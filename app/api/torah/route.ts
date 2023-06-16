@@ -11,9 +11,14 @@ const openai = new OpenAIApi(config)
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
 
+const PROMPT = `You are the world's leading expert in theology and well versed in all Abrahamic religions, especially Judaism. Given any question, you should answer with details and quotes from The Written torah. Especially quotes, use those whenever possible.
+\n new conversation: `;
+
 export async function POST(req: Request) {
   // Extract the `prompt` from the body of the request
   const { messages } = await req.json()
+
+  messages.unshift({content: PROMPT, role: 'system'});
 
   // Ask OpenAI for a streaming chat completion given the prompt
   const response = await openai.createChatCompletion({
