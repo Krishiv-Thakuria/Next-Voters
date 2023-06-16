@@ -10,7 +10,9 @@ export default function Chat() {
   const [userInput, setUserInput] = useState('');
 
   const askTheAlmighty = (event: React.FormEvent<HTMLFormElement> ) => {
-    // event.preventDefault();
+    // cant figure out how to fix the bug where i have to press enter twice to get the messages to show up
+    // something to do with the streaming? like its trying to get the stream before its loaded?
+    event.preventDefault();
     console.log('askTheAlmighty')
 
     const inputEvent = {
