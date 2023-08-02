@@ -13,14 +13,12 @@ export default function Chat() {
     // cant figure out how to fix the bug where i have to press enter twice to get the messages to show up
     // something to do with the streaming? like its trying to get the stream before its loaded?
     event.preventDefault();
-    console.log('askTheAlmighty')
 
     const inputEvent = {
         target: {
             value: userInput,
         },
     };
-    console.log('inputEvent', inputEvent)
 
     handleBibleInputChange(inputEvent);
     handleBibleSubmit(event);
@@ -30,8 +28,7 @@ export default function Chat() {
     handleTorahSubmit(event);
     handleGitaInputChange(inputEvent);
     handleGitaSubmit(event);
-    console.log('hi')
-    console.log('bibleMessages', bibleMessages)
+    
   }
 
   return (
@@ -74,6 +71,11 @@ export default function Chat() {
           {gitaMessages[gitaMessages.length - 1]?.content}
         </div>
       </div>
+        <div className="w-full flex justify-center items-center">
+          <a className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href="https://buymeacoffee.com/aadillpickle" target="_blank" rel="noreferrer">Buy @aadillpickle a coffee </a>
+        </div>
     </div>
+
+    
   )  
 }  
