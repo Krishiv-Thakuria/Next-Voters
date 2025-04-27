@@ -1,11 +1,42 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useChat } from 'ai/react';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 
 export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [questionCount, setQuestionCount] = useState(0);
+  const [hasIncrementedCount, setHasIncrementedCount] = useState(false);
+
+  // Fetch question count on component mount
+  useEffect(() => {
+    const fetchQuestionCount = async () => {
+      try {
+        const response = await fetch('/api/questionCount');
+        const data = await response.json();
+        setQuestionCount(data.count);
+      } catch (error) {
+        console.error('Error fetching question count:', error);
+      }
+    };
+
+    fetchQuestionCount();
+  }, []);
+
+  // Increment the global question count
+  const incrementQuestionCount = async () => {
+    if (hasIncrementedCount) return;
+    
+    try {
+      const response = await fetch('/api/questionCount', { method: 'POST' });
+      const data = await response.json();
+      setQuestionCount(data.count);
+      setHasIncrementedCount(true);
+    } catch (error) {
+      console.error('Error incrementing question count:', error);
+    }
+  };
 
   const {
     messages: conservativeMessages,
@@ -19,6 +50,12 @@ export default function Chat() {
     onError: (error) => {
       console.error('Conservative API error:', error);
       setError(error.message || 'Error fetching Conservative response');
+    },
+    onFinish: () => {
+      // Only increment count when both responses have finished
+      if (!liberalLoading) {
+        incrementQuestionCount();
+      }
     }
   });
 
@@ -34,6 +71,10 @@ export default function Chat() {
     onError: (error) => {
       console.error('Liberal API error:', error);
       setError(error.message || 'Error fetching Liberal response');
+    },
+    onFinish: () => {
+      // We only need to check in one onFinish
+      // The conservative onFinish already handles this
     }
   });
 
@@ -45,6 +86,9 @@ export default function Chat() {
     event.preventDefault();
     // Clear any previous errors
     setError(null);
+    
+    // Reset the increment flag
+    setHasIncrementedCount(false);
     
     // Only submit if there's input and not already loading
     if (!conservativeInput.trim() || isLoading) return;
@@ -77,9 +121,9 @@ export default function Chat() {
   return (
     <div className="min-h-screen bg-white flex flex-col p-4 md:p-8">
       <header className="mb-8 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight mb-2">Canadian Political Perspectives</h1>
-        <p className="text-gray-600 italic">Compare policy viewpoints across Canada's major political parties</p>
-        <p className="text-gray-600 mt-2 text-sm">Powered by Claude AI with direct PDF analysis</p>
+        <h1 className="text-3xl font-extrabold tracking-tight mb-2">Next Voters</h1>
+        <p className="text-gray-600">Compare policy viewpoints across Canada's major political parties</p>
+        <p className="text-gray-500 text-sm mt-2">Next Voters has provided {questionCount.toLocaleString()} perspective answers for Canadians so far</p>
       </header>
       
       {error && (
@@ -98,7 +142,7 @@ export default function Chat() {
         <div className="w-full md:w-[30%] flex flex-col">
           <div className="border-b-2 border-blue-600 pb-2 mb-4">
             <h2 className="text-xl font-bold uppercase tracking-wider text-blue-600">Conservative Party</h2>
-            <p className="text-xs text-blue-600 opacity-75">Based on official 2023 party platform</p>
+            <p className="text-xs text-blue-600 opacity-75">Based on official 2025 party platform</p>
           </div>
           <div className="flex-1 bg-blue-50 p-5 rounded-lg shadow-md overflow-y-auto h-64 md:h-96 border-2 border-blue-200 relative">
             {conservativeLoading && (
@@ -114,6 +158,11 @@ export default function Chat() {
               )}
             </div>
           </div>
+        </div>
+        
+        <div className="hidden md:flex flex-col items-center justify-center">
+          <p className="text-gray-700 font-medium">NextVoters.com</p>
+          <p className="text-gray-600 text-sm">See the true policies</p>
         </div>
         
         <div className="w-full md:w-[30%] flex flex-col">
@@ -136,6 +185,30 @@ export default function Chat() {
             </div>
           </div>
         </div>
+      </div>
+      
+      <div className="mt-8 mb-6 text-center">
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            // Create temporary notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded';
+            notification.style.zIndex = '50';
+            notification.textContent = 'Link copied to clipboard!';
+            document.body.appendChild(notification);
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+              notification.remove();
+            }, 3000);
+          }}
+          className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition-all hover:shadow-lg transform hover:-translate-y-1 flex items-center justify-center mx-auto"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+          </svg>
+          Share with friends to help them vote
+        </button>
       </div>
       
       <div className="max-w-xl mx-auto w-full mt-auto">
