@@ -1,3 +1,152 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom styles for markdown content */
+.markdown-body h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.markdown-body h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.markdown-body h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.markdown-body p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-body li {
+  margin-bottom: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+.markdown-body strong,
+.markdown-body b {
+  font-weight: 700;
+}
+
+.markdown-body em,
+.markdown-body i {
+  font-style: italic;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.markdown-body pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.markdown-body pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.markdown-body hr {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 1rem 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+}
+
+.markdown-body th {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+/* Specific styles for the party-colored content */
+.text-blue-800 .markdown-body ul li::marker {
+  color: #1e40af; /* Darker blue for Conservative */
+}
+
+.text-red-800 .markdown-body ul li::marker {
+  color: #b91c1c; /* Darker red for Liberal */
+}
+
+/* Add some spacing between bullet points for better readability */
+.markdown-body ul li,
+.markdown-body ol li {
+  margin-bottom: 0.5rem;
+}
+
+/* Make sure nested lists are properly indented */
+.markdown-body ul ul,
+.markdown-body ol ol,
+.markdown-body ul ol,
+.markdown-body ol ul {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Improve anchor link styling */
+.markdown-body a {
+  color: #2563eb;
+  text-decoration: none;
+  border-bottom: 1px dotted;
+  transition: border-color 0.2s ease;
+}
+
+.markdown-body a:hover {
+  border-bottom: 1px solid;
+}
+
+/* Party-specific link styling */
+.text-blue-800 .markdown-body a {
+  color: #1e40af;
+}
+
+.text-red-800 .markdown-body a {
+  color: #b91c1c;
+}

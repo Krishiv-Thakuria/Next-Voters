@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Canadian Political Perspectives',
+  title: 'Next Voters',
   description: "Easily compare and understand the policy viewpoints of Canada's major political parties in real-time, helping you make informed decisions and engage more effectively in civic discussions."
 }
 

@@ -1,4 +1,6 @@
 import { StreamingTextResponse } from 'ai';
+import Anthropic from '@anthropic-ai/sdk';
+import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -6,138 +8,74 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
   const userMessage = messages[messages.length - 1].content;
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
   
+  if (!anthropicApiKey) {
+    return new Response(JSON.stringify({ 
+      error: 'ANTHROPIC_API_KEY environment variable is not set' 
+    }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  // Base prompt for analysis instructions
+  const basePrompt = `IMPORTANT: Focus ONLY on what the user explicitly asked about - nothing more. Extract ONLY the specific Conservative Party policies, initiatives, and details that DIRECTLY relate to the user's query. 
+
+Do not provide general information or context outside what was specifically requested. If the user asks about "taxes", only discuss tax policies, not the broader economy or other topics.
+
+Structure your answer in concise bullet points with specific commitments, targets, and timelines. Be brief and direct. Include exact quotes when helpful.
+
+If there is limited or no information on the specific topic, briefly state this rather than expanding to adjacent topics.`;
+
   try {
-    // 1. Create a thread
-    const threadRes = await fetch('https://api.openai.com/v1/threads', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'OpenAI-Beta': 'assistants=v2'
-      },
-      body: JSON.stringify({}),
+    const anthropic = new Anthropic({
+      apiKey: anthropicApiKey,
     });
-    
-    if (!threadRes.ok) {
-      const errorData = await threadRes.json();
-      throw new Error(`Failed to create thread: ${errorData.error?.message || threadRes.statusText}`);
-    }
-    
-    const thread = await threadRes.json();
 
-    // 2. Add user message to thread
-    const messageRes = await fetch(`https://api.openai.com/v1/threads/${thread.id}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'OpenAI-Beta': 'assistants=v2'
-      },
-      body: JSON.stringify({
-        role: 'user',
-        content: userMessage,
-      }),
+    // Create the response stream
+    const stream = await anthropic.messages.create({
+      model: 'claude-3-7-sonnet-20250219',
+      max_tokens: 1024,
+      stream: true,
+      system: basePrompt,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "document",
+              source: {
+                type: "url",
+                url: "https://canada-first-for-a-change.s3.us-west-2.amazonaws.com/20250418_CPCPlatform_8-5x11_EN_R1-pages.pdf"
+              },
+              cache_control: { type: "ephemeral" }
+            },
+            {
+              type: "text",
+              text: userMessage
+            }
+          ]
+        }
+      ],
     });
-    
-    if (!messageRes.ok) {
-      const errorData = await messageRes.json();
-      throw new Error(`Failed to add message: ${errorData.error?.message || messageRes.statusText}`);
-    }
 
-    // 3. Run the assistant
-    const runRes = await fetch(`https://api.openai.com/v1/threads/${thread.id}/runs`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'OpenAI-Beta': 'assistants=v2'
-      },
-      body: JSON.stringify({
-        assistant_id: 'asst_L2me850KLvAo2ZB0y1GqjzAR', // Conservative Assistant ID
-      }),
-    });
-    
-    if (!runRes.ok) {
-      const errorData = await runRes.json();
-      throw new Error(`Failed to start run: ${errorData.error?.message || runRes.statusText}`);
-    }
-    
-    const run = await runRes.json();
-
-    // 4. Poll for the run to complete with timeout
-    let runStatus = run.status;
-    const maxAttempts = 30; // Max 45 seconds (30 * 1.5)
-    let attempts = 0;
-    
-    while (attempts < maxAttempts) {
-      attempts++;
-      
-      const pollRes = await fetch(`https://api.openai.com/v1/threads/${thread.id}/runs/${run.id}`, {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'OpenAI-Beta': 'assistants=v2'
-        },
-      });
-      
-      if (!pollRes.ok) {
-        const errorData = await pollRes.json();
-        throw new Error(`Failed to poll run status: ${errorData.error?.message || pollRes.statusText}`);
-      }
-      
-      const pollData = await pollRes.json();
-      runStatus = pollData.status;
-      
-      if (runStatus === 'completed') {
-        break;
-      } else if (runStatus === 'failed' || runStatus === 'cancelled' || runStatus === 'expired') {
-        throw new Error(`Run ended with status: ${runStatus}. Reason: ${pollData.last_error?.message || 'Unknown error'}`);
-      } else if (runStatus === 'requires_action') {
-        throw new Error('Run requires action which is not supported in this implementation');
-      }
-      
-      // Wait before polling again
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-    }
-    
-    if (runStatus !== 'completed') {
-      throw new Error('Assistant response timed out. Please try again.');
-    }
-
-    // 5. Fetch the assistant's final message
-    const messagesRes = await fetch(`https://api.openai.com/v1/threads/${thread.id}/messages`, {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'OpenAI-Beta': 'assistants=v2'
-      },
-    });
-    
-    if (!messagesRes.ok) {
-      const errorData = await messagesRes.json();
-      throw new Error(`Failed to fetch messages: ${errorData.error?.message || messagesRes.statusText}`);
-    }
-    
-    const messagesData = await messagesRes.json();
-    const assistantMessage = messagesData.data.find((msg: any) => msg.role === 'assistant');
-
-    if (!assistantMessage) {
-      throw new Error('No assistant message found in the response');
-    }
-
-    // Stream the assistant's reply
-    const stream = new ReadableStream({
-      start(controller) {
-        controller.enqueue(
-          new TextEncoder().encode(
-            assistantMessage?.content?.[0]?.text?.value || 'No response from Assistant.'
-          )
-        );
+    // Create a proper stream for StreamingTextResponse
+    const textEncoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        // Handle the events in the stream
+        for await (const chunk of stream) {
+          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+            controller.enqueue(textEncoder.encode(chunk.delta.text));
+          }
+        }
         controller.close();
-      },
+      }
     });
 
-    return new StreamingTextResponse(stream);
+    // Return the properly formatted streaming response
+    return new StreamingTextResponse(readableStream);
     
   } catch (error) {
     console.error('Conservative API error:', error);

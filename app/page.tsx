@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { useChat } from 'ai/react';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +79,7 @@ export default function Chat() {
       <header className="mb-8 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-2">Canadian Political Perspectives</h1>
         <p className="text-gray-600 italic">Compare policy viewpoints across Canada's major political parties</p>
+        <p className="text-gray-600 mt-2 text-sm">Powered by Claude AI with direct PDF analysis</p>
       </header>
       
       {error && (
@@ -96,6 +98,7 @@ export default function Chat() {
         <div className="w-full md:w-[30%] flex flex-col">
           <div className="border-b-2 border-blue-600 pb-2 mb-4">
             <h2 className="text-xl font-bold uppercase tracking-wider text-blue-600">Conservative Party</h2>
+            <p className="text-xs text-blue-600 opacity-75">Based on official 2023 party platform</p>
           </div>
           <div className="flex-1 bg-blue-50 p-5 rounded-lg shadow-md overflow-y-auto h-64 md:h-96 border-2 border-blue-200 relative">
             {conservativeLoading && (
@@ -103,15 +106,20 @@ export default function Chat() {
                 <div className="animate-pulse text-blue-600">Loading...</div>
               </div>
             )}
-            <p className="text-blue-800 leading-relaxed">
-              {lastConservative || "The Conservative perspective will appear here..."}
-            </p>
+            <div className="text-blue-800">
+              {lastConservative ? (
+                <MarkdownRenderer content={lastConservative} />
+              ) : (
+                "The Conservative perspective will appear here..."
+              )}
+            </div>
           </div>
         </div>
         
         <div className="w-full md:w-[30%] flex flex-col">
           <div className="border-b-2 border-red-600 pb-2 mb-4">
             <h2 className="text-xl font-bold uppercase tracking-wider text-red-600">Liberal Party</h2>
+            <p className="text-xs text-red-600 opacity-75">Based on official 2025 party platform</p>
           </div>
           <div className="flex-1 bg-red-50 p-5 rounded-lg shadow-md overflow-y-auto h-64 md:h-96 border-2 border-red-200 relative">
             {liberalLoading && (
@@ -119,9 +127,13 @@ export default function Chat() {
                 <div className="animate-pulse text-red-600">Loading...</div>
               </div>
             )}
-            <p className="text-red-800 leading-relaxed">
-              {lastLiberal || "The Liberal perspective will appear here..."}
-            </p>
+            <div className="text-red-800">
+              {lastLiberal ? (
+                <MarkdownRenderer content={lastLiberal} />
+              ) : (
+                "The Liberal perspective will appear here..."
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -153,6 +165,7 @@ export default function Chat() {
       </div>
       
       <footer className="mt-8 text-center text-gray-500 text-sm">
+        <p>Uses Claude 3.7 Sonnet to analyze official party platforms in real-time</p>
         <a 
           className="inline-block border-b border-gray-400 pb-0.5 hover:text-black hover:border-black transition-colors" 
           href="https://twitter.com/krishivthakuria" 
