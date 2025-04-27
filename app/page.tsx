@@ -14,8 +14,14 @@ export default function Chat() {
     const fetchQuestionCount = async () => {
       try {
         const response = await fetch('/api/questionCount');
+        if (!response.ok) {
+          console.error('Error response from questionCount API:', response.status);
+          return;
+        }
         const data = await response.json();
-        setQuestionCount(data.count);
+        if (data && typeof data.count === 'number') {
+          setQuestionCount(data.count);
+        }
       } catch (error) {
         console.error('Error fetching question count:', error);
       }
@@ -30,9 +36,15 @@ export default function Chat() {
     
     try {
       const response = await fetch('/api/questionCount', { method: 'POST' });
+      if (!response.ok) {
+        console.error('Error response from questionCount API:', response.status);
+        return;
+      }
       const data = await response.json();
-      setQuestionCount(data.count);
-      setHasIncrementedCount(true);
+      if (data && typeof data.count === 'number') {
+        setQuestionCount(data.count);
+        setHasIncrementedCount(true);
+      }
     } catch (error) {
       console.error('Error incrementing question count:', error);
     }
@@ -123,7 +135,9 @@ export default function Chat() {
       <header className="mb-8 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-2">Next Voters</h1>
         <p className="text-gray-600">Compare policy viewpoints across Canada's major political parties</p>
-        <p className="text-gray-500 text-sm mt-2">Next Voters has provided {questionCount.toLocaleString()} perspective answers for Canadians so far</p>
+        <p className="text-gray-500 text-sm mt-2">
+          Next Voters has provided {questionCount ? questionCount.toLocaleString() : '0'} perspective answers for Canadians so far
+        </p>
       </header>
       
       {error && (
