@@ -110,8 +110,6 @@ export default function Chat() {
       // The conservative onFinish already handles this
     }
   });
-    }
-  });
 
   // Extract last assistant responses
   const lastConservative = [...conservativeMessages].reverse().find(m => m.role === 'assistant')?.content;
