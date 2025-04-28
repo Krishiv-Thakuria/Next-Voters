@@ -31,14 +31,16 @@ If there is limited or no information on the specific topic, briefly state this 
   try {
     const anthropic = new Anthropic({
       apiKey: anthropicApiKey,
+      timeout: 30000, // 30 second timeout
     });
 
-    // Create the response stream
+    // Create the response stream with optimized settings
     const stream = await anthropic.messages.create({
       model: 'claude-3-7-sonnet-20250219',
       max_tokens: 1024,
       stream: true,
       system: basePrompt,
+      temperature: 0, // Lower temperature for faster, more consistent responses
       messages: [
         {
           role: "user",
@@ -64,13 +66,19 @@ If there is limited or no information on the specific topic, briefly state this 
     const textEncoder = new TextEncoder();
     const readableStream = new ReadableStream({
       async start(controller) {
-        // Handle the events in the stream
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-            controller.enqueue(textEncoder.encode(chunk.delta.text));
+        try {
+          // Handle the events in the stream
+          for await (const chunk of stream) {
+            if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+              controller.enqueue(textEncoder.encode(chunk.delta.text));
+            }
           }
+          controller.close();
+        } catch (error) {
+          console.error('Error in stream processing:', error);
+          controller.enqueue(textEncoder.encode("Error processing response. Please try again."));
+          controller.close();
         }
-        controller.close();
       }
     });
 
@@ -79,8 +87,11 @@ If there is limited or no information on the specific topic, briefly state this 
     
   } catch (error) {
     console.error('Conservative API error:', error);
+    // Return a more helpful error message
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
     return new Response(JSON.stringify({ 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      error: errorMessage,
+      suggestion: "Please try again or refresh the page."
     }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
