@@ -50,6 +50,15 @@ export default function Chat() {
     }
   };
 
+  // Function to check if error is rate limit related
+  const isRateLimitError = (errorMsg: string) => {
+    return (
+      errorMsg.toLowerCase().includes('rate limit') ||
+      errorMsg.toLowerCase().includes('too many requests') ||
+      errorMsg.toLowerCase().includes('tokens per minute')
+    );
+  };
+
   const {
     messages: conservativeMessages,
     input: conservativeInput,
@@ -61,7 +70,13 @@ export default function Chat() {
     api: 'api/conservative',
     onError: (error) => {
       console.error('Conservative API error:', error);
-      setError(error.message || 'Error fetching Conservative response');
+      const errorMsg = error.message || 'Error fetching Conservative response';
+      
+      if (isRateLimitError(errorMsg)) {
+        setError("Sorry, we're getting a ton of traffic right now - check back in a minute to try again!");
+      } else {
+        setError(errorMsg);
+      }
     },
     onFinish: () => {
       // Only increment count when both responses have finished
@@ -82,11 +97,19 @@ export default function Chat() {
     api: 'api/liberal',
     onError: (error) => {
       console.error('Liberal API error:', error);
-      setError(error.message || 'Error fetching Liberal response');
+      const errorMsg = error.message || 'Error fetching Liberal response';
+      
+      if (isRateLimitError(errorMsg)) {
+        setError("Sorry, we're getting a ton of traffic right now - check back in a minute to try again!");
+      } else {
+        setError(errorMsg);
+      }
     },
     onFinish: () => {
       // We only need to check in one onFinish
       // The conservative onFinish already handles this
+    }
+  });
     }
   });
 

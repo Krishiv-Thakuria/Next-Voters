@@ -4,7 +4,7 @@ import { kv } from '@vercel/kv';
 const COUNTER_KEY = 'questionCount';
 
 // Fallback in-memory counter in case KV isn't available
-let fallbackCounter = 56; // Only used if KV fails or isn't configured
+let fallbackCounter = 72; // Only used if KV fails or isn't configured
 
 // Helper to check if KV is properly configured
 const isKvConfigured = () => {
@@ -22,7 +22,7 @@ export async function GET() {
       // If it doesn't exist yet, initialize it 
       // (This should only happen on the very first deployment)
       if (count === null) {
-        count = 56;
+        count = 72;
         await kv.set(COUNTER_KEY, count);
       }
       
@@ -49,7 +49,7 @@ export async function POST() {
       
       // Initialize if needed (should only happen on first deployment)
       if (count === null) {
-        count = 56;
+        count = 72;
       }
       
       // Increment by 2 (one for each perspective)
