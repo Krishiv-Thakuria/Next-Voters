@@ -14,6 +14,7 @@
     "@anthropic-ai/sdk": "^0.40.0",
     "@supabase/supabase-js": "^2.49.4",
     "@types/pdfjs-dist": "^2.10.378",
+    "@vercel/analytics": "^1.5.0",
     "ai": "^2.0.1",
     "cors": "^2.8.5",
     "encoding": "^0.1.13",
