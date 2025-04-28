@@ -26,7 +26,7 @@ Do not provide general information or context outside what was specifically requ
 
 Structure your answer in concise bullet points with specific commitments, targets, and timelines. Be brief and direct. Include exact quotes when helpful.
 
-If there is limited or no information on the specific topic, briefly state this rather than expanding to adjacent topics.`;
+If there is limited or no information on the specific topic, briefly state this rather than expanding to adjacent topics. Do not give a summary at the end, or introduce the topic as a whole at the start.`;
 
   try {
     const anthropic = new Anthropic({
