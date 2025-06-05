@@ -6,49 +6,6 @@ import MarkdownRenderer from '../components/MarkdownRenderer';
 export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [questionCount, setQuestionCount] = useState(0);
-  const [hasIncrementedCount, setHasIncrementedCount] = useState(false);
-
-  // Fetch question count on component mount
-  useEffect(() => {
-    const fetchQuestionCount = async () => {
-      try {
-        const response = await fetch('/api/questionCount');
-        if (!response.ok) {
-          console.error('Error response from questionCount API:', response.status);
-          return;
-        }
-        const data = await response.json();
-        if (data && typeof data.count === 'number') {
-          setQuestionCount(data.count);
-        }
-      } catch (error) {
-        console.error('Error fetching question count:', error);
-      }
-    };
-
-    fetchQuestionCount();
-  }, []);
-
-  // Increment the global question count
-  const incrementQuestionCount = async () => {
-    if (hasIncrementedCount) return;
-    
-    try {
-      const response = await fetch('/api/questionCount', { method: 'POST' });
-      if (!response.ok) {
-        console.error('Error response from questionCount API:', response.status);
-        return;
-      }
-      const data = await response.json();
-      if (data && typeof data.count === 'number') {
-        setQuestionCount(data.count);
-        setHasIncrementedCount(true);
-      }
-    } catch (error) {
-      console.error('Error incrementing question count:', error);
-    }
-  };
 
   // Function to check if error is rate limit related
   const isRateLimitError = (errorMsg: string) => {
@@ -77,12 +34,6 @@ export default function Chat() {
       } else {
         setError(errorMsg);
       }
-    },
-    onFinish: () => {
-      // Only increment count when both responses have finished
-      if (!liberalLoading) {
-        incrementQuestionCount();
-      }
     }
   });
 
@@ -104,10 +55,6 @@ export default function Chat() {
       } else {
         setError(errorMsg);
       }
-    },
-    onFinish: () => {
-      // We only need to check in one onFinish
-      // The conservative onFinish already handles this
     }
   });
 
@@ -119,9 +66,6 @@ export default function Chat() {
     event.preventDefault();
     // Clear any previous errors
     setError(null);
-    
-    // Reset the increment flag
-    setHasIncrementedCount(false);
     
     // Only submit if there's input and not already loading
     if (!conservativeInput.trim() || isLoading) return;
@@ -156,9 +100,6 @@ export default function Chat() {
       <header className="mb-8 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-2">Next Voters</h1>
         <p className="text-gray-600">Compare policy viewpoints across Canada's major political parties</p>
-        <p className="text-gray-500 text-sm mt-2">
-          Next Voters has provided {questionCount ? questionCount.toLocaleString() : '0'} perspective answers for Canadians so far
-        </p>
       </header>
       
       {error && (
