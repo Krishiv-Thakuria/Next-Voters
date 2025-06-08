@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function GlobalError({
   error,
@@ -17,17 +19,22 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-          <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-          <p className="mb-6 text-gray-600 max-w-md">
-            We've encountered an unexpected error. Our team has been notified.
-          </p>
-          <button
-            onClick={() => reset()}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-          >
-            Try again
-          </button>
+        <div className="flex items-center justify-center min-h-screen p-4">
+          <Card className="w-full max-w-md text-center">
+            <CardHeader>
+              <CardTitle className="text-2xl">Something Went Wrong</CardTitle>
+              <CardDescription>
+                We've encountered an unexpected error. Our team has been notified.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* You could display error.message or error.digest here if needed, but be careful about exposing sensitive details to users */}
+              {/* <p className="text-sm text-muted-foreground">Error details: {error?.message}</p> */}
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <Button onClick={() => reset()}>Try again</Button>
+            </CardFooter>
+          </Card>
         </div>
       </body>
     </html>
