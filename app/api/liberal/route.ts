@@ -1,4 +1,3 @@
-import { StreamingTextResponse } from 'ai';
 import Anthropic from '@anthropic-ai/sdk';
 import { NextResponse } from 'next/server';
 
@@ -62,7 +61,7 @@ If there is limited or no information on the specific topic, briefly state this 
       ],
     });
 
-    // Create a proper stream for StreamingTextResponse
+    // Create a proper stream for Response
     const textEncoder = new TextEncoder();
     const readableStream = new ReadableStream({
       async start(controller) {
@@ -83,7 +82,12 @@ If there is limited or no information on the specific topic, briefly state this 
     });
 
     // Return the properly formatted streaming response
-    return new StreamingTextResponse(readableStream);
+    return new Response(readableStream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+      },
+    });
     
   } catch (error) {
     console.error('Liberal API error:', error);
