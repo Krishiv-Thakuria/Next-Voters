@@ -12,8 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // For scrollable candidate responses
-import { ArrowDownCircle } from 'lucide-react'; // For scroll-to-bottom button later
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ArrowDownCircle } from 'lucide-react';
 
 const CANDIDATE_SEPARATOR = "---CANDIDATE_SEPARATOR---";
 
@@ -22,21 +22,36 @@ const countryData: Record<string, string[]> = {
   Canada: ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan'],
 };
 
-const electionOptions = ["Arizona special election", "Congressional Primary"];
+// Updated election options based on country
+const electionOptions: Record<string, string[]> = {
+  USA: [
+    'Presidential Election 2024',
+    'Arizona Special Election',
+    'Congressional Primary',
+    'Midterm Elections',
+    'General Election'
+  ],
+  Canada: [
+    'Federal Election 2025',
+    'General Election',
+    'Provincial Election'
+  ]
+};
 
 export default function ChatMainPage() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  // Ensure the html tag does not have 'dark' class if it was applied dynamically
+  
   useEffect(() => {
     document.documentElement.classList.remove('dark');
   }, []);
+  
   const [country, setCountry] = useState<string>('');
   const [region, setRegion] = useState<string>('');
   const [availableRegions, setAvailableRegions] = useState<string[]>([]);
-  const [electionName, setElectionName] = useState<string>('Presidential Election 2024');
-  const [selectedElection, setSelectedElection] = useState<string>(''); // Placeholder
+  const [selectedElection, setSelectedElection] = useState<string>('');
+  const [availableElections, setAvailableElections] = useState<string[]>([]);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
     api: '/api/chat',
@@ -49,9 +64,8 @@ export default function ChatMainPage() {
     },
     onError: (err) => {
       console.error("Chat error:", err);
-      // Potentially display a user-friendly error message
     },
-    initialMessages: [], // Start with no messages
+    initialMessages: [],
   });
 
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
@@ -60,16 +74,14 @@ export default function ChatMainPage() {
     }
   };
 
-  // Auto-scroll when new messages arrive, if user is near the bottom
   useEffect(() => {
     if (!showScrollButton) {
-      scrollToBottom('auto'); // Use 'auto' for instant scroll on new messages if already at bottom
+      scrollToBottom('auto');
     }
   }, [messages, showScrollButton]);
 
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    // Show button if scrolled up more than a certain threshold (e.g., 300px from the bottom)
     if (scrollHeight - scrollTop - clientHeight > 300) {
       setShowScrollButton(true);
     } else {
@@ -77,9 +89,7 @@ export default function ChatMainPage() {
     }
   };
 
-  // Find the latest user message
   const latestUserMessage = messages.filter(m => m.role === 'user').pop();
-  // Find the latest assistant message
   const latestAssistantMessage = messages.filter(m => m.role === 'assistant').pop();
 
   let candidate1Response = '';
@@ -91,21 +101,33 @@ export default function ChatMainPage() {
     candidate2Response = parts[1]?.trim() || '';
   }
 
-  const handleElectionChange = (value: string) => {
-    setSelectedElection(value);
-    // Potentially update electionName based on selection or clear it
-    // setElectionName(value); // Or some other logic if needed
-  };
-
   const handleCountryChange = (selectedCountryValue: string) => {
     setCountry(selectedCountryValue);
-    setRegion(''); // Reset region when country changes
+    setRegion('');
+    setSelectedElection('');
     setAvailableRegions(countryData[selectedCountryValue] || []);
+    setAvailableElections(electionOptions[selectedCountryValue] || []);
   };
 
   const handleRegionChange = (selectedRegionValue: string) => {
     setRegion(selectedRegionValue);
   };
+
+  const handleElectionChange = (value: string) => {
+    setSelectedElection(value);
+  };
+
+  // Determine candidate labels based on country and election
+  const getCandidateLabels = () => {
+    if (country === 'USA') {
+      return ['DEMOCRATIC CANDIDATE', 'REPUBLICAN CANDIDATE'];
+    } else if (country === 'Canada') {
+      return ['LIBERAL CANDIDATE', 'CONSERVATIVE CANDIDATE'];
+    }
+    return ['CANDIDATE ONE', 'CANDIDATE TWO'];
+  };
+
+  const [candidate1Label, candidate2Label] = getCandidateLabels();
 
   return (
     <div className="h-screen bg-background text-foreground flex flex-col">
@@ -131,17 +153,17 @@ export default function ChatMainPage() {
             </div>
           )}
 
-          {/* Candidates' Responses Area - only shown if there are messages */}
+          {/* Candidates' Responses Area */}
           {messages.length > 0 ? (
             <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden">
               {/* Candidate 1 Column */}
               <Card className="flex flex-col bg-card border-border rounded-lg shadow-none">
                 <CardHeader className="border-b border-border p-3">
-                  <CardTitle className="text-blue-600 text-md">CANDIDATE ONE</CardTitle>
+                  <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
                 </CardHeader>
                 <ScrollArea className="flex-grow p-3">
                   <CardContent className="text-sm text-card-foreground whitespace-pre-line">
-                    {isLoading && !candidate1Response && latestUserMessage && <p className='opacity-50'>Thinking...</p>}
+                    {isLoading && !candidate1Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
                     {candidate1Response || (latestUserMessage && !isLoading && !error ? <p className='opacity-50'>Waiting for response...</p> : "")}
                   </CardContent>
                 </ScrollArea>
@@ -150,11 +172,11 @@ export default function ChatMainPage() {
               {/* Candidate 2 Column */}
               <Card className="flex flex-col bg-card border-border rounded-lg shadow-none">
                 <CardHeader className="border-b border-border p-3">
-                  <CardTitle className="text-purple-600 text-md">CANDIDATE 2</CardTitle>
+                  <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
                 </CardHeader>
                 <ScrollArea className="flex-grow p-3">
                   <CardContent className="text-sm text-card-foreground whitespace-pre-line">
-                    {isLoading && !candidate2Response && latestUserMessage && <p className='opacity-50'>Thinking...</p>}
+                    {isLoading && !candidate2Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
                     {candidate2Response || (latestUserMessage && !isLoading && !error ? <p className='opacity-50'>Waiting for response...</p> : "")}
                   </CardContent>
                 </ScrollArea>
@@ -166,7 +188,7 @@ export default function ChatMainPage() {
             </div>
           )}
           {error && <p className="text-destructive text-center py-2">Error: {error.message}</p>}
-          <div ref={messagesEndRef} /> {/* Anchor for scrolling to bottom */}
+          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
@@ -182,7 +204,7 @@ export default function ChatMainPage() {
         </Button>
       )}
 
-      {/* Chat Input Bar (formerly Footer) */}
+      {/* Chat Input Bar */}
       <footer className="bg-background p-3 md:p-4 sticky bottom-0 z-10 fade-edge-to-top">
         <form onSubmit={handleSubmit} className="container mx-auto flex flex-col gap-2 bg-card p-2 rounded-lg border border-border focus:ring-0 focus:outline-none">
           <Input
@@ -190,7 +212,7 @@ export default function ChatMainPage() {
             onChange={handleInputChange}
             placeholder="Type your question here... (e.g., What are the candidate's views on healthcare?)"
             className="flex-grow bg-transparent border-none text-foreground placeholder-muted-foreground focus:ring-0 focus:outline-none shadow-none"
-            disabled={isLoading || !country || !region}
+            disabled={isLoading || !country || !region || !selectedElection}
           />
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -206,6 +228,7 @@ export default function ChatMainPage() {
                   ))}
                 </SelectContent>
               </Select>
+              
               <Select onValueChange={handleRegionChange} value={region} disabled={!country || availableRegions.length === 0}>
                 <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
                   <SelectValue placeholder="Select Region/State" />
@@ -216,18 +239,23 @@ export default function ChatMainPage() {
                   ))}
                 </SelectContent>
               </Select>
-              <Select onValueChange={handleElectionChange} value={selectedElection}>
+              
+              <Select onValueChange={handleElectionChange} value={selectedElection} disabled={!country || availableElections.length === 0}>
                 <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
                   <SelectValue placeholder="Select Election" />
                 </SelectTrigger>
                 <SelectContent className="z-[50]">
-                  {electionOptions.map((election) => (
+                  {availableElections.map((election) => (
                     <SelectItem key={election} value={election}>{election}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <Button type="submit" disabled={isLoading || !input.trim() || !country || !region} className="p-2 aspect-square rounded-full shadow-none">
+            <Button 
+              type="submit" 
+              disabled={isLoading || !input.trim() || !country || !region || !selectedElection} 
+              className="p-2 aspect-square rounded-full shadow-none"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
               </svg>
