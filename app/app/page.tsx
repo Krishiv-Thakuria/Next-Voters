@@ -14,8 +14,10 @@ import {
 } from '@/components/ui/select';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { ArrowDownCircle } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-const CANDIDATE_SEPARATOR = "---CANDIDATE_SEPARATOR---";
+const CANDIDATE_SEPARATOR = "\n\n---\n\n"; // Updated to match backend separator
 
 const countryData: Record<string, string[]> = {
   USA: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
@@ -162,9 +164,9 @@ export default function ChatMainPage() {
                   <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
                 </CardHeader>
                 <ScrollArea className="flex-grow p-3">
-                  <CardContent className="text-sm text-card-foreground whitespace-pre-line">
+                  <CardContent className="prose prose-sm dark:prose-invert max-w-none text-card-foreground/90 leading-relaxed">
                     {isLoading && !candidate1Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
-                    {candidate1Response || (latestUserMessage && !isLoading && !error ? <p className='opacity-50'>Waiting for response...</p> : "")}
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{candidate1Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
                   </CardContent>
                 </ScrollArea>
               </Card>
@@ -175,9 +177,9 @@ export default function ChatMainPage() {
                   <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
                 </CardHeader>
                 <ScrollArea className="flex-grow p-3">
-                  <CardContent className="text-sm text-card-foreground whitespace-pre-line">
+                  <CardContent className="prose prose-sm dark:prose-invert max-w-none text-card-foreground/90 leading-relaxed">
                     {isLoading && !candidate2Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
-                    {candidate2Response || (latestUserMessage && !isLoading && !error ? <p className='opacity-50'>Waiting for response...</p> : "")}
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{candidate2Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
                   </CardContent>
                 </ScrollArea>
               </Card>
