@@ -75,10 +75,79 @@ function buildAutoRAGFilters(pdfFiles: string[]) {
   };
 }
 
-// Query Cloudflare AutoRAG
-async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGResponse> {
+// Create enhanced prompt for AutoRAG
+function createEnhancedPrompt(userQuery: string, country: string, location: string): string {
+  const partyNames = country.toLowerCase() === 'usa' 
+    ? { party1: 'Democratic', party2: 'Republican' }
+    : { party1: 'Liberal', party2: 'Conservative' };
+
+  return `You are a political policy analyst helping voters understand party positions. Answer the user's question: "${userQuery}"
+
+CRITICAL INSTRUCTIONS:
+1. **Format your response EXACTLY like this:**
+   [DEMOCRAT_START] or [LIBERAL_START]
+   [Your complete analysis for the first party]
+   [DEMOCRAT_END] or [LIBERAL_END]
+   
+   [REPUBLICAN_START] or [CONSERVATIVE_START]
+   [Your complete analysis for the second party]
+   [REPUBLICAN_END] or [CONSERVATIVE_END]
+
+2. **Writing Style Requirements:**
+   - Use clear, accessible language that voters can understand
+   - Be comprehensive but not overwhelming
+   - Start broad, then get specific with concrete examples
+   - Use bullet points for lists and key takeaways
+   - Use **bold** for emphasis on key points
+   - Use *italics* for nuanced points or context
+   - Use > blockquotes for direct policy statements when relevant
+   - NEVER use em dashes (—), use regular dashes (-) instead
+   - Use numbered lists for step-by-step processes or rankings
+
+3. **Content Strategy:**
+   - **Understand user intent:** If they ask about taxes and mention "middle-aged taxpayers," focus on how policies affect that demographic specifically
+   - **Be comprehensive:** Don't just say "not mentioned in documents" - provide context about what the party DOES focus on instead
+   - **Connect the dots:** Explain how broader policies affect the specific issue they're asking about
+   - **Be practical:** Focus on real-world impacts, not just policy theory
+
+4. **What to NEVER do:**
+   - NEVER mention page numbers, document names, or sources directly in the text
+   - NEVER say "the documents don't contain information" without providing related context
+   - NEVER combine both parties in one section
+   - NEVER use vague phrases like "they support this issue" - be specific about HOW and WHAT
+   - NEVER ignore the user's demographic context (age, income bracket, location, etc.)
+
+5. **Research Approach:**
+   - If the exact topic isn't covered, discuss related policies that would impact the issue
+   - Explain party philosophy and how it applies to the user's question
+   - Mention what each party prioritizes instead if they don't focus on the specific issue
+   - Provide historical context or voting records when relevant
+
+6. **Formatting Examples:**
+   
+   **Good format:**
+   • **Tax Credits:** The party proposes expanding the Child Tax Credit to $3,000 per child
+   • **Small Business Support:** Plans include reducing corporate tax rates for businesses under $1M revenue
+   
+   **Bad format:**
+   - The party supports tax reform (too vague)
+   - According to page 15 of the platform... (mentions sources)
+
+7. **Location Context:**
+   Remember this is for voters in ${location}. Consider:
+   - Local economic conditions
+   - Regional priorities that might be affected
+   - State-specific implementations of federal policies
+
+Answer the user's question comprehensively for each party, following ALL the above guidelines.`;
+}
+
+// Query Cloudflare AutoRAG with enhanced prompting
+async function queryAutoRAG(userQuery: string, filters: any, country: string, location: string): Promise<AutoRAGResponse> {
+  const enhancedPrompt = createEnhancedPrompt(userQuery, country, location);
+  
   const requestBody = {
-    query,
+    query: enhancedPrompt,
     filters
   };
 
@@ -116,13 +185,12 @@ async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGRespons
     const responseData = await response.json();
     console.log('AutoRAG Response Data:', responseData);
     
-    // Fix: Extract the actual response from the nested structure
     if (responseData.success && responseData.result) {
       return {
-        answer: responseData.result.response, // The actual response text
+        answer: responseData.result.response,
         response: responseData.result.response,
-        documents: responseData.result.data || [], // The document chunks
-        citations: [] // AutoRAG doesn't seem to return separate citations, they're embedded in the response
+        documents: responseData.result.data || [],
+        citations: []
       };
     } else {
       throw new Error('Invalid AutoRAG response structure');
@@ -132,6 +200,48 @@ async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGRespons
     console.error('AutoRAG Fetch Error:', error);
     throw error;
   }
+}
+
+// Parse the enhanced AutoRAG response
+function parseEnhancedResponse(fullResponse: string, country: string): [string, string] {
+  const isUSA = country.toLowerCase() === 'usa';
+  const party1Tags = isUSA ? ['[DEMOCRAT_START]', '[DEMOCRAT_END]'] : ['[LIBERAL_START]', '[LIBERAL_END]'];
+  const party2Tags = isUSA ? ['[REPUBLICAN_START]', '[REPUBLICAN_END]'] : ['[CONSERVATIVE_START]', '[CONSERVATIVE_END]'];
+  
+  let party1Response = '';
+  let party2Response = '';
+  
+  // Try to extract party1 response
+  const party1StartIdx = fullResponse.indexOf(party1Tags[0]);
+  const party1EndIdx = fullResponse.indexOf(party1Tags[1]);
+  
+  if (party1StartIdx !== -1 && party1EndIdx !== -1) {
+    party1Response = fullResponse.substring(party1StartIdx + party1Tags[0].length, party1EndIdx).trim();
+  }
+  
+  // Try to extract party2 response
+  const party2StartIdx = fullResponse.indexOf(party2Tags[0]);
+  const party2EndIdx = fullResponse.indexOf(party2Tags[1]);
+  
+  if (party2StartIdx !== -1 && party2EndIdx !== -1) {
+    party2Response = fullResponse.substring(party2StartIdx + party2Tags[0].length, party2EndIdx).trim();
+  }
+  
+  // Fallback: split on [STOP] if the new format didn't work
+  if (!party1Response || !party2Response) {
+    const stopSplit = fullResponse.split("[STOP]");
+    party1Response = party1Response || stopSplit[0]?.trim() || '';
+    party2Response = party2Response || stopSplit[1]?.trim() || '';
+  }
+  
+  // Final fallback: split response in half
+  if (!party1Response || !party2Response) {
+    const midpoint = Math.floor(fullResponse.length / 2);
+    party1Response = party1Response || fullResponse.substring(0, midpoint).trim();
+    party2Response = party2Response || fullResponse.substring(midpoint).trim();
+  }
+  
+  return [party1Response, party2Response];
 }
 
 // Generate party-specific responses from AutoRAG results
@@ -150,32 +260,23 @@ async function generatePartyResponses(
     // Build filters for AutoRAG
     const filters = buildAutoRAGFilters(pdfFiles);
     
-    // Query AutoRAG
-    const autoragResponse = await queryAutoRAG(userPrompt, filters);
+    // Query AutoRAG with enhanced prompting
+    const autoragResponse = await queryAutoRAG(userPrompt, filters, country, location);
     
     // Extract response text
     const fullResponse = autoragResponse.answer || autoragResponse.response || 'No response generated';
     console.log('Full AutoRAG Response:', fullResponse);
     
-    // Since AutoRAG is already providing a structured comparison, let's parse it
+    // Parse the enhanced response
+    const [party1Content, party2Content] = parseEnhancedResponse(fullResponse, country);
     
-    let data = fullResponse.split("[STOP]");
-
-    let democraticSection = data[0]?.trim() || '';
-    let republicanSection = data[1]?.trim() || '';
+    // Format the final responses with headers
+    const partyNames = country.toLowerCase() === 'usa' 
+      ? { party1: 'Democratic', party2: 'Republican' }
+      : { party1: 'Liberal', party2: 'Conservative' };
     
-    // Format the responses
-    let party1Response = '';
-    let party2Response = '';
-    
-    if (country.toLowerCase() === 'usa') {
-      party1Response = `**Democratic Position** (${location}):\n\n${democraticSection || 'Information not available in the provided documents.'}`;
-      party2Response = `**Republican Position** (${location}):\n\n${republicanSection || 'Information not available in the provided documents.'}`;
-    } else {
-      // Canada or other
-      party1Response = `**Liberal Position** (${location}):\n\n${democraticSection || fullResponse.substring(0, fullResponse.length / 2)}`;
-      party2Response = `**Conservative Position** (${location}):\n\n${republicanSection || fullResponse.substring(fullResponse.length / 2)}`;
-    }
+    const party1Response = `## ${partyNames.party1} Position\n\n${party1Content || 'Information not available in the provided documents.'}`;
+    const party2Response = `## ${partyNames.party2} Position\n\n${party2Content || 'Information not available in the provided documents.'}`;
     
     return [party1Response, party2Response];
     
@@ -184,9 +285,13 @@ async function generatePartyResponses(
     
     // Fallback responses
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    const partyNames = country.toLowerCase() === 'usa' 
+      ? { party1: 'Democratic', party2: 'Republican' }
+      : { party1: 'Liberal', party2: 'Conservative' };
+      
     return [
-      `**Party 1** (${location}):\n\nSorry, I couldn't retrieve policy information at this time. Error: ${errorMsg}`,
-      `**Party 2** (${location}):\n\nSorry, I couldn't retrieve policy information at this time. Error: ${errorMsg}`
+      `## ${partyNames.party1} Position\n\nSorry, I couldn't retrieve policy information at this time. Please try again later.`,
+      `## ${partyNames.party2} Position\n\nSorry, I couldn't retrieve policy information at this time. Please try again later.`
     ];
   }
 }
@@ -195,53 +300,89 @@ export async function POST(req: Request) {
   try {
     const { messages, location, election } = await req.json();
 
+    // Use the latest message from the user
     const userPrompt = (messages as Message[]).slice(-1)[0]?.content || 'No prompt provided';
+    const prompts = [userPrompt];
+
     const safeLocation = location || 'an unspecified location';
     const safeElection = election || 'Not Specified';
 
-    console.log('API Received - Prompt:', userPrompt, 'Location:', safeLocation, 'Election:', safeElection);
+    console.log('API Received - Prompts:', prompts, 'Location:', safeLocation, 'Election:', safeElection);
 
-    // Parse location to get country and region
     const [region, country] = safeLocation.split(', ').reverse();
 
     const stream = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
+        let closed = false;
 
-        try {
-          // Get party responses from AutoRAG
-          const [party1ResponseString, party2ResponseString] = await generatePartyResponses(
-            userPrompt, 
-            safeLocation, 
-            safeElection,
-            country || 'Canada',
-            region || ''
-          );
+        const ensureClosed = () => {
+          if (!closed) {
+            try {
+              controller.close();
+            } catch (e) {
+              // Ignore errors if already closed or in an invalid state
+            }
+            closed = true;
+          }
+        };
 
-          // Stream Party 1's response
-          for (const char of party1ResponseString) {
-            controller.enqueue(encoder.encode(char));
+        const enqueueData = (data: string) => {
+          if (!closed) {
+            try {
+              controller.enqueue(encoder.encode(data));
+            } catch (e) {
+              console.error('Error enqueuing data:', e);
+              ensureClosed(); // Close if enqueue fails
+            }
+          }
+        };
+        
+        const streamChars = async (text: string) => {
+          for (const char of text) {
+            if (closed) break;
+            enqueueData(char);
             await new Promise(resolve => setTimeout(resolve, 2)); // Simulate typing
           }
+        };
 
-          const separator = "\n\n---CANDIDATE_SEPARATOR---\n\n";
-          for (const char of separator) {
-            controller.enqueue(encoder.encode(char));
-            await new Promise(resolve => setTimeout(resolve, 5));
-          }
+        try {
+          const promises = prompts.map(prompt => 
+            generatePartyResponses(
+              prompt, 
+              safeLocation, 
+              safeElection,
+              country || 'Canada', // Default to Canada if not specified
+              region || ''
+            )
+          );
 
-          // Stream Party 2's response
-          for (const char of party2ResponseString) {
-            controller.enqueue(encoder.encode(char));
-            await new Promise(resolve => setTimeout(resolve, 2));
+          const results = await Promise.all(promises);
+
+          for (let i = 0; i < results.length; i++) {
+            if (closed) break;
+            const [party1ResponseString, party2ResponseString] = results[i];
+
+            await streamChars(party1ResponseString);
+            if (closed) break;
+
+            const separator = "\n\n---\n\n";
+            enqueueData(separator);
+
+            await streamChars(party2ResponseString);
+            if (closed) break;
+
+            if (i < results.length - 1) {
+              const promptSeparator = "\n\n---\n\n";
+              enqueueData(promptSeparator);
+            }
           }
-          
-          controller.close();
         } catch (error) {
           console.error('Streaming error:', error);
           const errorMessage = `Error generating responses: ${error instanceof Error ? error.message : 'Unknown error'}`;
-          controller.enqueue(encoder.encode(errorMessage));
-          controller.close();
+          enqueueData(errorMessage);
+        } finally {
+          ensureClosed();
         }
       },
     });
