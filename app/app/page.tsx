@@ -17,7 +17,7 @@ import { ArrowDownCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const CANDIDATE_SEPARATOR = "\n\n---\n\n"; // Updated to match backend separator
+const CANDIDATE_SEPARATOR = "---CANDIDATE_SEPARATOR---";
 
 const countryData: Record<string, string[]> = {
   USA: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
@@ -44,11 +44,11 @@ export default function ChatMainPage() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  
+
   useEffect(() => {
     document.documentElement.classList.remove('dark');
   }, []);
-  
+
   const [country, setCountry] = useState<string>('');
   const [region, setRegion] = useState<string>('');
   const [availableRegions, setAvailableRegions] = useState<string[]>([]);
@@ -75,6 +75,7 @@ export default function ChatMainPage() {
       messagesEndRef.current.scrollIntoView({ behavior });
     }
   };
+
 
   useEffect(() => {
     if (!showScrollButton) {
@@ -131,6 +132,67 @@ export default function ChatMainPage() {
 
   const [candidate1Label, candidate2Label] = getCandidateLabels();
 
+  const markdownComponents = {
+    h1: ({ node, ...props }) => (
+      <h1 className="text-4xl font-bold" {...props} />
+    ),
+    h2: ({ node, ...props }) => (
+      <h2 className="text-3xl font-semibold" {...props} />
+    ),
+    h3: ({ node, ...props }) => (
+      <h2 className="text-2xl font-semibold" {...props} />
+    ),
+    a: ({ node, ...props }) => (
+      <a
+        className="text-blue-500 hover:underline dark:text-blue-300"
+        {...props}
+      />
+    ),
+    table: ({ node, ...props }) => (
+      <table
+        className="table-auto border-collapse border border-gray-300 dark:border-gray-700 w-full my-4 bg-white text-black dark:bg-black dark:text-white"
+        {...props}
+      />
+    ),
+    thead: ({ node, ...props }) => (
+      <thead
+        className="bg-white text-black dark:bg-black dark:text-white"
+        {...props}
+      />
+    ),
+    th: ({ node, ...props }) => (
+      <th
+        className="px-4 border border-gray-300 dark:border-gray-700"
+        {...props}
+      />
+    ),
+    tr: ({ node, ...props }) => (
+      <tr
+        className="border border-gray-300 dark:border-gray-700"
+        {...props}
+      />
+    ),
+    td: ({ node, ...props }) => (
+      <td
+        className="px-4 border border-gray-300 dark:border-gray-700"
+        {...props}
+      />
+    ),
+    ol: ({ node, ...props }) => (
+      <ol
+        style={{ listStyleType: "lower-alpha" }}
+        className="pl-6"
+        {...props}
+      />
+    ),
+    ul: ({ node, ...props }) => (
+      <ul className="list-disc pl-6" {...props} />
+    ),
+    li: ({ node, ...props }) => <li className="" {...props} />,
+    p: ({ node, ...props }) => <p className="" {...props} />,
+  };
+
+
   return (
     <div className="h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
@@ -164,9 +226,9 @@ export default function ChatMainPage() {
                   <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
                 </CardHeader>
                 <ScrollArea className="flex-grow p-3">
-                  <CardContent className="prose prose-sm dark:prose-invert max-w-none text-card-foreground/90 leading-relaxed">
+                  <CardContent className="text-sm text-card-foreground whitespace-pre-line">
                     {isLoading && !candidate1Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{candidate1Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
+                    <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>{candidate1Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
                   </CardContent>
                 </ScrollArea>
               </Card>
@@ -177,9 +239,9 @@ export default function ChatMainPage() {
                   <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
                 </CardHeader>
                 <ScrollArea className="flex-grow p-3">
-                  <CardContent className="prose prose-sm dark:prose-invert max-w-none text-card-foreground/90 leading-relaxed">
+                  <CardContent className="text-sm text-card-foreground whitespace-pre-line">
                     {isLoading && !candidate2Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{candidate2Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
+                    <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>{candidate2Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
                   </CardContent>
                 </ScrollArea>
               </Card>
@@ -230,7 +292,7 @@ export default function ChatMainPage() {
                   ))}
                 </SelectContent>
               </Select>
-              
+
               <Select onValueChange={handleRegionChange} value={region} disabled={!country || availableRegions.length === 0}>
                 <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
                   <SelectValue placeholder="Select Region/State" />
@@ -241,7 +303,7 @@ export default function ChatMainPage() {
                   ))}
                 </SelectContent>
               </Select>
-              
+
               <Select onValueChange={handleElectionChange} value={selectedElection} disabled={!country || availableElections.length === 0}>
                 <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
                   <SelectValue placeholder="Select Election" />
@@ -253,9 +315,9 @@ export default function ChatMainPage() {
                 </SelectContent>
               </Select>
             </div>
-            <Button 
-              type="submit" 
-              disabled={isLoading || !input.trim() || !country || !region || !selectedElection} 
+            <Button
+              type="submit"
+              disabled={isLoading || !input.trim() || !country || !region || !selectedElection}
               className="p-2 aspect-square rounded-full shadow-none"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
