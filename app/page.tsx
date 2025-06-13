@@ -90,7 +90,7 @@ export default function LandingPage() {
             <Link href="/contact" className="text-slate-600 hover:text-slate-900 font-medium transition-colors duration-200">
               Contact
             </Link>
-            <Link href="/chat" className="bg-slate-900 text-white px-6 py-2.5 font-semibold rounded-sm hover:bg-slate-800 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+            <Link href="/app" className="bg-slate-900 text-white px-6 py-2.5 font-semibold rounded-sm hover:bg-slate-800 transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
               Analyze Elections
             </Link>
           </div>
@@ -179,9 +179,9 @@ export default function LandingPage() {
                 }}
                 onClick={() => {
                   if (election.id === 'az-7th-2025') {
-                    window.location.href = '/chat';
+                    window.location.href = '/app';
                   } else {
-                    window.location.href = `/election/${election.id}`;
+                    window.location.href = `/app`;
                   }
                 }}
               >
@@ -301,7 +301,7 @@ export default function LandingPage() {
               Experience our most comprehensive election analysis with detailed candidate comparisons, policy breakdowns, and AI-powered insights for this critical special election.
             </p>
             <Link 
-              href="/chat"
+              href="/app"
               className="inline-flex items-center bg-slate-900 text-white px-10 py-4 text-lg font-semibold rounded-sm hover:bg-slate-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               Compare Candidates
