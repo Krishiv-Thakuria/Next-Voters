@@ -20,27 +20,27 @@ interface ElectionConfig {
 // Hard-coded switch case for different elections and their policy PDFs
 function getElectionPDFs(country: string, region: string, election: string): string[] {
   const key = `${country}-${election}`.toLowerCase();
-  
+
   console.log('Election key:', key); // Debug log
-  
+
   switch (key) {
     // Canadian Elections
     case 'canada-federal election 2025':
     case 'canada-general election':
     case 'canada-provincial election':
       return ['conservative-platform.pdf', 'liberal-platform.pdf'];
-    
+
     // US National Elections
     case 'usa-presidential election 2024':
     case 'usa-general election':
       return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
-    
+
     // US Special Elections - Default to national PDFs
     case 'usa-arizona special election':
     case 'usa-congressional primary':
     case 'usa-midterm elections':
       return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
-    
+
     // Default cases by country
     default:
       console.log('Using default case for country:', country);
@@ -49,7 +49,7 @@ function getElectionPDFs(country: string, region: string, election: string): str
       } else if (country.toLowerCase() === 'canada') {
         return ['conservative-platform.pdf', 'liberal-platform.pdf'];
       }
-      
+
       // Fallback to US files since that's what you're testing
       return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
   }
@@ -58,13 +58,15 @@ function getElectionPDFs(country: string, region: string, election: string): str
 // Build AutoRAG filters based on PDF files
 function buildAutoRAGFilters(pdfFiles: string[]) {
   if (pdfFiles.length === 1) {
+    console.log('only one pdfFile', pdfFiles.length);
     return {
       type: "eq",
       key: "filename",
       value: pdfFiles[0]
     };
   }
-  
+
+  console.log('using OR', pdfFiles.length);
   return {
     type: "or",
     filters: pdfFiles.map(filename => ({
@@ -115,7 +117,7 @@ async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGRespons
 
     const responseData = await response.json();
     console.log('AutoRAG Response Data:', responseData);
-    
+
     // Fix: Extract the actual response from the nested structure
     if (responseData.success && responseData.result) {
       return {
@@ -127,7 +129,7 @@ async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGRespons
     } else {
       throw new Error('Invalid AutoRAG response structure');
     }
-    
+
   } catch (error) {
     console.error('AutoRAG Fetch Error:', error);
     throw error;
@@ -136,8 +138,8 @@ async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGRespons
 
 // Generate party-specific responses from AutoRAG results
 async function generatePartyResponses(
-  userPrompt: string, 
-  location: string, 
+  userPrompt: string,
+  location: string,
   election: string,
   country: string,
   region: string
@@ -146,28 +148,37 @@ async function generatePartyResponses(
     // Get relevant PDFs for this election
     const pdfFiles = getElectionPDFs(country, region, election);
     console.log('Using PDFs:', pdfFiles, 'for election:', election, 'in', location);
-    
+
     // Build filters for AutoRAG
     const filters = buildAutoRAGFilters(pdfFiles);
-    
+
+    // const filters = {
+    //   type: "or",
+    //   filters: pdfFiles.map(filename => ({
+    //     type: "eq",
+    //     key: "filename",
+    //     value: filename
+    //   }))
+    // }
+
     // Query AutoRAG
     const autoragResponse = await queryAutoRAG(userPrompt, filters);
-    
+
     // Extract response text
     const fullResponse = autoragResponse.answer || autoragResponse.response || 'No response generated';
     console.log('Full AutoRAG Response:', fullResponse);
-    
+
     // Since AutoRAG is already providing a structured comparison, let's parse it
-    
+
     let data = fullResponse.split("[STOP]");
 
     let democraticSection = data[0]?.trim() || '';
     let republicanSection = data[1]?.trim() || '';
-    
+
     // Format the responses
     let party1Response = '';
     let party2Response = '';
-    
+
     if (country.toLowerCase() === 'usa') {
       party1Response = `**Democratic Position** (${location}):\n\n${democraticSection || 'Information not available in the provided documents.'}`;
       party2Response = `**Republican Position** (${location}):\n\n${republicanSection || 'Information not available in the provided documents.'}`;
@@ -176,12 +187,12 @@ async function generatePartyResponses(
       party1Response = `**Liberal Position** (${location}):\n\n${democraticSection || fullResponse.substring(0, fullResponse.length / 2)}`;
       party2Response = `**Conservative Position** (${location}):\n\n${republicanSection || fullResponse.substring(fullResponse.length / 2)}`;
     }
-    
+
     return [party1Response, party2Response];
-    
+
   } catch (error) {
     console.error('AutoRAG query failed:', error);
-    
+
     // Fallback responses
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
     return [
@@ -211,8 +222,8 @@ export async function POST(req: Request) {
         try {
           // Get party responses from AutoRAG
           const [party1ResponseString, party2ResponseString] = await generatePartyResponses(
-            userPrompt, 
-            safeLocation, 
+            userPrompt,
+            safeLocation,
             safeElection,
             country || 'Canada',
             region || ''
@@ -235,7 +246,7 @@ export async function POST(req: Request) {
             controller.enqueue(encoder.encode(char));
             await new Promise(resolve => setTimeout(resolve, 2));
           }
-          
+
           controller.close();
         } catch (error) {
           console.error('Streaming error:', error);
@@ -249,9 +260,9 @@ export async function POST(req: Request) {
     return new StreamingTextResponse(stream);
   } catch (error) {
     console.error('Error in chat API:', error);
-    return new Response(JSON.stringify({ 
-      error: 'Internal server error in chat API', 
-      details: (error as Error).message 
+    return new Response(JSON.stringify({
+      error: 'Internal server error in chat API',
+      details: (error as Error).message
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
