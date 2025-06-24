@@ -168,20 +168,19 @@ export default function ChatMainPage() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
+    <div className="grid grid-rows-[auto_1fr_auto_auto] h-screen bg-background text-foreground">
       <header className="bg-background border-b border-border p-3 md:p-4 sticky top-0 z-10">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-semibold text-primary">NextVoters</h1>
         </div>
       </header>
 
-
-
-      <ScrollArea className="flex-grow" ref={scrollAreaRef} onScroll={handleScroll}>
-        { !latestUserMessage && !isLoading ? (
-           <div className="flex h-full items-center justify-center">
-              <p className="font-mono text-lg text-gray-500">Ask your first question to begin.</p>
-          </div>: (
+      { !latestUserMessage && !isLoading ? (
+        <div className="grid h-full place-items-center">
+          <p className="font-mono text-lg text-gray-500">Ask your first question to begin.</p>
+        </div>
+      ) : (
+        <ScrollArea className="overflow-y-auto" ref={scrollAreaRef} onScroll={handleScroll}>
           <div className="container mx-auto flex flex-col gap-4 p-3 md:p-4">
             {latestUserMessage && (
               <div className="flex justify-end w-full">
@@ -212,8 +211,8 @@ export default function ChatMainPage() {
             {error && <p className="text-destructive text-center py-2">Error: {error.message}</p>}
             <div ref={messagesEndRef} />
           </div>
-        )}
-      </ScrollArea>
+        </ScrollArea>
+      )}
 
       {showScrollButton && (
         <Button
