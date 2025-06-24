@@ -33,12 +33,16 @@ body {
   }
 
   .fade-edge-to-top {
-    mask-image: linear-gradient(to top, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to top, black 70%, transparent 100%);
+    mask-image: linear-gradient(to top, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, black 90%, transparent 100%);
   }
 
   .message {
     animation: fade-in 0.5s ease-in-out;
+  }
+
+  .footer-background-gradient {
+    background: linear-gradient(to bottom, transparent 0%, white 20%);
   }
 }
 

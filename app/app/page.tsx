@@ -135,50 +135,42 @@ export default function ChatMainPage() {
       </header>
 
       <ScrollArea className="flex-grow" ref={scrollAreaRef} onScroll={handleScroll}>
-        <div className="container mx-auto flex flex-col gap-4 p-3 md:p-4 h-full">
-          {latestUserMessage && (
-            <div className="flex justify-end w-full">
-              <div className="bg-slate-100 text-slate-800 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-none">
-                <p className="whitespace-pre-line">{latestUserMessage.content}</p>
+        { !latestUserMessage && !isLoading ? (
+          <div className="flex h-full items-center justify-center">
+            <p className="text-muted-foreground text-lg opacity-50">Ask your first question to begin</p>
+          </div>
+        ) : (
+          <div className="container mx-auto flex flex-col gap-4 p-3 md:p-4">
+            {latestUserMessage && (
+              <div className="flex justify-end w-full">
+                <div className="bg-[#F4F4F4] text-gray-900 px-4 py-2 rounded-full max-w-xs sm:max-w-sm md:max-w-md">
+                  <p className="whitespace-pre-line">{latestUserMessage.content}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {(isLoading || assistantMessage) && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
-              <Card className="flex flex-col bg-card border-border rounded-lg shadow-none">
-                <CardHeader className="border-b border-border p-3">
-                  <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
-                </CardHeader>
-                <ScrollArea className="flex-grow p-3">
-                  <CardContent className="text-card-foreground/90 leading-relaxed">
+            {(isLoading || assistantMessage) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+                <div className="bg-[#F4F4F4] rounded-3xl p-4 flex flex-col">
+                  <h3 className="text-blue-600 font-semibold mb-2 text-md">{candidate1Label}</h3>
+                  <div className="text-gray-900 leading-relaxed flex-grow overflow-y-auto">
                     {isLoading && !assistantMessage ? <LoadingIndicator /> : <StreamingResponse text={candidate1Response} />}
-                  </CardContent>
-                </ScrollArea>
-              </Card>
+                  </div>
+                </div>
 
-              <Card className="flex flex-col bg-card border-border rounded-lg shadow-none">
-                <CardHeader className="border-b border-border p-3">
-                  <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
-                </CardHeader>
-                <ScrollArea className="flex-grow p-3">
-                  <CardContent className="text-card-foreground/90 leading-relaxed">
+                <div className="bg-[#F4F4F4] rounded-3xl p-4 flex flex-col">
+                  <h3 className="text-purple-600 font-semibold mb-2 text-md">{candidate2Label}</h3>
+                  <div className="text-gray-900 leading-relaxed flex-grow overflow-y-auto">
                     {isLoading && !assistantMessage ? <LoadingIndicator /> : <StreamingResponse text={candidate2Response} />}
-                  </CardContent>
-                </ScrollArea>
-              </Card>
-            </div>
-          )}
+                  </div>
+                </div>
+              </div>
+            )}
 
-          {!latestUserMessage && !isLoading && (
-             <div className="flex-grow flex items-center justify-center h-full">
-              <p className="text-muted-foreground text-lg opacity-50">Ask your first question to begin</p>
-            </div>
-          )}
-
-          {error && <p className="text-destructive text-center py-2">Error: {error.message}</p>}
-          <div ref={messagesEndRef} />
-        </div>
+            {error && <p className="text-destructive text-center py-2">Error: {error.message}</p>}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
       </ScrollArea>
 
       {showScrollButton && (
@@ -193,7 +185,7 @@ export default function ChatMainPage() {
         </Button>
       )}
 
-      <footer className="bg-background p-3 md:p-4 sticky bottom-0 z-10 fade-edge-to-top">
+      <footer className="p-3 md:p-4 sticky bottom-0 z-10 footer-background-gradient">
         <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
           <PromptInputWithActions
             input={input}
