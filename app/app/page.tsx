@@ -2,6 +2,8 @@
 
 import React, { useState, FormEvent, useEffect, useRef, UIEvent } from 'react';
 import { useChat, Message } from 'ai/react';
+import { useSearchParams } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
 import { PromptInputWithActions } from '@/components/prompt-input-with-actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -16,12 +18,13 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { ArrowDownCircle } from 'lucide-react';
 import { LoadingIndicator } from '@/components/loading-indicator';
 import { StreamingResponse } from '@/components/streaming-response';
+import { PromptSuggestion } from '../../components/prompt-kit/prompt-suggestion';
 
 const CANDIDATE_SEPARATOR = "\n\n---\n\n"; // Updated to match backend separator
 
 const countryData: Record<string, string[]> = {
-  USA: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
-  Canada: ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan'],
+  USA: ['N/A', 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
+  Canada: ['N/A', 'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan'],
 };
 
 // Updated election options based on country
@@ -29,6 +32,8 @@ const electionOptions: Record<string, string[]> = {
   USA: [
     'Presidential Election 2024',
     'Arizona Special Election',
+    'Virginia Gubernatorial Election 2025',
+    'New Jersey General Assembly Election 2025',
     'Congressional Primary',
     'Midterm Elections',
     'General Election'
@@ -37,74 +42,60 @@ const electionOptions: Record<string, string[]> = {
     'Federal Election 2025',
     'General Election',
     'Provincial Election'
-  ]
+  ],
 };
 
 export default function ChatMainPage() {
   // Force a re-compile to fix stale server state
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
   const [showScrollButton, setShowScrollButton] = useState(false);
 
-  const [country, setCountry] = useState<string>('USA');
-  const [region, setRegion] = useState<string>('Arizona');
-  const [availableRegions, setAvailableRegions] = useState<string[]>(countryData['USA'] || []);
-  const [availableElections, setAvailableElections] = useState<string[]>(electionOptions['USA'] || []);
-  const [selectedElection, setSelectedElection] = useState<string>('Arizona Special Election');
+  const [country, setCountry] = useState('USA');
+  const [region, setRegion] = useState('Arizona');
+  const [availableRegions, setAvailableRegions] = useState<string[]>(countryData.USA);
+  const [selectedElection, setSelectedElection] = useState('Arizona Special Election');
+  const [availableElections, setAvailableElections] = useState<string[]>(electionOptions.USA);
 
   const [candidate1Response, setCandidate1Response] = useState('');
   const [candidate2Response, setCandidate2Response] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [assistantMessage, setAssistantMessage] = useState<Message | null>(null);
 
   const { messages, input, setInput, handleSubmit, isLoading, error } = useChat({
     api: '/api/chat',
     initialMessages: [],
+    id: uuidv4(),
     body: {
-      country: country,
-      region: region,
+      country,
+      region,
       election: selectedElection,
+    },
+    onResponse: () => setIsStreaming(true),
+    onFinish: (message) => {
+      setIsStreaming(false);
+      setAssistantMessage(message);
+    },
+    onError: (err) => {
+      console.error(err);
+      setIsStreaming(false);
     },
   });
 
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-    if (lastMessage && lastMessage.role === 'assistant') {
-      const parts = lastMessage.content.split(CANDIDATE_SEPARATOR);
-      setCandidate1Response(parts[0] || '');
-      setCandidate2Response(parts[1] || '');
-    }
-  }, [messages]);
+  const latestUserMessage = messages.filter((m) => m.role === 'user').pop();
 
-  useEffect(() => {
-    document.documentElement.classList.remove('dark');
-  }, []);
+  const handleCountryChange = (newCountry: string) => {
+    if (newCountry === country) return;
 
-  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior });
-    }
-  };
+    const newRegions = countryData[newCountry] || [];
+    const newElections = electionOptions[newCountry] || [];
 
-  useEffect(() => {
-    if (!showScrollButton) {
-      scrollToBottom('auto');
-    }
-  }, [messages, showScrollButton]);
-
-  const handleScroll = (event: UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    if (scrollHeight - scrollTop - clientHeight > 300) {
-      setShowScrollButton(true);
-    } else {
-      setShowScrollButton(false);
-    }
-  };
-
-  const handleCountryChange = (selectedCountryValue: string) => {
-    setCountry(selectedCountryValue);
-    setRegion('');
-    setSelectedElection('');
-    setAvailableRegions(countryData[selectedCountryValue] || []);
-    setAvailableElections(electionOptions[selectedCountryValue] || []);
+    setCountry(newCountry);
+    setAvailableRegions(newRegions);
+    setAvailableElections(newElections);
+    setRegion(newRegions[0] || '');
+    setSelectedElection(newElections[0] || '');
   };
 
   const handleRegionChange = (selectedRegionValue: string) => {
@@ -116,15 +107,65 @@ export default function ChatMainPage() {
   };
 
   const getCandidateLabels = () => {
-    if (country === 'USA' && selectedElection === 'Presidential Election 2024') {
-      return { candidate1: 'Joe Biden', candidate2: 'Donald Trump' };
+    if (selectedElection.includes('Presidential')) {
+      return { candidate1Label: 'Joe Biden', candidate2Label: 'Donald Trump' };
     }
-    return { candidate1: 'Candidate 1', candidate2: 'Candidate 2' };
+    return { candidate1Label: 'Candidate 1', candidate2Label: 'Candidate 2' };
   };
 
-  const { candidate1: candidate1Label, candidate2: candidate2Label } = getCandidateLabels();
-  const latestUserMessage = messages.filter((m) => m.role === 'user').pop();
-  const assistantMessage = messages.filter((m) => m.role === 'assistant').pop();
+  const { candidate1Label, candidate2Label } = getCandidateLabels();
+
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    if (scrollAreaRef.current) {
+      const scrollableView = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
+      if (scrollableView) {
+        scrollableView.scrollTo({ top: scrollableView.scrollHeight, behavior });
+      }
+    }
+  };
+
+  const handleScroll = (event: UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+    const isAtBottom = scrollHeight - scrollTop <= clientHeight + 2;
+    if (showScrollButton === isAtBottom) {
+      setShowScrollButton(!isAtBottom);
+    }
+  };
+
+  useEffect(() => {
+    const countryParam = searchParams.get('country');
+    const regionParam = searchParams.get('region');
+    const electionParam = searchParams.get('election');
+
+    if (countryParam && countryData[countryParam]) {
+      const initialRegions = countryData[countryParam] || [];
+      const initialElections = electionOptions[countryParam] || [];
+
+      setCountry(countryParam);
+      setAvailableRegions(initialRegions);
+      setAvailableElections(initialElections);
+      setRegion(regionParam && initialRegions.includes(regionParam) ? regionParam : initialRegions[0] || '');
+      setSelectedElection(electionParam && initialElections.includes(electionParam) ? electionParam : initialElections[0] || '');
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (assistantMessage) {
+      const parts = assistantMessage.content.split(CANDIDATE_SEPARATOR);
+      setCandidate1Response(parts[0] || '');
+      setCandidate2Response(parts[1] || '');
+    }
+  }, [assistantMessage]);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      scrollToBottom('auto');
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground">
@@ -134,12 +175,13 @@ export default function ChatMainPage() {
         </div>
       </header>
 
+
+
       <ScrollArea className="flex-grow" ref={scrollAreaRef} onScroll={handleScroll}>
         { !latestUserMessage && !isLoading ? (
-          <div className="flex h-full items-center justify-center">
-            <p className="text-muted-foreground text-lg opacity-50">Ask your first question to begin</p>
-          </div>
-        ) : (
+           <div className="flex h-full items-center justify-center">
+              <p className="font-mono text-lg text-gray-500">Ask your first question to begin.</p>
+          </div>: (
           <div className="container mx-auto flex flex-col gap-4 p-3 md:p-4">
             {latestUserMessage && (
               <div className="flex justify-end w-full">
@@ -184,6 +226,41 @@ export default function ChatMainPage() {
           <ArrowDownCircle className="h-6 w-6 text-foreground" />
         </Button>
       )}
+
+      <div className="w-full max-w-2xl mx-auto px-4">
+        <div className="flex flex-wrap gap-2 mb-3 justify-center">
+          <PromptSuggestion
+            className="px-4 py-2"
+            onClick={() => setInput("What are the stances on taxation?")}
+          >
+            Taxes
+          </PromptSuggestion>
+          <PromptSuggestion
+            className="px-4 py-2"
+            onClick={() => setInput("What are the positions on climate change?")}
+          >
+            Climate Change
+          </PromptSuggestion>
+          <PromptSuggestion
+            className="px-4 py-2"
+            onClick={() => setInput("What are the views on healthcare reform?")}
+          >
+            Healthcare
+          </PromptSuggestion>
+          <PromptSuggestion
+            className="px-4 py-2"
+            onClick={() => setInput("What are the policies on immigration?")}
+          >
+            Immigration
+          </PromptSuggestion>
+          <PromptSuggestion
+            className="px-4 py-2"
+            onClick={() => setInput("What is the approach to education funding?")}
+          >
+            Education
+          </PromptSuggestion>
+        </div>
+      </div>
 
       <footer className="p-3 md:p-4 sticky bottom-0 z-10 footer-background-gradient">
         <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
