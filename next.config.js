@@ -10,9 +10,6 @@ const nextConfig = {
     
     return config;
   },
-  experimental: {
-    staticWorkerRequestDeduping: true
-  },
 };
 
 module.exports = nextConfig;

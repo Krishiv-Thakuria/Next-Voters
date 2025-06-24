@@ -21,7 +21,6 @@ type PromptInputContextType = {
   value: string
   setValue: (value: string) => void
   maxHeight: number | string
-  onSubmit?: () => void
   disabled?: boolean
 }
 
@@ -30,7 +29,6 @@ const PromptInputContext = createContext<PromptInputContextType>({
   value: "",
   setValue: () => {},
   maxHeight: 240,
-  onSubmit: undefined,
   disabled: false,
 })
 
@@ -47,7 +45,6 @@ type PromptInputProps = {
   value?: string
   onValueChange?: (value: string) => void
   maxHeight?: number | string
-  onSubmit?: () => void
   children: React.ReactNode
   className?: string
   disabled?: boolean
@@ -59,7 +56,6 @@ function PromptInput({
   maxHeight = 240,
   value,
   onValueChange,
-  onSubmit,
   children,
   disabled = false,
 }: PromptInputProps) {
@@ -78,7 +74,6 @@ function PromptInput({
           value: value ?? internalValue,
           setValue: onValueChange ?? handleChange,
           maxHeight,
-          onSubmit,
           disabled,
         }}
       >
@@ -105,7 +100,7 @@ function PromptInputTextarea({
   disableAutosize = false,
   ...props
 }: PromptInputTextareaProps) {
-  const { value, setValue, maxHeight, onSubmit, disabled } = usePromptInput()
+  const { value, setValue, maxHeight, disabled } = usePromptInput()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -122,7 +117,7 @@ function PromptInputTextarea({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      onSubmit?.()
+      textareaRef.current?.form?.requestSubmit()
     }
     onKeyDown?.(e)
   }
