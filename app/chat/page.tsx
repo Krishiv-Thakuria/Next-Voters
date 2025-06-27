@@ -137,7 +137,7 @@ export default function Chat() {
         </div>
         
         <div className="hidden md:flex flex-col items-center justify-center">
-          <p className="text-gray-700 font-medium">NextVoters.com</p>
+                      <p className="text-gray-700 font-medium">Next Voters.com</p>
           <p className="text-gray-600 text-sm">See the true policies</p>
         </div>
         

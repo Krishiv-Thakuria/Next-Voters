@@ -11,7 +11,7 @@ export default function LandingPage() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [counters, setCounters] = useState({
     dataPoints: 0,
-    accuracy: 0,
+    topics: 0,
     realTime: 0,
     monitoring: 0
   });
@@ -96,18 +96,18 @@ export default function LandingPage() {
           const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
           
           setCounters({
-            dataPoints: Math.floor(50 * easeProgress),
-            accuracy: Math.floor(99.7 * easeProgress * 10) / 10,
-            realTime: Math.floor(100 * easeProgress),
+            dataPoints: Math.floor(1 * easeProgress),
+            topics: Math.floor(150 * easeProgress),
+            realTime: Math.floor(3 * easeProgress),
             monitoring: Math.floor(24 * easeProgress)
           });
           
           if (step >= steps) {
             clearInterval(timer);
             setCounters({
-              dataPoints: 50,
-              accuracy: 99.7,
-              realTime: 100,
+              dataPoints: 1,
+              topics: 150,
+              realTime: 3,
               monitoring: 24
             });
           }
@@ -330,7 +330,7 @@ export default function LandingPage() {
             <div className="w-2 h-2 bg-black rounded-full transition-all duration-500 group-hover:scale-125"></div>
             <div className="flex flex-col">
               <h1 className="text-2xl font-extralight tracking-[0.2em] text-black uppercase transition-all duration-300 group-hover:tracking-[0.25em]">
-                NextVoters
+                Next Voters
               </h1>
               <p className="text-xs font-light text-gray-500 tracking-[0.3em] uppercase transition-all duration-300 group-hover:tracking-[0.35em]">
                 Political Intelligence
@@ -384,7 +384,7 @@ export default function LandingPage() {
                 Where artificial intelligence meets political intelligence. 
                 <br className="hidden md:block"/>
                 <span className="inline-block transition-all duration-500 hover:tracking-wider">
-                  Welcome to NextVoters — experience democracy through a new lens.
+                  Welcome to Next Voters — experience democracy through a new lens.
                 </span>
               </p>
             </div>
@@ -437,10 +437,10 @@ export default function LandingPage() {
                 <div className="mb-8 transition-all duration-700 group-hover:translate-y-[-2px]">
                   <div className="w-1.5 h-1.5 bg-gray-600 rounded-full mb-6 group-hover:scale-[2] group-hover:bg-black transition-all duration-700"></div>
                   <h3 className="text-2xl md:text-3xl font-extralight text-black mb-6 tracking-wide group-hover:tracking-wider transition-all duration-500">
-                    Verified Accuracy
+                    Comprehensive Coverage
                   </h3>
                   <p className="text-gray-600 font-extralight leading-[1.7] text-lg group-hover:text-gray-700 transition-colors duration-500">
-                    Every data point is cross-verified through authoritative sources, ensuring the highest standards of information integrity and reliability.
+                    Every policy document is thoroughly analyzed, covering the full spectrum of political topics and positions from major Canadian parties.
                   </p>
                 </div>
               </div>
@@ -473,25 +473,25 @@ export default function LandingPage() {
                 </div>
                 <div className="w-8 h-px bg-gray-300 mx-auto mb-3 group-hover:w-12 group-hover:bg-black transition-all duration-500"></div>
                 <div className="text-xs font-extralight text-gray-500 uppercase tracking-[0.2em] group-hover:text-gray-700 transition-colors duration-500">
-                  Data Points Analyzed
+                  Words Analyzed
                 </div>
               </div>
               <div className="group cursor-default">
                 <div className="text-5xl md:text-6xl xl:text-7xl font-extralight text-black mb-4 tracking-tight group-hover:scale-105 transition-transform duration-700">
-                  {counters.accuracy}%
+                  {counters.topics}+
                 </div>
                 <div className="w-8 h-px bg-gray-300 mx-auto mb-3 group-hover:w-12 group-hover:bg-black transition-all duration-500"></div>
                 <div className="text-xs font-extralight text-gray-500 uppercase tracking-[0.2em] group-hover:text-gray-700 transition-colors duration-500">
-                  Accuracy Rate
+                  Policy Topics
                 </div>
               </div>
               <div className="group cursor-default">
                 <div className="text-5xl md:text-6xl xl:text-7xl font-extralight text-black mb-4 tracking-tight group-hover:scale-105 transition-transform duration-700">
-                  <span className="text-4xl md:text-5xl xl:text-6xl">Real-Time</span>
+                  {counters.realTime}s
                 </div>
                 <div className="w-8 h-px bg-gray-300 mx-auto mb-3 group-hover:w-12 group-hover:bg-black transition-all duration-500"></div>
                 <div className="text-xs font-extralight text-gray-500 uppercase tracking-[0.2em] group-hover:text-gray-700 transition-colors duration-500">
-                  Processing Speed
+                  Avg Response Time
                 </div>
               </div>
               <div className="group cursor-default">
@@ -581,7 +581,7 @@ export default function LandingPage() {
             onClick={() => {
               if (navigator.share) {
                 navigator.share({
-                  title: 'NextVoters - Political Intelligence',
+                  title: 'Next Voters - Political Intelligence',
                   text: 'Experience democracy through artificial intelligence',
                   url: window.location.href,
                 });
