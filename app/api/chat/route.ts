@@ -338,14 +338,6 @@ export async function POST(req: Request) {
           }
         };
         
-        const streamChars = async (text: string) => {
-          for (const char of text) {
-            if (closed) break;
-            enqueueData(char);
-            await new Promise(resolve => setTimeout(resolve, 2)); // Simulate typing
-          }
-        };
-
         try {
           const promises = prompts.map(prompt => 
             generatePartyResponses(
@@ -363,13 +355,13 @@ export async function POST(req: Request) {
             if (closed) break;
             const [party1ResponseString, party2ResponseString] = results[i];
 
-            await streamChars(party1ResponseString);
+            enqueueData(party1ResponseString);
             if (closed) break;
 
             const separator = "\n\n---\n\n";
             enqueueData(separator);
 
-            await streamChars(party2ResponseString);
+            enqueueData(party2ResponseString);
             if (closed) break;
 
             if (i < results.length - 1) {
