@@ -10,81 +10,165 @@ interface AutoRAGResponse {
   documents?: any[];
 }
 
+interface PartyPDFs {
+  party1: string; // Democratic/Liberal party PDF
+  party2: string; // Republican/Conservative party PDF
+}
+
 interface ElectionConfig {
   country: string;
   region?: string;
   election: string;
-  pdfFiles: string[];
+  pdfs: PartyPDFs;
+  party1Name: string; // e.g., "Democratic", "Liberal"
+  party2Name: string; // e.g., "Republican", "Conservative"
 }
 
-// Hard-coded switch case for different elections and their policy PDFs
-function getElectionPDFs(country: string, region: string, election: string): string[] {
+// Comprehensive election configurations with party-specific PDFs
+function getElectionConfig(country: string, region: string, election: string): ElectionConfig {
   const key = `${country}-${election}`.toLowerCase();
-
+  
   console.log('Election key:', key); // Debug log
 
-  switch (key) {
-    // Canadian Elections
-    case 'canada-federal election 2025':
-    case 'canada-general election':
-    case 'canada-provincial election':
-      return ['conservative-platform.pdf', 'liberal-platform.pdf'];
+  // USA Elections
+  if (country.toLowerCase() === 'usa') {
+    switch (key) {
+      case 'usa-presidential election 2024':
+      case 'usa-general election':
+      case 'usa-federal election':
+        return {
+          country: 'USA',
+          region,
+          election,
+          pdfs: {
+            party1: 'us-national-democratic-2024.pdf',
+            party2: 'us-national-republican-2024.pdf'
+          },
+          party1Name: 'Democratic',
+          party2Name: 'Republican'
+        };
 
-    // US National Elections
-    case 'usa-presidential election 2024':
-    case 'usa-general election':
-      return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
+      case 'usa-arizona special election':
+        return {
+          country: 'USA',
+          region: 'Arizona',
+          election,
+          pdfs: {
+            party1: 'arizona-democratic-2024.pdf', // State-specific if available
+            party2: 'arizona-republican-2024.pdf'
+          },
+          party1Name: 'Democratic',
+          party2Name: 'Republican'
+        };
 
-    // US Special Elections - Default to national PDFs
-    case 'usa-arizona special election':
-    case 'usa-congressional primary':
-    case 'usa-midterm elections':
-      return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
+      case 'usa-congressional primary':
+      case 'usa-midterm elections':
+        return {
+          country: 'USA',
+          region,
+          election,
+          pdfs: {
+            party1: 'us-congressional-democratic-2024.pdf',
+            party2: 'us-congressional-republican-2024.pdf'
+          },
+          party1Name: 'Democratic',
+          party2Name: 'Republican'
+        };
 
-    // Default cases by country
-    default:
-      console.log('Using default case for country:', country);
-      if (country.toLowerCase() === 'usa') {
-        return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
-      } else if (country.toLowerCase() === 'canada') {
-        return ['conservative-platform.pdf', 'liberal-platform.pdf'];
-      }
-
-      // Fallback to US files since that's what you're testing
-      return ['us-national-democratic-2024.pdf', 'us-national-republican-2024.pdf'];
+      default:
+        // Default US configuration
+        return {
+          country: 'USA',
+          region,
+          election,
+          pdfs: {
+            party1: 'us-national-democratic-2024.pdf',
+            party2: 'us-national-republican-2024.pdf'
+          },
+          party1Name: 'Democratic',
+          party2Name: 'Republican'
+        };
+    }
   }
-}
 
-// Build AutoRAG filters based on PDF files
-function buildAutoRAGFilters(pdfFiles: string[]) {
-  if (pdfFiles.length === 1) {
-    console.log('only one pdfFile', pdfFiles.length);
-    return {
-      type: "eq",
-      key: "filename",
-      value: pdfFiles[0]
-    };
+  // Canadian Elections
+  if (country.toLowerCase() === 'canada') {
+    switch (key) {
+      case 'canada-federal election 2025':
+      case 'canada-general election':
+        return {
+          country: 'Canada',
+          region,
+          election,
+          pdfs: {
+            party1: 'liberal-platform.pdf',
+            party2: 'conservative-platform.pdf'
+          },
+          party1Name: 'Liberal',
+          party2Name: 'Conservative'
+        };
+
+      case 'canada-provincial election':
+        // Could be made more specific based on province
+        return {
+          country: 'Canada',
+          region,
+          election,
+          pdfs: {
+            party1: `${region?.toLowerCase()}-liberal-platform.pdf` || 'liberal-platform.pdf',
+            party2: `${region?.toLowerCase()}-conservative-platform.pdf` || 'conservative-platform.pdf'
+          },
+          party1Name: 'Liberal',
+          party2Name: 'Conservative'
+        };
+
+      default:
+        return {
+          country: 'Canada',
+          region,
+          election,
+          pdfs: {
+            party1: 'liberal-platform.pdf',
+            party2: 'conservative-platform.pdf'
+          },
+          party1Name: 'Liberal',
+          party2Name: 'Conservative'
+        };
+    }
   }
 
-  console.log('using OR', pdfFiles.length);
+  // Default fallback (could add more countries here)
+  console.log('Using default fallback configuration for country:', country);
   return {
-    type: "or",
-    filters: pdfFiles.map(filename => ({
-      type: "eq",
-      key: "filename",
-      value: filename
-    }))
+    country: country || 'USA',
+    region,
+    election,
+    pdfs: {
+      party1: 'us-national-democratic-2024.pdf',
+      party2: 'us-national-republican-2024.pdf'
+    },
+    party1Name: 'Democratic',
+    party2Name: 'Republican'
   };
 }
 
-// Query Cloudflare AutoRAG
-async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGResponse> {
+// Build single-document filter for targeted queries
+function buildSingleDocumentFilter(filename: string) {
+  return {
+    type: "eq",
+    key: "filename",
+    value: filename
+  };
+}
+
+// Query Cloudflare AutoRAG with enhanced error handling
+async function queryAutoRAG(query: string, filters: any, partyContext: string): Promise<AutoRAGResponse> {
   const requestBody = {
-    query,
+    query: `${query}\n\nContext: Please focus specifically on the ${partyContext} party's position and policies.`,
     filters
   };
 
-  console.log('AutoRAG Request:', {
+  console.log(`AutoRAG Request for ${partyContext}:`, {
     url: 'https://api.cloudflare.com/client/v4/accounts/dbf3f40b913e7a3fb4b74a75697facf8/autorag/rags/policyrag/ai-search',
     method: 'POST',
     headers: {
@@ -107,36 +191,35 @@ async function queryAutoRAG(query: string, filters: any): Promise<AutoRAGRespons
       }
     );
 
-    console.log('AutoRAG Response Status:', response.status);
+    console.log(`AutoRAG Response Status for ${partyContext}:`, response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AutoRAG Error Response:', errorText);
-      throw new Error(`AutoRAG API error: ${response.status} - ${errorText}`);
+      console.error(`AutoRAG Error Response for ${partyContext}:`, errorText);
+      throw new Error(`AutoRAG API error for ${partyContext}: ${response.status} - ${errorText}`);
     }
 
     const responseData = await response.json();
-    console.log('AutoRAG Response Data:', responseData);
+    console.log(`AutoRAG Response Data for ${partyContext}:`, responseData);
 
-    // Fix: Extract the actual response from the nested structure
     if (responseData.success && responseData.result) {
       return {
-        answer: responseData.result.response, // The actual response text
+        answer: responseData.result.response,
         response: responseData.result.response,
-        documents: responseData.result.data || [], // The document chunks
-        citations: [] // AutoRAG doesn't seem to return separate citations, they're embedded in the response
+        documents: responseData.result.data || [],
+        citations: []
       };
     } else {
-      throw new Error('Invalid AutoRAG response structure');
+      throw new Error(`Invalid AutoRAG response structure for ${partyContext}`);
     }
 
   } catch (error) {
-    console.error('AutoRAG Fetch Error:', error);
+    console.error(`AutoRAG Fetch Error for ${partyContext}:`, error);
     throw error;
   }
 }
 
-// Generate party-specific responses from AutoRAG results
+// Generate party-specific responses using two separate AutoRAG calls
 async function generatePartyResponses(
   userPrompt: string,
   location: string,
@@ -145,53 +228,47 @@ async function generatePartyResponses(
   region: string
 ): Promise<[string, string]> {
   try {
-    // Get relevant PDFs for this election
-    const pdfFiles = getElectionPDFs(country, region, election);
-    console.log('Using PDFs:', pdfFiles, 'for election:', election, 'in', location);
+    // Get election configuration
+    const config = getElectionConfig(country, region, election);
+    console.log('Using configuration:', config);
 
-    // Build filters for AutoRAG
-    const filters = buildAutoRAGFilters(pdfFiles);
+    // Create party-specific filters
+    const party1Filter = buildSingleDocumentFilter(config.pdfs.party1);
+    const party2Filter = buildSingleDocumentFilter(config.pdfs.party2);
 
-    // const filters = {
-    //   type: "or",
-    //   filters: pdfFiles.map(filename => ({
-    //     type: "eq",
-    //     key: "filename",
-    //     value: filename
-    //   }))
-    // }
+    console.log('Party 1 filter:', party1Filter);
+    console.log('Party 2 filter:', party2Filter);
 
-    // Query AutoRAG
-    const autoragResponse = await queryAutoRAG(userPrompt, filters);
+    // Make two separate AutoRAG requests in parallel for better performance
+    const [party1Response, party2Response] = await Promise.allSettled([
+      queryAutoRAG(userPrompt, party1Filter, config.party1Name),
+      queryAutoRAG(userPrompt, party2Filter, config.party2Name)
+    ]);
 
-    // Extract response text
-    const fullResponse = autoragResponse.answer || autoragResponse.response || 'No response generated';
-    console.log('Full AutoRAG Response:', fullResponse);
-
-    // Since AutoRAG is already providing a structured comparison, let's parse it
-
-    let data = fullResponse.split("[STOP]");
-
-    let democraticSection = data[0]?.trim() || '';
-    let republicanSection = data[1]?.trim() || '';
-
-    // Format the responses
-    let party1Response = '';
-    let party2Response = '';
-
-    if (country.toLowerCase() === 'usa') {
-      party1Response = `**Democratic Position** (${location}):\n\n${democraticSection || 'Information not available in the provided documents.'}`;
-      party2Response = `**Republican Position** (${location}):\n\n${republicanSection || 'Information not available in the provided documents.'}`;
+    // Process Party 1 response
+    let party1ResponseString = '';
+    if (party1Response.status === 'fulfilled') {
+      const response = party1Response.value.answer || party1Response.value.response || '';
+      party1ResponseString = `**${config.party1Name} Position** (${location}):\n\n${response}`;
     } else {
-      // Canada or other
-      party1Response = `**Liberal Position** (${location}):\n\n${democraticSection || fullResponse.substring(0, fullResponse.length / 2)}`;
-      party2Response = `**Conservative Position** (${location}):\n\n${republicanSection || fullResponse.substring(fullResponse.length / 2)}`;
+      console.error(`${config.party1Name} query failed:`, party1Response.reason);
+      party1ResponseString = `**${config.party1Name} Position** (${location}):\n\nSorry, I couldn't retrieve ${config.party1Name.toLowerCase()} policy information at this time. ${party1Response.reason?.message || 'Unknown error occurred.'}`;
     }
 
-    return [party1Response, party2Response];
+    // Process Party 2 response  
+    let party2ResponseString = '';
+    if (party2Response.status === 'fulfilled') {
+      const response = party2Response.value.answer || party2Response.value.response || '';
+      party2ResponseString = `**${config.party2Name} Position** (${location}):\n\n${response}`;
+    } else {
+      console.error(`${config.party2Name} query failed:`, party2Response.reason);
+      party2ResponseString = `**${config.party2Name} Position** (${location}):\n\nSorry, I couldn't retrieve ${config.party2Name.toLowerCase()} policy information at this time. ${party2Response.reason?.message || 'Unknown error occurred.'}`;
+    }
+
+    return [party1ResponseString, party2ResponseString];
 
   } catch (error) {
-    console.error('AutoRAG query failed:', error);
+    console.error('generatePartyResponses failed:', error);
 
     // Fallback responses
     const errorMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -220,12 +297,12 @@ export async function POST(req: Request) {
         const encoder = new TextEncoder();
 
         try {
-          // Get party responses from AutoRAG
+          // Get party responses from AutoRAG using two separate requests
           const [party1ResponseString, party2ResponseString] = await generatePartyResponses(
             userPrompt,
             safeLocation,
             safeElection,
-            country || 'Canada',
+            country || 'USA', // Default to USA for better fallback
             region || ''
           );
 

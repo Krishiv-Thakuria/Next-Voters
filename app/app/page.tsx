@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ArrowDownCircle } from 'lucide-react';
+import { ArrowDownCircle, ChevronUp, ChevronDown } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -40,10 +40,19 @@ const electionOptions: Record<string, string[]> = {
   ]
 };
 
+interface QAPair {
+  id: string;
+  question: string;
+  response: string;
+  timestamp: number;
+}
+
 export default function ChatMainPage() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const currentResponseRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [userHasScrolled, setUserHasScrolled] = useState(false);
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -54,6 +63,13 @@ export default function ChatMainPage() {
   const [availableRegions, setAvailableRegions] = useState<string[]>([]);
   const [selectedElection, setSelectedElection] = useState<string>('');
   const [availableElections, setAvailableElections] = useState<string[]>([]);
+  
+  // Store previous Q&A pairs
+  const [qaPairs, setQAPairs] = useState<QAPair[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState<string>('');
+  
+  // Track the question that's currently being processed
+  const currentQuestionRef = useRef<string>('');
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
     api: '/api/chat',
@@ -61,37 +77,102 @@ export default function ChatMainPage() {
       location: country && region ? `${region}, ${country}` : 'Unknown Location',
       election: selectedElection || 'Not Specified',
     },
-    onFinish: () => {
-      // Any logic to run when streaming finishes
+    onFinish: (message) => {
+      // Use the ref to get the correct question that was being processed
+      const questionForThisResponse = currentQuestionRef.current;
+      
+      if (questionForThisResponse) {
+        const newQAPair: QAPair = {
+          id: Date.now().toString(),
+          question: questionForThisResponse,
+          response: message.content,
+          timestamp: Date.now()
+        };
+        setQAPairs(prev => [newQAPair, ...prev]); // Add to beginning for chronological order
+        setCurrentQuestion('');
+        currentQuestionRef.current = ''; // Clear the ref
+        
+        // Clear messages to reset for next question
+        setMessages([]);
+      }
     },
     onError: (err) => {
       console.error("Chat error:", err);
+      // Clear on error too
+      setCurrentQuestion('');
+      currentQuestionRef.current = '';
     },
     initialMessages: [],
   });
 
-  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior });
+  // Override handleSubmit to track current question and manage history properly
+  const handleQuestionSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading || !country || !region || !selectedElection) return;
+    
+    const newQuestion = input.trim();
+    
+    // If there's already a current question with a response, move it to history first
+    const latestAssistantMessage = messages.filter(m => m.role === 'assistant').pop();
+    if (currentQuestion && latestAssistantMessage) {
+      const completedQAPair: QAPair = {
+        id: Date.now().toString() + '_completed',
+        question: currentQuestion,
+        response: latestAssistantMessage.content,
+        timestamp: Date.now()
+      };
+      setQAPairs(prev => [completedQAPair, ...prev]);
     }
+    
+    // Set the new question in both state and ref
+    setCurrentQuestion(newQuestion);
+    currentQuestionRef.current = newQuestion; // Store in ref for onFinish callback
+    setUserHasScrolled(false); // Reset scroll tracking for new question
+    setMessages([]); // Clear previous messages before starting new chat
+    
+    // Submit the new question
+    handleSubmit(e);
   };
-
-
-  useEffect(() => {
-    if (!showScrollButton) {
-      scrollToBottom('auto');
-    }
-  }, [messages, showScrollButton]);
 
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
-    if (scrollHeight - scrollTop - clientHeight > 300) {
-      setShowScrollButton(true);
-    } else {
-      setShowScrollButton(false);
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+    
+    // Track if user has manually scrolled
+    if (Math.abs(scrollTop - lastScrollPosition) > 10) {
+      setUserHasScrolled(true);
+    }
+    setLastScrollPosition(scrollTop);
+    
+    setShowScrollButton(!isAtBottom && qaPairs.length > 0);
+  };
+
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollHeight,
+          behavior
+        });
+      }
+    }
+    setUserHasScrolled(false);
+  };
+
+  const scrollToTop = (behavior: ScrollBehavior = 'smooth') => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: 0,
+          behavior
+        });
+      }
     }
   };
 
+  // Get current response data
   const latestUserMessage = messages.filter(m => m.role === 'user').pop();
   const latestAssistantMessage = messages.filter(m => m.role === 'assistant').pop();
 
@@ -192,11 +273,10 @@ export default function ChatMainPage() {
     p: ({ node, ...props }) => <p className="" {...props} />,
   };
 
-
   return (
     <div className="h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <header className="bg-background p-3 md:p-4 sticky top-0 z-20 fade-edge-to-bottom">
+      <header className="bg-background p-3 md:p-4 sticky top-0 z-20 fade-edge-to-bottom border-b border-border">
         <div className="container mx-auto flex flex-col items-center max-w-5xl">
           <div className="text-sm sm:text-base text-muted-foreground text-center whitespace-nowrap">
             {(country && region) ? `${region}, ${country}` : 'Location not set'} | {selectedElection || 'Election not specified'}
@@ -206,71 +286,146 @@ export default function ChatMainPage() {
 
       {/* Main Content Area - Scrollable */}
       <ScrollArea ref={scrollAreaRef} onScroll={handleScroll} className="flex-grow w-full max-w-5xl mx-auto">
-        <div className="p-3 flex flex-col gap-4 flex-grow">
+        <div className="p-3 flex flex-col gap-6">
 
-          {/* User's Question Area */}
-          {latestUserMessage && (
-            <div className="flex justify-end w-full">
-              <div className="bg-slate-100 text-slate-800 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-none">
-                <p className="whitespace-pre-line">{latestUserMessage.content}</p>
+          {/* Current Question and Response */}
+          {currentQuestion && (
+            <div className="space-y-4" ref={currentResponseRef}>
+              {/* Current User Question */}
+              <div className="flex justify-end w-full">
+                <div className="bg-slate-100 text-slate-800 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm">
+                  <p className="whitespace-pre-line">{currentQuestion}</p>
+                </div>
+              </div>
+
+              {/* Current Response */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Candidate 1 Column */}
+                <Card className="bg-card border-border rounded-lg shadow-sm">
+                  <CardHeader className="border-b border-border p-3">
+                    <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
+                      {isLoading && !candidate1Response && <p className='opacity-50'>Analyzing policy documents...</p>}
+                      <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                        {candidate1Response || (!isLoading && !error ? "Waiting for response..." : "")}
+                      </ReactMarkdown>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Candidate 2 Column */}
+                <Card className="bg-card border-border rounded-lg shadow-sm">
+                  <CardHeader className="border-b border-border p-3">
+                    <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-3">
+                    <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
+                      {isLoading && !candidate2Response && <p className='opacity-50'>Analyzing policy documents...</p>}
+                      <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                        {candidate2Response || (!isLoading && !error ? "Waiting for response..." : "")}
+                      </ReactMarkdown>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           )}
 
-          {/* Candidates' Responses Area */}
-          {messages.length > 0 ? (
-            <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden">
-              {/* Candidate 1 Column */}
-              <Card className="flex flex-col bg-card border-border rounded-lg shadow-none">
-                <CardHeader className="border-b border-border p-3">
-                  <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
-                </CardHeader>
-                <ScrollArea className="flex-grow p-3">
-                  <CardContent className="text-sm text-card-foreground whitespace-pre-line">
-                    {isLoading && !candidate1Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
-                    <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>{candidate1Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
-                  </CardContent>
-                </ScrollArea>
-              </Card>
+          {/* Previous Q&A Pairs */}
+          {qaPairs.map((qaPair, index) => {
+            const parts = qaPair.response.split(CANDIDATE_SEPARATOR);
+            const prevCandidate1Response = parts[0]?.trim() || '';
+            const prevCandidate2Response = parts[1]?.trim() || '';
 
-              {/* Candidate 2 Column */}
-              <Card className="flex flex-col bg-card border-border rounded-lg shadow-none">
-                <CardHeader className="border-b border-border p-3">
-                  <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
-                </CardHeader>
-                <ScrollArea className="flex-grow p-3">
-                  <CardContent className="text-sm text-card-foreground whitespace-pre-line">
-                    {isLoading && !candidate2Response && latestUserMessage && <p className='opacity-50'>Analyzing policy documents...</p>}
-                    <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>{candidate2Response || (latestUserMessage && !isLoading && !error ? "Waiting for response..." : "")}</ReactMarkdown>
-                  </CardContent>
-                </ScrollArea>
-              </Card>
-            </div>
-          ) : (
-            <div className="flex-grow flex items-center justify-center h-full">
+            return (
+              <div key={qaPair.id} className="space-y-4 border-t border-border pt-4 opacity-75 hover:opacity-100 transition-opacity">
+                {/* Previous Question */}
+                <div className="flex justify-end w-full">
+                  <div className="bg-slate-50 text-slate-700 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm border">
+                    <p className="whitespace-pre-line text-sm">{qaPair.question}</p>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      {new Date(qaPair.timestamp).toLocaleTimeString()}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Previous Response */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Previous Candidate 1 */}
+                  <Card className="bg-card/50 border-border rounded-lg shadow-sm">
+                    <CardHeader className="border-b border-border p-3">
+                      <CardTitle className="text-blue-500 text-sm">{candidate1Label}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-3">
+                      <div className="text-xs text-card-foreground whitespace-pre-line">
+                        <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                          {prevCandidate1Response}
+                        </ReactMarkdown>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Previous Candidate 2 */}
+                  <Card className="bg-card/50 border-border rounded-lg shadow-sm">
+                    <CardHeader className="border-b border-border p-3">
+                      <CardTitle className="text-purple-500 text-sm">{candidate2Label}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-3">
+                      <div className="text-xs text-card-foreground whitespace-pre-line">
+                        <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                          {prevCandidate2Response}
+                        </ReactMarkdown>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Empty State */}
+          {!currentQuestion && qaPairs.length === 0 && (
+            <div className="flex-grow flex items-center justify-center h-64">
               <p className="text-muted-foreground text-lg opacity-50">Ask your first question to begin</p>
             </div>
           )}
+
           {error && <p className="text-destructive text-center py-2">Error: {error.message}</p>}
-          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
-      {showScrollButton && (
-        <Button
-          onClick={() => scrollToBottom('smooth')}
-          variant="outline"
-          size="icon"
-          className="fixed bottom-24 right-6 md:right-10 z-40 rounded-full h-12 w-12 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
-          aria-label="Scroll to bottom"
-        >
-          <ArrowDownCircle className="h-6 w-6 text-foreground" />
-        </Button>
+      {/* Scroll Controls */}
+      {qaPairs.length > 0 && (
+        <div className="fixed bottom-24 right-6 md:right-10 z-40 flex flex-col gap-2">
+          <Button
+            onClick={() => scrollToTop('smooth')}
+            variant="outline"
+            size="icon"
+            className="rounded-full h-10 w-10 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
+            aria-label="Scroll to top"
+          >
+            <ChevronUp className="h-5 w-5 text-foreground" />
+          </Button>
+          
+          {showScrollButton && (
+            <Button
+              onClick={() => scrollToBottom('smooth')}
+              variant="outline"
+              size="icon"
+              className="rounded-full h-10 w-10 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
+              aria-label="Scroll to bottom"
+            >
+              <ChevronDown className="h-5 w-5 text-foreground" />
+            </Button>
+          )}
+        </div>
       )}
 
       {/* Chat Input Bar */}
-      <footer className="bg-background p-3 md:p-4 sticky bottom-0 z-10 fade-edge-to-top">
-        <form onSubmit={handleSubmit} className="container mx-auto flex flex-col gap-2 bg-card p-2 rounded-lg border border-border focus:ring-0 focus:outline-none">
+      <footer className="bg-background p-3 md:p-4 sticky bottom-0 z-10 fade-edge-to-top border-t border-border">
+        <form onSubmit={handleQuestionSubmit} className="container mx-auto flex flex-col gap-2 bg-card p-2 rounded-lg border border-border focus:ring-0 focus:outline-none">
           <Input
             value={input}
             onChange={handleInputChange}
