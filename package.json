@@ -7,8 +7,7 @@
     "debug": "NODE_OPTIONS='--inspect' next dev",
     "debug:win": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",
