@@ -13,9 +13,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ArrowDownCircle, ChevronUp, ChevronDown } from 'lucide-react';
+import { ArrowDownCircle, ChevronUp, ChevronDown, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import Turnstile from '@/components/Turnstile';
 
 const CANDIDATE_SEPARATOR = "---CANDIDATE_SEPARATOR---";
 

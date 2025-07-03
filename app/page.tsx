@@ -338,6 +338,12 @@ export default function LandingPage() {
             </div>
           </div>
           <nav className="hidden md:flex space-x-12">
+            <Link href="/docs" className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
+              Documents
+            </Link>
+            <Link href="/app" className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
+              Compare
+            </Link>
             <button className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
               About
             </button>
@@ -389,6 +395,55 @@ export default function LandingPage() {
               </p>
             </div>
 
+            {/* Featured Document Spotlight */}
+            <div className="mb-12 md:mb-16">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 md:p-12 border border-gray-100/80 backdrop-blur-sm">
+                <div className="flex flex-col lg:flex-row items-start gap-8">
+                  <div className="p-4 bg-blue-100 rounded-xl shrink-0">
+                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <span className="text-sm font-medium text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+                        NEW FEATURE
+                      </span>
+                      <span className="text-sm text-gray-500 tracking-wider uppercase">
+                        Document Analysis
+                      </span>
+                    </div>
+                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-extralight text-black mb-4 leading-tight tracking-wide">
+                      Analyze the "Big Beautiful Bill"
+                    </h3>
+                    <p className="text-gray-600 text-lg lg:text-xl font-light leading-relaxed mb-6 max-w-2xl tracking-wide">
+                      Dive deep into the comprehensive legislative package that's been making headlines. Our AI analyzes every section, provision, and implication to help you understand what it really means.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Link 
+                        href="/docs"
+                        className="group inline-flex items-center bg-black text-white px-8 py-4 text-lg font-light tracking-wide hover:bg-gray-900 transition-all duration-500 hover:scale-105 hover-target"
+                      >
+                        Explore Documents
+                        <svg className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </Link>
+                      <Link 
+                        href="/app"
+                        className="group inline-flex items-center border border-gray-300 text-black px-8 py-4 text-lg font-light tracking-wide hover:bg-gray-50 transition-all duration-500 hover:scale-105 hover-target"
+                      >
+                        Compare Candidates
+                        <svg className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* CTA Section with magnetic effects */}
             <div className="mb-16 md:mb-20">
               <Link 
@@ -419,33 +474,33 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className={`transition-all duration-1500 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
-              {/* Feature 1 */}
+              {/* Feature 1 - Document Analysis */}
               <div className="group cursor-default">
                 <div className="mb-8 transition-all duration-700 group-hover:translate-y-[-2px]">
-                  <div className="w-1.5 h-1.5 bg-black rounded-full mb-6 group-hover:scale-[2] group-hover:bg-gray-700 transition-all duration-700"></div>
+                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mb-6 group-hover:scale-[2] group-hover:bg-blue-700 transition-all duration-700"></div>
                   <h3 className="text-2xl md:text-3xl font-extralight text-black mb-6 tracking-wide group-hover:tracking-wider transition-all duration-500">
-                    AI-Powered Analysis
+                    Document Analysis
                   </h3>
                   <p className="text-gray-600 font-extralight leading-[1.7] text-lg group-hover:text-gray-700 transition-colors duration-500">
-                    Advanced machine learning algorithms process vast datasets to deliver unprecedented political insights and predictive intelligence.
+                    Deep dive into legislative documents like the "Big Beautiful Bill" with AI-powered analysis that breaks down complex provisions into understandable insights.
                   </p>
                 </div>
               </div>
 
-              {/* Feature 2 */}
+              {/* Feature 2 - Candidate Comparison */}
               <div className="group cursor-default">
                 <div className="mb-8 transition-all duration-700 group-hover:translate-y-[-2px]">
                   <div className="w-1.5 h-1.5 bg-gray-600 rounded-full mb-6 group-hover:scale-[2] group-hover:bg-black transition-all duration-700"></div>
                   <h3 className="text-2xl md:text-3xl font-extralight text-black mb-6 tracking-wide group-hover:tracking-wider transition-all duration-500">
-                    Comprehensive Coverage
+                    Candidate Comparison
                   </h3>
                   <p className="text-gray-600 font-extralight leading-[1.7] text-lg group-hover:text-gray-700 transition-colors duration-500">
-                    Every policy document is thoroughly analyzed, covering the full spectrum of political topics and positions from major Canadian parties.
+                    Side-by-side analysis of candidate positions across all major policy areas, helping you understand the differences that matter most to you.
                   </p>
                 </div>
               </div>
 
-              {/* Feature 3 */}
+              {/* Feature 3 - Real-Time Intelligence */}
               <div className="group cursor-default">
                 <div className="mb-8 transition-all duration-700 group-hover:translate-y-[-2px]">
                   <div className="w-1.5 h-1.5 bg-gray-400 rounded-full mb-6 group-hover:scale-[2] group-hover:bg-gray-800 transition-all duration-700"></div>

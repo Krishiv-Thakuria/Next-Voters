@@ -1,4 +1,5 @@
 import { StreamingTextResponse, Message } from 'ai';
+import { verifyTurnstileToken } from '@/lib/turnstile';
 
 // IMPORTANT: Set the runtime to edge
 // export const runtime = 'edge';
@@ -169,10 +170,10 @@ async function queryAutoRAG(query: string, filters: any, partyContext: string): 
   };
 
   console.log(`AutoRAG Request for ${partyContext}:`, {
-    url: 'https://api.cloudflare.com/client/v4/accounts/dbf3f40b913e7a3fb4b74a75697facf8/autorag/rags/policyrag/ai-search',
+    url: `https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/autorag/rags/policyrag/ai-search`,
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer gM2_TNsBwmoTzSdPv9kXJNHAP4gO37GropuTT9gA',
+      'Authorization': 'Bearer ' + process.env.POLICY_RAG_API_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(requestBody)
@@ -180,11 +181,11 @@ async function queryAutoRAG(query: string, filters: any, partyContext: string): 
 
   try {
     const response = await fetch(
-      'https://api.cloudflare.com/client/v4/accounts/dbf3f40b913e7a3fb4b74a75697facf8/autorag/rags/policyrag/ai-search',
+      `https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/autorag/rags/policyrag/ai-search`,
       {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer gM2_TNsBwmoTzSdPv9kXJNHAP4gO37GropuTT9gA',
+          'Authorization': 'Bearer ' + process.env.POLICY_RAG_API_KEY,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
