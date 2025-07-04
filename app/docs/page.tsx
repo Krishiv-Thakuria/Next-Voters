@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ChevronUp, ChevronDown, FileText, ArrowLeft, Shield } from 'lucide-react';
+import { ChevronUp, ChevronDown, FileText, ArrowLeft, Shield, Loader } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
@@ -378,7 +378,12 @@ export default function DocsPage() {
                 </CardHeader>
                 <CardContent className="p-3">
                   <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
-                    {isLoading && !currentResponse && <p className='opacity-50'>Analyzing document content...</p>}
+                    {isLoading && !currentResponse && (
+                      <p className="opacity-50 animate-pulse flex items-center gap-2">
+                        <Loader className="h-4 w-4 animate-spin" />
+                        Analyzing document content...
+                      </p>
+                    )}
                     <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                       {currentResponse || (!isLoading && !error ? "Waiting for response..." : "")}
                     </ReactMarkdown>
