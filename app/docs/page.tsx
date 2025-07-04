@@ -381,7 +381,7 @@ export default function DocsPage() {
                     {isLoading && !currentResponse && (
                       <p className="opacity-50 animate-pulse flex items-center gap-2">
                         <Loader className="h-4 w-4 animate-spin" />
-                        Analyzing document content...
+                        Analyzing document (~1000 pages)… this may take a few seconds
                       </p>
                     )}
                     <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
