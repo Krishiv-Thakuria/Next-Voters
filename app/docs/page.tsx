@@ -84,7 +84,7 @@ export default function DocsPage() {
           response: message.content,
           timestamp: Date.now()
         };
-        setQAPairs(prev => [newQAPair, ...prev]);
+        setQAPairs(prev => [...prev, newQAPair]);
         setCurrentQuestion('');
         currentQuestionRef.current = '';
         setMessages([]);
@@ -115,7 +115,7 @@ export default function DocsPage() {
         response: latestAssistantMessage.content,
         timestamp: Date.now()
       };
-      setQAPairs(prev => [completedQAPair, ...prev]);
+      setQAPairs(prev => [...prev, completedQAPair]);
     }
     
     setCurrentQuestion(newQuestion);
@@ -168,6 +168,13 @@ export default function DocsPage() {
     }
     setUserHasScrolled(false);
   };
+
+  // Auto-scroll to bottom whenever a new Q&A pair is added (unless the user has manually scrolled up)
+  useEffect(() => {
+    if (!userHasScrolled) {
+      scrollToBottom('auto');
+    }
+  }, [qaPairs.length]);
 
   const scrollToTop = (behavior: ScrollBehavior = 'smooth') => {
     if (scrollAreaRef.current) {
