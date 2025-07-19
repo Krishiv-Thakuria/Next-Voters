@@ -171,10 +171,11 @@ function buildSingleDocumentFilter(filename: string) {
   };
 }
 
-// Query Cloudflare AutoRAG with enhanced error handling
-async function queryAutoRAG(query: string, filters: any, partyContext: string): Promise<AutoRAGResponse> {
+// Query Cloudflare AutoRAG with enhanced error handling and retry logic
+async function queryAutoRAG(query: string, filters: any, partyContext: string, retryCount = 0): Promise<AutoRAGResponse> {
   const CF_ACCOUNT_ID = process.env.CF_ACCOUNT_ID;
   const POLICY_RAG_API_KEY = process.env.POLICY_RAG_API_KEY;
+  const MAX_RETRIES = 3;
 
   if (!CF_ACCOUNT_ID || !POLICY_RAG_API_KEY) {
     throw new Error('AutoRAG configuration missing');
@@ -185,7 +186,7 @@ async function queryAutoRAG(query: string, filters: any, partyContext: string): 
     filters
   };
 
-  console.log(`AutoRAG Request for ${partyContext}:`, {
+  console.log(`AutoRAG Request for ${partyContext} (attempt ${retryCount + 1}):`, {
     url: `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/autorag/rags/policyrag/ai-search`,
     method: 'POST',
     headers: {
@@ -219,7 +220,19 @@ async function queryAutoRAG(query: string, filters: any, partyContext: string): 
     return result;
 
   } catch (error) {
-    console.error(`AutoRAG query error for ${partyContext}:`, error);
+    console.error(`AutoRAG query error for ${partyContext} (attempt ${retryCount + 1}):`, error);
+    
+    // Check if it's a connection error and we haven't exceeded max retries
+    const isConnectionError = error instanceof TypeError && 
+      (error.message.includes('fetch failed') || error.message.includes('ECONNRESET'));
+    
+    if (isConnectionError && retryCount < MAX_RETRIES) {
+      console.log(`Retrying ${partyContext} request in ${(retryCount + 1) * 1000}ms...`);
+      // Wait before retrying, with exponential backoff
+      await new Promise(resolve => setTimeout(resolve, (retryCount + 1) * 1000));
+      return queryAutoRAG(query, filters, partyContext, retryCount + 1);
+    }
+    
     throw error;
   }
 }
@@ -240,10 +253,17 @@ async function generatePartyResponses(
     const party1Filter = buildSingleDocumentFilter(config.pdfs.party1);
     const party2Filter = buildSingleDocumentFilter(config.pdfs.party2);
 
-    // Make both AutoRAG requests in parallel
+    // Make both AutoRAG requests with a small delay to avoid connection issues
+    const party1Promise = queryAutoRAG(userPrompt, party1Filter, config.party1Name);
+    
+    // Add a small delay before the second request to avoid overwhelming the API
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const party2Promise = queryAutoRAG(userPrompt, party2Filter, config.party2Name);
+    
     const [party1Response, party2Response] = await Promise.allSettled([
-      queryAutoRAG(userPrompt, party1Filter, config.party1Name),
-      queryAutoRAG(userPrompt, party2Filter, config.party2Name)
+      party1Promise,
+      party2Promise
     ]);
 
     // Process Party 1 response

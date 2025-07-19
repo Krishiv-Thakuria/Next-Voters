@@ -46,7 +46,10 @@ const electionOptions: Record<string, string[]> = {
 interface QAPair {
   id: string;
   question: string;
-  response: string;
+  party1Response: string;
+  party2Response: string;
+  party1Name: string;
+  party2Name: string;
   timestamp: number;
 }
 
@@ -222,12 +225,13 @@ export default function ChatMainPage() {
     const questionForThisResponse = currentQuestionRef.current;
     
     if (questionForThisResponse && party1Messages.length > 0 && party2Messages.length > 0) {
-      const combinedResponse = `${party1Messages[0].content}\n\n---CANDIDATE_SEPARATOR---\n\n${party2Messages[0].content}`;
-      
       const newQAPair: QAPair = {
         id: Date.now().toString(),
         question: questionForThisResponse,
-        response: combinedResponse,
+        party1Response: party1Messages[0].content,
+        party2Response: party2Messages[0].content,
+        party1Name: party1Name,
+        party2Name: party2Name,
         timestamp: Date.now()
       };
       
@@ -614,13 +618,32 @@ export default function ChatMainPage() {
                       </div>
                     </div>
 
-                    {/* AI Response */}
-                    <div className="flex justify-start">
-                      <div className="bg-muted/80 p-4 rounded-lg max-w-xs sm:max-w-sm md:max-w-lg">
-                        <div className="prose prose-sm max-w-none">
-                          <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
-                            {qa.response}
-                          </ReactMarkdown>
+                    {/* AI Response - Dual Party Display */}
+                    <div className="w-full">
+                      {/* Desktop: Side by side, Mobile: Stacked */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Party 1 Response */}
+                        <div className="bg-blue-50/80 dark:bg-blue-950/80 p-4 rounded-lg border border-blue-200/80 dark:border-blue-800/80">
+                          <div className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2">
+                            {qa.party1Name} Position
+                          </div>
+                          <div className="prose prose-sm max-w-none">
+                            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                              {qa.party1Response}
+                            </ReactMarkdown>
+                          </div>
+                        </div>
+                        
+                        {/* Party 2 Response */}
+                        <div className="bg-red-50/80 dark:bg-red-950/80 p-4 rounded-lg border border-red-200/80 dark:border-red-800/80">
+                          <div className="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">
+                            {qa.party2Name} Position
+                          </div>
+                          <div className="prose prose-sm max-w-none">
+                            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                              {qa.party2Response}
+                            </ReactMarkdown>
+                          </div>
                         </div>
                       </div>
                     </div>
