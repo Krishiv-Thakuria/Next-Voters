@@ -341,7 +341,7 @@ export default function LandingPage() {
             <Link href="/docs" className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
               Documents
             </Link>
-            <Link href="/app" className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
+            <Link href="/app?country=USA&region=Arizona&election=Arizona+Special+Election" className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
               Compare
             </Link>
             <button className="text-gray-400 hover:text-black transition-all duration-300 text-sm font-light tracking-wider uppercase hover:tracking-[0.2em] hover:scale-105">
