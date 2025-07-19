@@ -106,71 +106,175 @@ export default function ChatMainPage() {
   // Store previous Q&A pairs
   const [qaPairs, setQAPairs] = useState<QAPair[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<string>('');
+  const [party1Name, setParty1Name] = useState('Democratic');
+  const [party2Name, setParty2Name] = useState('Republican');
   
   // Track the question that's currently being processed
   const currentQuestionRef = useRef<string>('');
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
-    api: '/api/chat',
-    body: {
-      location: country && region ? `${region}, ${country}` : 'Unknown Location',
-      election: selectedElection || 'Not Specified',
-    },
-    onFinish: (message) => {
-      // Use the ref to get the correct question that was being processed
-      const questionForThisResponse = currentQuestionRef.current;
-      
-      if (questionForThisResponse) {
-        const newQAPair: QAPair = {
-          id: Date.now().toString(),
-          question: questionForThisResponse,
-          response: message.content,
-          timestamp: Date.now()
-        };
-        setQAPairs(prev => [newQAPair, ...prev]); // Add to beginning for chronological order
-        setCurrentQuestion('');
-        currentQuestionRef.current = ''; // Clear the ref
-        
-        // Clear messages to reset for next question
-        setMessages([]);
+  // State for dual party responses
+  const [party1Messages, setParty1Messages] = useState<Message[]>([]);
+  const [party2Messages, setParty2Messages] = useState<Message[]>([]);
+  const [party1Loading, setParty1Loading] = useState(false);
+  const [party2Loading, setParty2Loading] = useState(false);
+  const [input, setInput] = useState('');
+  
+  const isLoading = party1Loading || party2Loading;
+
+  // Function to handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+  };
+
+  // Function to make dual API calls
+  const makeDualAPICall = async (userPrompt: string) => {
+    const location = `${region}, ${country}`;
+    const requestBody = {
+      messages: [{ role: 'user', content: userPrompt }],
+      location,
+      election: selectedElection
+    };
+
+    // Start both requests simultaneously
+    setParty1Loading(true);
+    setParty2Loading(true);
+
+    // Process party1 response
+    const processParty1 = async () => {
+      try {
+        const response = await fetch('/api/chat-dual', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...requestBody, party: 'party1' })
+        });
+
+        if (response.ok) {
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+          let content = '';
+          
+          if (reader) {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              
+              const chunk = decoder.decode(value, { stream: true });
+              content += chunk;
+              
+              setParty1Messages([{
+                id: 'party1-response',
+                role: 'assistant',
+                content: content
+              }]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Party1 API error:', error);
+      } finally {
+        setParty1Loading(false);
       }
-    },
-    onError: (err) => {
-      console.error("Chat error:", err);
-      // Clear on error too
+    };
+
+    // Process party2 response
+    const processParty2 = async () => {
+      try {
+        const response = await fetch('/api/chat-dual', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...requestBody, party: 'party2' })
+        });
+
+        if (response.ok) {
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+          let content = '';
+          
+          if (reader) {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              
+              const chunk = decoder.decode(value, { stream: true });
+              content += chunk;
+              
+              setParty2Messages([{
+                id: 'party2-response',
+                role: 'assistant',
+                content: content
+              }]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Party2 API error:', error);
+      } finally {
+        setParty2Loading(false);
+      }
+    };
+
+    // Run both processes in parallel
+    Promise.all([processParty1(), processParty2()]);
+  };
+
+  // Function to handle completion of both responses
+  const onFinish = () => {
+    const questionForThisResponse = currentQuestionRef.current;
+    
+    if (questionForThisResponse && party1Messages.length > 0 && party2Messages.length > 0) {
+      const combinedResponse = `${party1Messages[0].content}\n\n---CANDIDATE_SEPARATOR---\n\n${party2Messages[0].content}`;
+      
+      const newQAPair: QAPair = {
+        id: Date.now().toString(),
+        question: questionForThisResponse,
+        response: combinedResponse,
+        timestamp: Date.now()
+      };
+      
+      setQAPairs(prev => [newQAPair, ...prev]);
       setCurrentQuestion('');
       currentQuestionRef.current = '';
-    },
-    initialMessages: [],
-  });
+      
+      // Clear current messages
+      setParty1Messages([]);
+      setParty2Messages([]);
+    }
+  };
 
-  // Override handleSubmit to track current question and manage history properly
+  // Effect to handle completion when both messages are ready
+  useEffect(() => {
+    if (!party1Loading && !party2Loading && party1Messages.length > 0 && party2Messages.length > 0) {
+      onFinish();
+    }
+  }, [party1Loading, party2Loading, party1Messages, party2Messages]);
+
+  const onError = (err: Error) => {
+    console.error("Chat error:", err);
+    setCurrentQuestion('');
+    currentQuestionRef.current = '';
+    setParty1Loading(false);
+    setParty2Loading(false);
+  };
+
+  // Handle form submission with dual API calls
   const handleQuestionSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() || isLoading || !country || !region || !selectedElection) return;
     
     const newQuestion = input.trim();
-    
-    // If there's already a current question with a response, move it to history first
-    const latestAssistantMessage = messages.filter(m => m.role === 'assistant').pop();
-    if (currentQuestion && latestAssistantMessage) {
-      const completedQAPair: QAPair = {
-        id: Date.now().toString() + '_completed',
-        question: currentQuestion,
-        response: latestAssistantMessage.content,
-        timestamp: Date.now()
-      };
-      setQAPairs(prev => [completedQAPair, ...prev]);
-    }
-    
-    // Set the new question in both state and ref
     setCurrentQuestion(newQuestion);
-    currentQuestionRef.current = newQuestion; // Store in ref for onFinish callback
-    setUserHasScrolled(false); // Reset scroll tracking for new question
-    setMessages([]); // Clear previous messages before starting new chat
+    currentQuestionRef.current = newQuestion;
     
-    // Submit the new question
-    handleSubmit(e);
+    // Clear previous messages and scroll state
+    setUserHasScrolled(false);
+    setParty1Messages([]);
+    setParty2Messages([]);
+    
+    // Make dual API call
+    makeDualAPICall(newQuestion);
+    
+    // Clear input
+    setInput('');
   };
 
   const handleScroll = (event: UIEvent<HTMLDivElement>) => {
@@ -211,18 +315,19 @@ export default function ChatMainPage() {
     }
   };
 
-  // Get current response data
-  const latestUserMessage = messages.filter(m => m.role === 'user').pop();
-  const latestAssistantMessage = messages.filter(m => m.role === 'assistant').pop();
-
-  let candidate1Response = '';
-  let candidate2Response = '';
-
-  if (latestAssistantMessage) {
-    const parts = latestAssistantMessage.content.split(CANDIDATE_SEPARATOR);
-    candidate1Response = parts[0]?.trim() || '';
-    candidate2Response = parts[1]?.trim() || '';
-  }
+  // Update party names based on country
+  useEffect(() => {
+    if (country === 'USA') {
+      setParty1Name('Democratic');
+      setParty2Name('Republican');
+    } else if (country === 'Canada') {
+      setParty1Name('Liberal');
+      setParty2Name('Conservative');
+    } else {
+      setParty1Name('Party 1');
+      setParty2Name('Party 2');
+    }
+  }, [country]);
 
   const handleCountryChange = (selectedCountryValue: string) => {
     setCountry(selectedCountryValue);
@@ -450,19 +555,47 @@ export default function ChatMainPage() {
                       </div>
                     </div>
 
-                    {/* AI Response */}
-                    <div className="flex justify-start">
-                      <div className="bg-muted p-4 rounded-lg max-w-xs sm:max-w-sm md:max-w-lg">
-                        {isLoading && !messages.find(m => m.role === 'assistant') && (
+                    {/* AI Response - Dual Party Display */}
+                    <div className="w-full">
+                      {isLoading && party1Messages.length === 0 && party2Messages.length === 0 && (
+                        <div className="flex justify-center">
                           <p className="text-muted-foreground italic">Analyzing policy documents...</p>
-                        )}
-                        {messages.filter(m => m.role === 'assistant').map((message, index) => (
-                          <div key={index} className="prose prose-sm max-w-none">
-                            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
-                              {message.content}
-                            </ReactMarkdown>
+                        </div>
+                      )}
+                      
+                      {/* Desktop: Side by side, Mobile: Stacked */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Party 1 Response */}
+                        <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                          <div className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2">
+                            {party1Name} Position
                           </div>
-                        ))}
+                          {party1Loading && party1Messages.length === 0 ? (
+                            <div className="text-muted-foreground italic text-sm">Loading {party1Name.toLowerCase()} position...</div>
+                          ) : party1Messages.length > 0 ? (
+                            <div className="prose prose-sm max-w-none">
+                              <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                                {party1Messages[0].content}
+                              </ReactMarkdown>
+                            </div>
+                          ) : null}
+                        </div>
+                        
+                        {/* Party 2 Response */}
+                        <div className="bg-red-50 dark:bg-red-950 p-4 rounded-lg border border-red-200 dark:border-red-800">
+                          <div className="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">
+                            {party2Name} Position
+                          </div>
+                          {party2Loading && party2Messages.length === 0 ? (
+                            <div className="text-muted-foreground italic text-sm">Loading {party2Name.toLowerCase()} position...</div>
+                          ) : party2Messages.length > 0 ? (
+                            <div className="prose prose-sm max-w-none">
+                              <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                                {party2Messages[0].content}
+                              </ReactMarkdown>
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </div>
