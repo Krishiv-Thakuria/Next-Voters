@@ -430,7 +430,7 @@ export default function LandingPage() {
                         </svg>
                       </Link>
                       <Link 
-                        href="/app"
+                        href="/app?country=USA&region=National&election=Presidential+Election+2024"
                         className="group inline-flex items-center border border-gray-300 text-black px-8 py-4 text-lg font-light tracking-wide hover:bg-gray-50 transition-all duration-500 hover:scale-105 hover-target"
                       >
                         Compare Candidates
