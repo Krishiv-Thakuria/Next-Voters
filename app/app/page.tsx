@@ -2,6 +2,7 @@
 
 import React, { useState, FormEvent, useEffect, useRef, UIEvent } from 'react';
 import { useChat, Message } from 'ai/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -17,6 +18,7 @@ import { ArrowDownCircle, ChevronUp, ChevronDown, Shield } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Turnstile from '@/components/Turnstile';
+import { PromptInputBasic } from '@/components/prompt-input-basic';
 
 const CANDIDATE_SEPARATOR = "---CANDIDATE_SEPARATOR---";
 
@@ -49,6 +51,8 @@ interface QAPair {
 }
 
 export default function ChatMainPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const currentResponseRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -59,11 +63,45 @@ export default function ChatMainPage() {
     document.documentElement.classList.remove('dark');
   }, []);
 
-  const [country, setCountry] = useState<string>('');
-  const [region, setRegion] = useState<string>('');
-  const [availableRegions, setAvailableRegions] = useState<string[]>([]);
-  const [selectedElection, setSelectedElection] = useState<string>('');
-  const [availableElections, setAvailableElections] = useState<string[]>([]);
+  const [country, setCountry] = useState<string>('USA');
+  const [region, setRegion] = useState<string>('Arizona');
+  const [availableRegions, setAvailableRegions] = useState<string[]>(countryData['USA'] || []);
+  const [selectedElection, setSelectedElection] = useState<string>('Arizona Special Election');
+  const [availableElections, setAvailableElections] = useState<string[]>(electionOptions['USA'] || []);
+
+  // Initialize state from URL parameters
+  useEffect(() => {
+    const urlCountry = searchParams.get('country');
+    const urlRegion = searchParams.get('region');
+    const urlElection = searchParams.get('election');
+    
+    // Set defaults if URL params are missing
+    const finalCountry = urlCountry && countryData[urlCountry] ? urlCountry : 'USA';
+    const finalRegion = urlRegion && countryData[finalCountry]?.includes(urlRegion) ? urlRegion : 'Arizona';
+    const finalElection = urlElection && electionOptions[finalCountry]?.includes(urlElection) ? urlElection : 'Arizona Special Election';
+    
+    setCountry(finalCountry);
+    setRegion(finalRegion);
+    setSelectedElection(finalElection);
+    setAvailableRegions(countryData[finalCountry] || []);
+    setAvailableElections(electionOptions[finalCountry] || []);
+    
+    // Update URL with defaults if any were missing
+    if (!urlCountry || !urlRegion || !urlElection) {
+      updateURL(finalCountry, finalRegion, finalElection);
+    }
+  }, [searchParams]);
+
+  // Function to update URL with current state
+  const updateURL = (newCountry?: string, newRegion?: string, newElection?: string) => {
+    const params = new URLSearchParams();
+    
+    if (newCountry || country) params.set('country', newCountry || country);
+    if (newRegion || region) params.set('region', newRegion || region);
+    if (newElection || selectedElection) params.set('election', newElection || selectedElection);
+    
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
   
   // Store previous Q&A pairs
   const [qaPairs, setQAPairs] = useState<QAPair[]>([]);
@@ -188,18 +226,21 @@ export default function ChatMainPage() {
 
   const handleCountryChange = (selectedCountryValue: string) => {
     setCountry(selectedCountryValue);
-    setRegion('');
-    setSelectedElection('');
     setAvailableRegions(countryData[selectedCountryValue] || []);
     setAvailableElections(electionOptions[selectedCountryValue] || []);
+    setRegion('');
+    setSelectedElection('');
+    updateURL(selectedCountryValue, '', '');
   };
 
   const handleRegionChange = (selectedRegionValue: string) => {
     setRegion(selectedRegionValue);
+    updateURL(undefined, selectedRegionValue, undefined);
   };
 
   const handleElectionChange = (value: string) => {
     setSelectedElection(value);
+    updateURL(undefined, undefined, value);
   };
 
   // Determine candidate labels based on country and election
@@ -275,214 +316,213 @@ export default function ChatMainPage() {
   };
 
   return (
-    <div className="h-screen bg-background text-foreground flex flex-col">
-      {/* Header */}
-      <header className="bg-background p-3 md:p-4 sticky top-0 z-20 fade-edge-to-bottom border-b border-border">
-        <div className="container mx-auto flex flex-col items-center max-w-5xl">
-          <div className="text-sm sm:text-base text-muted-foreground text-center whitespace-nowrap">
-            {(country && region) ? `${region}, ${country}` : 'Location not set'} | {selectedElection || 'Election not specified'}
-          </div>
-        </div>
-      </header>
+    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden relative">
+      {/* SVG Background Pattern */}
+      <svg 
+        className="absolute inset-0 w-full h-full pointer-events-none" 
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ zIndex: 0 }}
+      >
+        <defs>
+          <pattern id="backgroundPattern" x="0" y="0" width="100%" height="100%">
+            {/* Diagonal lines making an X */}
+            <line 
+              x1="0" y1="0" 
+              x2="100%" y2="100%" 
+              stroke="#EEEEEE" 
+              strokeWidth="1" 
+              opacity="1"
+            />
+            <line 
+              x1="100%" y1="0" 
+              x2="0" y2="100%" 
+              stroke="#EEEEEE" 
+              strokeWidth="1" 
+              opacity="1"
+            />
+            
+            {/* Vertical line through center */}
+            <line 
+              x1="50%" y1="0" 
+              x2="50%" y2="100%" 
+              stroke="#EEEEEE" 
+              strokeWidth="1" 
+              opacity="1"
+            />
+            
+            {/* Horizontal line through center */}
+            <line 
+              x1="0" y1="50%" 
+              x2="100%" y2="50%" 
+              stroke="#EEEEEE" 
+              strokeWidth="1" 
+              opacity="1"
+            />
+            
+            {/* Smaller concentric circle */}
+            <circle 
+              cx="50%" cy="50%" 
+              r="15%" 
+              fill="none" 
+              stroke="#EEEEEE" 
+              strokeWidth="1" 
+              opacity="1"
+            />
+            
+            {/* Larger concentric circle */}
+            <circle 
+              cx="50%" cy="50%" 
+              r="35%" 
+              fill="none" 
+              stroke="#EEEEEE" 
+              strokeWidth="1" 
+              opacity="1"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#backgroundPattern)" />
+      </svg>
 
-      {/* Main Content Area - Scrollable */}
-      <ScrollArea ref={scrollAreaRef} onScroll={handleScroll} className="flex-grow w-full max-w-5xl mx-auto">
-        <div className="p-3 flex flex-col gap-6">
-
-          {/* Current Question and Response */}
-          {currentQuestion && (
-            <div className="space-y-4" ref={currentResponseRef}>
-              {/* Current User Question */}
-              <div className="flex justify-end w-full">
-                <div className="bg-slate-100 text-slate-800 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm">
-                  <p className="whitespace-pre-line">{currentQuestion}</p>
+      <div className="relative z-10 h-full flex flex-col">
+        {/* Show centered input only if no messages exist */}
+        {qaPairs.length === 0 && !currentQuestion && (
+          <div className="flex-grow flex items-center justify-center p-6">
+            <div className="w-full max-w-2xl">
+              {/* Heading */}
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-bold text-foreground mb-2">NextVoters</h1>
+                <p className="text-muted-foreground text-sm">Ask questions about candidates and elections</p>
+              </div>
+              
+              <PromptInputBasic
+                key="centered-input"
+                value={input}
+                onChange={handleInputChange}
+                onSubmit={handleQuestionSubmit}
+                isLoading={isLoading}
+                placeholder="Ask your voting question here... (e.g., What are the candidate's views on healthcare?)"
+                disabled={false}
+                country={country}
+                region={region}
+                election={selectedElection}
+                availableRegions={availableRegions}
+                availableElections={availableElections}
+                countryData={countryData}
+                electionOptions={electionOptions}
+                onCountryChange={handleCountryChange}
+                onRegionChange={handleRegionChange}
+                onElectionChange={handleElectionChange}
+              />
+              
+              {(country && region && selectedElection) && (
+                <div className="mt-4 text-center text-sm text-muted-foreground">
+                  <p>Asking about: <span className="font-medium">{selectedElection}</span> in <span className="font-medium">{region}, {country}</span></p>
                 </div>
-              </div>
-
-              {/* Current Response */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Candidate 1 Column */}
-                <Card className="bg-card border-border rounded-lg shadow-sm">
-                  <CardHeader className="border-b border-border p-3">
-                    <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-3">
-                    <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
-                      {isLoading && !candidate1Response && <p className='opacity-50'>Analyzing policy documents...</p>}
-                      <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
-                        {candidate1Response || (!isLoading && !error ? "Waiting for response..." : "")}
-                      </ReactMarkdown>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Candidate 2 Column */}
-                <Card className="bg-card border-border rounded-lg shadow-sm">
-                  <CardHeader className="border-b border-border p-3">
-                    <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-3">
-                    <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
-                      {isLoading && !candidate2Response && <p className='opacity-50'>Analyzing policy documents...</p>}
-                      <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
-                        {candidate2Response || (!isLoading && !error ? "Waiting for response..." : "")}
-                      </ReactMarkdown>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              )}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Previous Q&A Pairs */}
-          {qaPairs.map((qaPair, index) => {
-            const parts = qaPair.response.split(CANDIDATE_SEPARATOR);
-            const prevCandidate1Response = parts[0]?.trim() || '';
-            const prevCandidate2Response = parts[1]?.trim() || '';
+        {/* Chat UI - shown after first message */}
+        {(qaPairs.length > 0 || currentQuestion) && (
+          <>
+            {/* Header with title and context */}
+            <div className="border-b border-border p-4 bg-background/95 backdrop-blur">
+              <h1 className="text-xl font-bold text-foreground">NextVoters</h1>
+              <p className="text-sm text-muted-foreground">
+                {country && region && selectedElection ? 
+                  `${selectedElection} in ${region}, ${country}` : 
+                  'Ask questions about candidates and elections'
+                }
+              </p>
+            </div>
 
-            return (
-              <div key={qaPair.id} className="space-y-4 border-t border-border pt-4 opacity-75 hover:opacity-100 transition-opacity">
-                {/* Previous Question */}
-                <div className="flex justify-end w-full">
-                  <div className="bg-slate-50 text-slate-700 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm border">
-                    <p className="whitespace-pre-line text-sm">{qaPair.question}</p>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      {new Date(qaPair.timestamp).toLocaleTimeString()}
+            {/* Messages Area */}
+            <ScrollArea ref={scrollAreaRef} onScroll={handleScroll} className="flex-grow p-4">
+              <div className="max-w-4xl mx-auto space-y-6">
+                {/* Current Question and Response */}
+                {currentQuestion && (
+                  <div className="space-y-4" ref={currentResponseRef}>
+                    {/* User Question */}
+                    <div className="flex justify-end">
+                      <div className="bg-primary text-primary-foreground p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md">
+                        <p className="whitespace-pre-line">{currentQuestion}</p>
+                      </div>
+                    </div>
+
+                    {/* AI Response */}
+                    <div className="flex justify-start">
+                      <div className="bg-muted p-4 rounded-lg max-w-xs sm:max-w-sm md:max-w-lg">
+                        {isLoading && !messages.find(m => m.role === 'assistant') && (
+                          <p className="text-muted-foreground italic">Analyzing policy documents...</p>
+                        )}
+                        {messages.filter(m => m.role === 'assistant').map((message, index) => (
+                          <div key={index} className="prose prose-sm max-w-none">
+                            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                              {message.content}
+                            </ReactMarkdown>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* Previous Response */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Previous Candidate 1 */}
-                  <Card className="bg-card/50 border-border rounded-lg shadow-sm">
-                    <CardHeader className="border-b border-border p-3">
-                      <CardTitle className="text-blue-500 text-sm">{candidate1Label}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-3">
-                      <div className="text-xs text-card-foreground whitespace-pre-line">
-                        <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
-                          {prevCandidate1Response}
-                        </ReactMarkdown>
+                {/* Previous Q&A Pairs */}
+                {qaPairs.map((qa) => (
+                  <div key={qa.id} className="space-y-4 opacity-75 hover:opacity-100 transition-opacity">
+                    {/* User Question */}
+                    <div className="flex justify-end">
+                      <div className="bg-primary/80 text-primary-foreground p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md">
+                        <p className="whitespace-pre-line text-sm">{qa.question}</p>
+                        <div className="text-xs opacity-70 mt-2">
+                          {new Date(qa.timestamp).toLocaleTimeString()}
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
 
-                  {/* Previous Candidate 2 */}
-                  <Card className="bg-card/50 border-border rounded-lg shadow-sm">
-                    <CardHeader className="border-b border-border p-3">
-                      <CardTitle className="text-purple-500 text-sm">{candidate2Label}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-3">
-                      <div className="text-xs text-card-foreground whitespace-pre-line">
-                        <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
-                          {prevCandidate2Response}
-                        </ReactMarkdown>
+                    {/* AI Response */}
+                    <div className="flex justify-start">
+                      <div className="bg-muted/80 p-4 rounded-lg max-w-xs sm:max-w-sm md:max-w-lg">
+                        <div className="prose prose-sm max-w-none">
+                          <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                            {qa.response}
+                          </ReactMarkdown>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            </ScrollArea>
 
-          {/* Empty State */}
-          {!currentQuestion && qaPairs.length === 0 && (
-            <div className="flex-grow flex items-center justify-center h-64">
-              <p className="text-muted-foreground text-lg opacity-50">Ask your first question to begin</p>
+            {/* Fixed Input at Bottom - Floating */}
+            <div className="p-4">
+              <div className="max-w-4xl mx-auto">
+                <PromptInputBasic
+                  key="chat-input"
+                  value={input}
+                  onChange={handleInputChange}
+                  onSubmit={handleQuestionSubmit}
+                  isLoading={isLoading}
+                  placeholder="Ask another question..."
+                  disabled={false}
+                  country={country}
+                  region={region}
+                  election={selectedElection}
+                  availableRegions={availableRegions}
+                  availableElections={availableElections}
+                  countryData={countryData}
+                  electionOptions={electionOptions}
+                  onCountryChange={handleCountryChange}
+                  onRegionChange={handleRegionChange}
+                  onElectionChange={handleElectionChange}
+                />
+              </div>
             </div>
-          )}
-
-          {error && <p className="text-destructive text-center py-2">Error: {error.message}</p>}
-        </div>
-      </ScrollArea>
-
-      {/* Scroll Controls */}
-      {qaPairs.length > 0 && (
-        <div className="fixed bottom-24 right-6 md:right-10 z-40 flex flex-col gap-2">
-          <Button
-            onClick={() => scrollToTop('smooth')}
-            variant="outline"
-            size="icon"
-            className="rounded-full h-10 w-10 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
-            aria-label="Scroll to top"
-          >
-            <ChevronUp className="h-5 w-5 text-foreground" />
-          </Button>
-          
-          {showScrollButton && (
-            <Button
-              onClick={() => scrollToBottom('smooth')}
-              variant="outline"
-              size="icon"
-              className="rounded-full h-10 w-10 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
-              aria-label="Scroll to bottom"
-            >
-              <ChevronDown className="h-5 w-5 text-foreground" />
-            </Button>
-          )}
-        </div>
-      )}
-
-      {/* Chat Input Bar */}
-      <footer className="bg-background p-3 md:p-4 sticky bottom-0 z-10 fade-edge-to-top border-t border-border">
-        <form onSubmit={handleQuestionSubmit} className="container mx-auto flex flex-col gap-2 bg-card p-2 rounded-lg border border-border focus:ring-0 focus:outline-none">
-          <Input
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Type your question here... (e.g., What are the candidate's views on healthcare?)"
-            className="flex-grow bg-transparent border-none text-foreground placeholder-muted-foreground focus:ring-0 focus:outline-none shadow-none"
-            disabled={isLoading || !country || !region || !selectedElection}
-          />
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Select value={country} onValueChange={handleCountryChange}>
-                <SelectTrigger className="w-auto md:w-[150px] bg-card border-border text-card-foreground focus:ring-ring focus:border-primary text-xs md:text-sm p-2 h-9 md:h-10">
-                  <SelectValue placeholder="Country" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover text-popover-foreground border-border z-[50]">
-                  {Object.keys(countryData).map((c) => (
-                    <SelectItem key={c} value={c} className="hover:bg-accent focus:bg-accent">
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select onValueChange={handleRegionChange} value={region} disabled={!country || availableRegions.length === 0}>
-                <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
-                  <SelectValue placeholder="Select Region/State" />
-                </SelectTrigger>
-                <SelectContent className="z-[50]">
-                  {availableRegions.map((r) => (
-                    <SelectItem key={r} value={r}>{r}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select onValueChange={handleElectionChange} value={selectedElection} disabled={!country || availableElections.length === 0}>
-                <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
-                  <SelectValue placeholder="Select Election" />
-                </SelectTrigger>
-                <SelectContent className="z-[50]">
-                  {availableElections.map((election) => (
-                    <SelectItem key={election} value={election}>{election}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              type="submit"
-              disabled={isLoading || !input.trim() || !country || !region || !selectedElection}
-              className="p-2 aspect-square rounded-full shadow-none"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
-              </svg>
-            </Button>
-          </div>
-        </form>
-      </footer>
+          </>
+        )}
+      </div>
     </div>
   );
 }
