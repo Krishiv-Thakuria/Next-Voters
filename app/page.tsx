@@ -447,7 +447,7 @@ export default function LandingPage() {
             {/* CTA Section with magnetic effects */}
             <div className="mb-16 md:mb-20">
               <Link 
-                href="/app"
+                href="/app?country=USA&region=National&election=Congressional+Primary"
                 className="group relative inline-flex items-center bg-black text-white px-16 py-5 text-lg font-light tracking-[0.1em] hover:bg-gray-900 transition-all duration-500 overflow-hidden hover-target"
                 style={{
                   transform: mousePosition.x > 0 ? 
