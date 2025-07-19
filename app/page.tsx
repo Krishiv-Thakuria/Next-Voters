@@ -577,7 +577,7 @@ export default function LandingPage() {
               Join the revolution in democratic engagement. Experience intelligence that adapts, learns, and evolves with the political landscape.
             </p>
             <Link 
-              href="/app"
+              href="/app?country=Canada&region=National&election=Federal+Election+2025"
               className="group relative inline-flex items-center bg-black text-white px-20 py-6 text-xl font-extralight tracking-[0.15em] hover:bg-gray-900 transition-all duration-700 overflow-hidden"
             >
               <span className="relative z-10 transition-all duration-500 group-hover:tracking-[0.2em]">Begin Your Journey</span>
