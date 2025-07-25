@@ -57,8 +57,8 @@ async function queryDocumentRAG(query: string, filename: string, documentName: s
   const filters = buildDocumentFilter(filename);
   
   const requestBody = {
-    query: `${query}\n\nContext: Please analyze and answer based on the content of "${documentName}" document. Provide specific details and cite relevant sections when possible.`,
-    filters
+    query: `${query}`,
+    // filters
   };
 
   console.log(`Document RAG Request for ${documentName}:`, {
