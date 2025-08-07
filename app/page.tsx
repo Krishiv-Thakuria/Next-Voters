@@ -125,9 +125,7 @@ export default function LandingPage() {
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <a
-              href="https://getwaitlist.com/waitlist/30664"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/fellowship"
               className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
             >
               BECOME A FELLOW
@@ -180,7 +178,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
-                </div>
+            </div>
 
                 {/* Dropdowns */}
                 <div className="flex justify-center gap-4 mt-4">
@@ -229,9 +227,9 @@ export default function LandingPage() {
                   </select>
                 </div>
               </form>
-            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
       </main>
 
