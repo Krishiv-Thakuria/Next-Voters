@@ -124,7 +124,12 @@ export default function LandingPage() {
       <header className="w-full">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <a href="/fellowship" className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins">
+            <a
+              href="https://getwaitlist.com/waitlist/30664"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
+            >
               BECOME A FELLOW
             </a>
         </div>
@@ -135,7 +140,16 @@ export default function LandingPage() {
       </header>
 
       <main className="w-full">
-        <div className="max-w-[600px] mx-auto px-6 pt-20 pb-16 text-center">
+        {/* Hero with animated background */}
+        <section className="relative py-16">
+          {/* Animated background (pattern + subtle rotating gradient) */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="animated-hero overlay absolute inset-0"></div>
+            <div className="animated-hero gradient absolute -inset-[20%]"></div>
+            <div className="animated-hero pattern absolute inset-0"></div>
+          </div>
+
+          <div className="relative max-w-[680px] mx-auto px-6 text-center">
           {/* Main Title */}
           <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
             Next Voters
@@ -146,75 +160,78 @@ export default function LandingPage() {
             Technology that empowers voters to understand policy and legislation fast
           </p>
           
-          {/* Search Form */}
-          <form onSubmit={handleSubmit} className="mb-6">
-            <div className="relative">
-              <input
-                type="text"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="Ask any question about policy or legislation"
-                className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-400 bg-gray-50 font-poppins"
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
-                disabled={!question.trim() || !country || !region || !election}
-              >
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </form>
+            {/* Search Card */}
+            <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-sm mb-6">
+              <form onSubmit={handleSubmit}>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    placeholder="Ask any question about policy or legislation"
+                    className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-400 bg-gray-50 font-poppins"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+                    disabled={!question.trim() || !country || !region || !election}
+                  >
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
 
-                    {/* Dropdowns */}
-          <div className="flex justify-center gap-4 mb-12">
-            <select
-              value={country}
-              onChange={(e) => {
-                setCountry(e.target.value);
-                setRegion('');
-                setElection(electionOptions[e.target.value]?.[0] || '');
-              }}
-              className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 font-poppins"
-            >
-              {Object.keys(countryData).map((countryName) => (
-                <option key={countryName} value={countryName}>
-                  {countryName}
-                </option>
-              ))}
-            </select>
-            
-            <select
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 disabled:opacity-50 font-poppins"
-              disabled={!availableRegions.length}
-            >
-              <option value="">Select Region</option>
-              {availableRegions.map((regionName) => (
-                <option key={regionName} value={regionName}>
-                  {regionName}
-                </option>
-              ))}
-            </select>
-            
-            <select
-              value={election}
-              onChange={(e) => setElection(e.target.value)}
-              className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 disabled:opacity-50 font-poppins"
-              disabled={!availableElections.length}
-            >
-              <option value="">Select Election</option>
-              {availableElections.map((electionName) => (
-                <option key={electionName} value={electionName}>
-                  {electionName}
-                </option>
-              ))}
-            </select>
+                {/* Dropdowns */}
+                <div className="flex justify-center gap-4 mt-4">
+                  <select
+                    value={country}
+                    onChange={(e) => {
+                      setCountry(e.target.value);
+                      setRegion('');
+                      setElection(electionOptions[e.target.value]?.[0] || '');
+                    }}
+                    className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 font-poppins"
+                  >
+                    {Object.keys(countryData).map((countryName) => (
+                      <option key={countryName} value={countryName}>
+                        {countryName}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <select
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                    className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 disabled:opacity-50 font-poppins"
+                    disabled={!availableRegions.length}
+                  >
+                    <option value="">Select Region</option>
+                    {availableRegions.map((regionName) => (
+                      <option key={regionName} value={regionName}>
+                        {regionName}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <select
+                    value={election}
+                    onChange={(e) => setElection(e.target.value)}
+                    className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 disabled:opacity-50 font-poppins"
+                    disabled={!availableElections.length}
+                  >
+                    <option value="">Select Election</option>
+                    {availableElections.map((electionName) => (
+                      <option key={electionName} value={electionName}>
+                        {electionName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </section>
 
       </main>
 

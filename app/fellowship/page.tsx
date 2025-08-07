@@ -22,12 +22,12 @@ export default function FellowshipPage() {
       {/* Main Content */}
       <main className="w-full">
         {/* Hero Section */}
-        <div className="max-w-[600px] mx-auto px-6 pt-20 pb-16 text-center">
+        <div className="max-w-[680px] mx-auto px-6 pt-20 pb-16 text-center">
           <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
             Become a civic changemaker
           </h1>
           
-          <p className="text-[16px] text-gray-600 mb-12 font-poppins leading-relaxed">
+          <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
             Changing the world starts with changing your community.
           </p>
           
@@ -42,8 +42,8 @@ export default function FellowshipPage() {
         </div>
 
         {/* $10,000+ Section */}
-        <div className="max-w-[600px] mx-auto px-6 text-center mb-20">
-          <div className="max-w-lg mx-auto bg-white border border-gray-300 rounded-xl p-12">
+        <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
+          <div className="max-w-lg mx-auto bg-white border border-gray-300 rounded-xl p-12 shadow-sm">
             <p className="text-[16px] text-gray-900 mb-6 font-poppins">
               Get access to a pool of
             </p>
@@ -65,7 +65,7 @@ export default function FellowshipPage() {
         </div>
 
         {/* Fellows Lead Real Change Section */}
-        <div className="max-w-[600px] mx-auto px-6 text-center mb-20">
+        <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
           <h2 className="text-[32px] font-semibold text-gray-900 mb-12 font-poppins">
             Fellows lead <em>real</em> change
           </h2>
@@ -73,7 +73,7 @@ export default function FellowshipPage() {
           {/* Impact Cards */}
           <div className="space-y-8">
             {/* Card 1 */}
-            <div className="bg-white border border-gray-300 rounded-xl p-8">
+            <div className="bg-white border border-gray-300 rounded-xl p-8 shadow-sm">
               <h3 className="text-[20px] font-semibold text-gray-900 mb-4 font-poppins">
                 Create viral content that impacts millions
               </h3>
@@ -85,7 +85,7 @@ export default function FellowshipPage() {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white border border-gray-300 rounded-xl p-8">
+            <div className="bg-white border border-gray-300 rounded-xl p-8 shadow-sm">
               <h3 className="text-[20px] font-semibold text-gray-900 mb-4 font-poppins">
                 Lead real change in your community
               </h3>
@@ -98,7 +98,7 @@ export default function FellowshipPage() {
         </div>
 
         {/* Mentorship Section */}
-        <div className="max-w-[600px] mx-auto px-6 text-center mb-20">
+        <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
           <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-poppins">
             Exclusive mentorship with civic leaders
           </h2>
@@ -124,7 +124,7 @@ export default function FellowshipPage() {
         </div>
 
         {/* Final CTA Section */}
-        <div className="max-w-[600px] mx-auto px-6 text-center pb-20">
+        <div className="max-w-[680px] mx-auto px-6 text-center pb-20">
           <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-poppins">
             Let's strengthen democracy, together
           </h2>

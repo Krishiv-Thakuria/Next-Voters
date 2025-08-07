@@ -27,6 +27,22 @@ body {
 }
 
 @layer utilities {
+  /* Animated hero background helpers */
+  .animated-hero.gradient {
+    background: radial-gradient(60% 60% at 50% 40%, rgba(30,64,175,0.15) 0%, rgba(185,28,28,0.12) 45%, rgba(255,255,255,0) 70%);
+    animation: rotate-slow 24s linear infinite;
+  }
+  .animated-hero.pattern {
+    background-image: linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(0deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px;
+    mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+    animation: pulse-slow 6s ease-in-out infinite;
+  }
+  .animated-hero.overlay {
+    background: linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.95));
+  }
+
   .fade-edge-to-bottom {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
@@ -49,6 +65,16 @@ body {
   to {
     opacity: 1;
   }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg) scale(1.1); }
+  to { transform: rotate(360deg) scale(1.1); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.7; }
 }
 /* Custom animation delays for landing page */
 .animation-delay-2000 {
