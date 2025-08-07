@@ -57,6 +57,7 @@ export default function ChatMainPage() {
 
   // State to track if we need to process stored data
   const [storedDataToProcess, setStoredDataToProcess] = useState<any>(null);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -67,11 +68,14 @@ export default function ChatMainPage() {
       try {
         const parsedData = JSON.parse(storedData);
         setStoredDataToProcess(parsedData);
+        // Remove after we've staged it locally to avoid duplicate sends on refresh
         sessionStorage.removeItem('nextVotersData');
       } catch (error) {
         console.error('Error parsing stored data:', error);
       }
     }
+    // Mark as initialized after first mount to avoid "UI jumping" with placeholders
+    setInitialized(true);
   }, []);
 
   const [country, setCountry] = useState<string>('');
@@ -338,10 +342,27 @@ export default function ChatMainPage() {
       <header className="bg-white p-4 sticky top-0 z-20 border-b border-gray-200">
         <div className="container mx-auto flex flex-col items-center max-w-5xl">
           <div className="text-sm text-gray-600 text-center">
-            {(country && region) ? `${region}, ${country}` : 'Location not set'} | {selectedElection || 'Election not specified'}
+            {(country && region)
+              ? `${region}, ${country}`
+              : (initialized ? 'Location not set' : 'Loading preferences...')}
+            {' '}|{' '}
+            {selectedElection || (initialized ? 'Election not specified' : '...')}
           </div>
         </div>
       </header>
+
+      {/* Loading banner for clearer feedback while generating */}
+      {isLoading && (
+        <div className="bg-blue-50 text-blue-700 border-b border-blue-200 py-2 z-10">
+          <div className="max-w-5xl mx-auto flex items-center justify-center gap-2 text-sm">
+            <svg className="h-4 w-4 animate-spin text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <span>Generating responses... this can take a few seconds</span>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area - Scrollable */}
       <ScrollArea ref={scrollAreaRef} onScroll={handleScroll} className="flex-grow w-full max-w-5xl mx-auto">
@@ -366,7 +387,15 @@ export default function ChatMainPage() {
                   </CardHeader>
                   <CardContent className="p-4">
                     <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins">
-                      {isLoading && !candidate1Response && <p className='opacity-50'>Analyzing policy documents...</p>}
+                      {isLoading && !candidate1Response && (
+                        <div className="flex items-center gap-2 text-blue-700">
+                          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                          </svg>
+                          <span>Analyzing policy documents...</span>
+                        </div>
+                      )}
                       <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                         {candidate1Response || (!isLoading && !error ? "Waiting for response..." : "")}
                       </ReactMarkdown>
@@ -381,7 +410,15 @@ export default function ChatMainPage() {
                   </CardHeader>
                   <CardContent className="p-4">
                     <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins">
-                      {isLoading && !candidate2Response && <p className='opacity-50'>Analyzing policy documents...</p>}
+                      {isLoading && !candidate2Response && (
+                        <div className="flex items-center gap-2 text-red-700">
+                          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                          </svg>
+                          <span>Analyzing policy documents...</span>
+                        </div>
+                      )}
                       <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                         {candidate2Response || (!isLoading && !error ? "Waiting for response..." : "")}
                       </ReactMarkdown>
