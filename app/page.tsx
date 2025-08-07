@@ -145,7 +145,7 @@ export default function LandingPage() {
 
       <main className="w-full">
         {/* Hero with animated background */}
-        <section className="relative py-16">
+        <section className="relative pt-20 pb-8">
           {/* Animated background (pattern + subtle rotating gradient) */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="animated-hero overlay absolute inset-0"></div>
@@ -239,8 +239,8 @@ export default function LandingPage() {
 
       </main>
 
-      {/* 87% Statistics Section */}
-      <section className="py-24 bg-white">
+       {/* 87% Statistics Section */}
+      <section className="py-24 bg-white -mt-4">
         <div className="max-w-[1200px] mx-auto px-4">
           {/* Top divider line */}
           <div className="w-full h-px bg-gray-200 mb-16"></div>
@@ -276,20 +276,20 @@ export default function LandingPage() {
       {/* Next Voters Fellowship Section */}
       <section className="py-24 bg-white">
         <div className="max-w-[1200px] mx-auto px-4 text-center">
-          <h2 className="text-[32px] font-semibold text-gray-900 mb-4 font-poppins">
+          <h2 className="text-[28px] font-medium text-gray-900 mb-2 font-poppins leading-[1.2]">
             Join the
           </h2>
-          <h2 className="text-[32px] font-semibold text-gray-900 mb-16 font-poppins">
+          <h2 className="text-[36px] font-extrabold text-gray-900 mb-14 font-poppins leading-[1.15] tracking-tight">
             Next Voters Fellowship
             </h2>
           
           {/* Fellowship Card */}
-          <div className="max-w-lg mx-auto bg-white border border-gray-300 rounded-xl p-12 mb-8">
-            <p className="text-[16px] text-gray-900 mb-6 font-poppins">
+          <div className="max-w-lg mx-auto bg-white border border-gray-300 rounded-xl p-12 mb-8 shadow-sm">
+            <p className="text-[16px] text-gray-900 mb-4 font-poppins leading-[1.4]">
               Get access to a pool of
             </p>
             <div 
-              className="text-[64px] font-bold mb-6 leading-none font-poppins"
+              className="text-[72px] font-extrabold mb-4 leading-[1.05] font-poppins"
               style={{ 
                 background: 'linear-gradient(135deg, #B91C1C 0%, #1E40AF 100%)',
                 WebkitBackgroundClip: 'text',
@@ -299,16 +299,16 @@ export default function LandingPage() {
             >
               $10,000+
             </div>
-            <p className="text-[16px] text-gray-900 leading-relaxed font-poppins">
+            <p className="text-[16px] text-gray-900 leading-[1.45] font-poppins">
               in no-strings-attached, impact-based grants for top-performing fellows
             </p>
           </div>
           
-          <p className="text-[18px] text-gray-900 mb-12 font-medium font-poppins">
+          <p className="text-[18px] text-gray-900 mb-10 font-medium font-poppins leading-[1.4]">
             Make a real change and strengthen democracy.
           </p>
           
-          <a href="/fellowship" className="inline-block px-10 py-4 text-[16px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium">
+          <a href="/fellowship" className="inline-block px-10 py-4 text-[16px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-semibold">
             Learn more
           </a>
         </div>
