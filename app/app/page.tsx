@@ -74,6 +74,17 @@ export default function ChatMainPage() {
         console.error('Error parsing stored data:', error);
       }
     }
+    // Fallback: hydrate from URL params if storage missing
+    if (!storedData) {
+      const url = new URL(window.location.href);
+      const q = url.searchParams.get('q') || '';
+      const c = url.searchParams.get('country') || '';
+      const r = url.searchParams.get('region') || '';
+      const e = url.searchParams.get('election') || '';
+      if (q || c || r || e) {
+        setStoredDataToProcess({ question: q, country: c, region: r, election: e });
+      }
+    }
     // Mark as initialized after first mount to avoid "UI jumping" with placeholders
     setInitialized(true);
   }, []);
@@ -336,18 +347,22 @@ export default function ChatMainPage() {
     p: ({ node, ...props }) => <p className="" {...props} />,
   };
 
+  // Compute header display values to avoid blanks before state hydrates
+  const displayLocation = (country && region)
+    ? `${region}, ${country}`
+    : (storedDataToProcess?.country && storedDataToProcess?.region)
+      ? `${storedDataToProcess.region}, ${storedDataToProcess.country}`
+      : (initialized ? 'Location not set' : 'Loading preferences...');
+  const displayElection = selectedElection
+    || storedDataToProcess?.election
+    || (initialized ? 'Election not specified' : '...');
+
   return (
     <div className="h-screen bg-white text-gray-900 flex flex-col font-poppins">
       {/* Header */}
       <header className="bg-white p-4 sticky top-0 z-20 border-b border-gray-200">
         <div className="container mx-auto flex flex-col items-center max-w-5xl">
-          <div className="text-sm text-gray-600 text-center">
-            {(country && region)
-              ? `${region}, ${country}`
-              : (initialized ? 'Location not set' : 'Loading preferences...')}
-            {' '}|{' '}
-            {selectedElection || (initialized ? 'Election not specified' : '...')}
-          </div>
+          <div className="text-sm text-gray-600 text-center">{displayLocation} | {displayElection}</div>
         </div>
       </header>
 

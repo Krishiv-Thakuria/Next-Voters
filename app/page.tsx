@@ -111,8 +111,14 @@ export default function LandingPage() {
       election
     }));
     
-    // Navigate to the full chat interface
-    router.push('/app');
+    // Navigate to the full chat interface with query params as backup to sessionStorage
+    const params = new URLSearchParams({
+      country,
+      region,
+      election,
+      q: question.trim(),
+    });
+    router.push(`/app?${params.toString()}`);
   };
 
   const availableRegions = countryData[country] || [];
