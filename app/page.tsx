@@ -186,52 +186,64 @@ export default function LandingPage() {
                   </button>
             </div>
 
-                {/* Dropdowns */}
-                <div className="flex justify-center gap-4 mt-4">
-                  <select
-                    value={country}
-                    onChange={(e) => {
-                      setCountry(e.target.value);
-                      setRegion('');
-                      setElection(electionOptions[e.target.value]?.[0] || '');
-                    }}
-                    className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 font-poppins"
-                  >
-                    {Object.keys(countryData).map((countryName) => (
-                      <option key={countryName} value={countryName}>
-                        {countryName}
-                      </option>
-                    ))}
-                  </select>
-                  
-                  <select
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 disabled:opacity-50 font-poppins"
-                    disabled={!availableRegions.length}
-                  >
-                    <option value="">Select Region</option>
-                    {availableRegions.map((regionName) => (
-                      <option key={regionName} value={regionName}>
-                        {regionName}
-                      </option>
-                    ))}
-                  </select>
-                  
-                  <select
-                    value={election}
-                    onChange={(e) => setElection(e.target.value)}
-                    className="px-4 py-2 text-[14px] text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-gray-400 disabled:opacity-50 font-poppins"
-                    disabled={!availableElections.length}
-                  >
-                    <option value="">Select Election</option>
-                    {availableElections.map((electionName) => (
-                      <option key={electionName} value={electionName}>
-                        {electionName}
-                      </option>
-                    ))}
-                  </select>
-            </div>
+                {/* Dropdowns - minimal, clean selectors */}
+                <div className="flex justify-start gap-8 mt-6 pl-1">
+                  {/* Country */}
+                  <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
+                    <select
+                      value={country}
+                      onChange={(e) => {
+                        setCountry(e.target.value);
+                        setRegion('');
+                        setElection(electionOptions[e.target.value]?.[0] || '');
+                      }}
+                      className="appearance-none bg-transparent pr-6 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
+                    >
+                      {Object.keys(countryData).map((countryName) => (
+                        <option key={countryName} value={countryName}>
+                          {countryName}
+                        </option>
+                      ))}
+                    </select>
+                    <svg className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+
+                  {/* Region */}
+                  <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
+                    <select
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                      className="appearance-none bg-transparent pr-6 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
+                      disabled={!availableRegions.length}
+                    >
+                      <option value="">Select Region/State</option>
+                      {availableRegions.map((regionName) => (
+                        <option key={regionName} value={regionName}>
+                          {regionName}
+                        </option>
+                      ))}
+                    </select>
+                    <svg className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+
+                  {/* Election */}
+                  <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
+                    <select
+                      value={election}
+                      onChange={(e) => setElection(e.target.value)}
+                      className="appearance-none bg-transparent pr-6 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
+                      disabled={!availableElections.length}
+                    >
+                      <option value="">Select Election</option>
+                      {availableElections.map((electionName) => (
+                        <option key={electionName} value={electionName}>
+                          {electionName}
+                        </option>
+                      ))}
+                    </select>
+                    <svg className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+                </div>
               </form>
           </div>
         </div>
