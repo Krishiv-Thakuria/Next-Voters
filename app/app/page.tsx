@@ -55,8 +55,23 @@ export default function ChatMainPage() {
   const [userHasScrolled, setUserHasScrolled] = useState(false);
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
+  // State to track if we need to process stored data
+  const [storedDataToProcess, setStoredDataToProcess] = useState<any>(null);
+
   useEffect(() => {
     document.documentElement.classList.remove('dark');
+    
+    // Check for data from the landing page
+    const storedData = sessionStorage.getItem('nextVotersData');
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        setStoredDataToProcess(parsedData);
+        sessionStorage.removeItem('nextVotersData');
+      } catch (error) {
+        console.error('Error parsing stored data:', error);
+      }
+    }
   }, []);
 
   const [country, setCountry] = useState<string>('');
@@ -72,7 +87,7 @@ export default function ChatMainPage() {
   // Track the question that's currently being processed
   const currentQuestionRef = useRef<string>('');
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages, append } = useChat({
     api: '/api/chat',
     body: {
       location: country && region ? `${region}, ${country}` : 'Unknown Location',
@@ -105,6 +120,51 @@ export default function ChatMainPage() {
     },
     initialMessages: [],
   });
+
+  // Set location data immediately when stored data is available
+  useEffect(() => {
+    if (storedDataToProcess) {
+      const { question, country: storedCountry, region: storedRegion, election: storedElection } = storedDataToProcess;
+      
+      // Set the form data immediately for display
+      setCountry(storedCountry);
+      setRegion(storedRegion);
+      setSelectedElection(storedElection);
+      setAvailableRegions(countryData[storedCountry] || []);
+      setAvailableElections(electionOptions[storedCountry] || []);
+      
+      // Set the question in state and ref immediately
+      setCurrentQuestion(question);
+      currentQuestionRef.current = question;
+    }
+  }, [storedDataToProcess]);
+
+  // Process chat submission when append function is available
+  useEffect(() => {
+    if (storedDataToProcess && append) {
+      const { question, country: storedCountry, region: storedRegion, election: storedElection } = storedDataToProcess;
+      
+      // Use a delay to ensure state updates are fully processed
+      setTimeout(() => {
+        // Set the input field value for display
+        handleInputChange({ target: { value: question } } as React.ChangeEvent<HTMLInputElement>);
+        
+        // Directly send the message using append function with the updated body parameters
+        append({
+          role: 'user',
+          content: question
+        }, {
+          body: {
+            location: `${storedRegion}, ${storedCountry}`,
+            election: storedElection
+          }
+        });
+      }, 300);
+      
+      // Clear the stored data
+      setStoredDataToProcess(null);
+    }
+  }, [storedDataToProcess, append, handleInputChange]);
 
   // Override handleSubmit to track current question and manage history properly
   const handleQuestionSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -275,11 +335,11 @@ export default function ChatMainPage() {
   };
 
   return (
-    <div className="h-screen bg-background text-foreground flex flex-col">
+    <div className="h-screen bg-white text-gray-900 flex flex-col font-poppins">
       {/* Header */}
-      <header className="bg-background p-3 md:p-4 sticky top-0 z-20 fade-edge-to-bottom border-b border-border">
+      <header className="bg-white p-4 sticky top-0 z-20 border-b border-gray-200">
         <div className="container mx-auto flex flex-col items-center max-w-5xl">
-          <div className="text-sm sm:text-base text-muted-foreground text-center whitespace-nowrap">
+          <div className="text-sm text-gray-600 text-center">
             {(country && region) ? `${region}, ${country}` : 'Location not set'} | {selectedElection || 'Election not specified'}
           </div>
         </div>
@@ -294,20 +354,20 @@ export default function ChatMainPage() {
             <div className="space-y-4" ref={currentResponseRef}>
               {/* Current User Question */}
               <div className="flex justify-end w-full">
-                <div className="bg-slate-100 text-slate-800 p-3 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm">
-                  <p className="whitespace-pre-line">{currentQuestion}</p>
+                <div className="bg-blue-500 text-white p-4 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm">
+                  <p className="whitespace-pre-line font-poppins">{currentQuestion}</p>
                 </div>
               </div>
 
               {/* Current Response */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Candidate 1 Column */}
-                <Card className="bg-card border-border rounded-lg shadow-sm">
-                  <CardHeader className="border-b border-border p-3">
-                    <CardTitle className="text-blue-600 text-md">{candidate1Label}</CardTitle>
+                <Card className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                  <CardHeader className="border-b border-gray-200 p-4">
+                    <CardTitle className="text-blue-600 text-lg font-semibold font-poppins">{candidate1Label}</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-3">
-                    <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
+                  <CardContent className="p-4">
+                    <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins">
                       {isLoading && !candidate1Response && <p className='opacity-50'>Analyzing policy documents...</p>}
                       <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                         {candidate1Response || (!isLoading && !error ? "Waiting for response..." : "")}
@@ -317,12 +377,12 @@ export default function ChatMainPage() {
                 </Card>
 
                 {/* Candidate 2 Column */}
-                <Card className="bg-card border-border rounded-lg shadow-sm">
-                  <CardHeader className="border-b border-border p-3">
-                    <CardTitle className="text-purple-600 text-md">{candidate2Label}</CardTitle>
+                <Card className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                  <CardHeader className="border-b border-gray-200 p-4">
+                    <CardTitle className="text-red-600 text-lg font-semibold font-poppins">{candidate2Label}</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-3">
-                    <div className="text-sm text-card-foreground whitespace-pre-line min-h-[100px]">
+                  <CardContent className="p-4">
+                    <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins">
                       {isLoading && !candidate2Response && <p className='opacity-50'>Analyzing policy documents...</p>}
                       <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                         {candidate2Response || (!isLoading && !error ? "Waiting for response..." : "")}
@@ -404,10 +464,10 @@ export default function ChatMainPage() {
             onClick={() => scrollToTop('smooth')}
             variant="outline"
             size="icon"
-            className="rounded-full h-10 w-10 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
+            className="rounded-full h-10 w-10 bg-white/80 backdrop-blur shadow-md hover:bg-gray-100 border border-gray-300"
             aria-label="Scroll to top"
           >
-            <ChevronUp className="h-5 w-5 text-foreground" />
+            <ChevronUp className="h-5 w-5 text-gray-700" />
           </Button>
           
           {showScrollButton && (
@@ -415,34 +475,34 @@ export default function ChatMainPage() {
               onClick={() => scrollToBottom('smooth')}
               variant="outline"
               size="icon"
-              className="rounded-full h-10 w-10 bg-background/80 backdrop-blur shadow-md hover:bg-muted"
+              className="rounded-full h-10 w-10 bg-white/80 backdrop-blur shadow-md hover:bg-gray-100 border border-gray-300"
               aria-label="Scroll to bottom"
             >
-              <ChevronDown className="h-5 w-5 text-foreground" />
+              <ChevronDown className="h-5 w-5 text-gray-700" />
             </Button>
           )}
         </div>
       )}
 
       {/* Chat Input Bar */}
-      <footer className="bg-background p-3 md:p-4 sticky bottom-0 z-10 fade-edge-to-top border-t border-border">
-        <form onSubmit={handleQuestionSubmit} className="container mx-auto flex flex-col gap-2 bg-card p-2 rounded-lg border border-border focus:ring-0 focus:outline-none">
+      <footer className="bg-white p-4 sticky bottom-0 z-10 border-t border-gray-200">
+        <form onSubmit={handleQuestionSubmit} className="container mx-auto flex flex-col gap-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
           <Input
             value={input}
             onChange={handleInputChange}
             placeholder="Type your question here... (e.g., What are the candidate's views on healthcare?)"
-            className="flex-grow bg-transparent border-none text-foreground placeholder-muted-foreground focus:ring-0 focus:outline-none shadow-none"
+            className="flex-grow bg-transparent border-none text-gray-900 placeholder-gray-500 focus:ring-0 focus:outline-none shadow-none font-poppins"
             disabled={isLoading || !country || !region || !selectedElection}
           />
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Select value={country} onValueChange={handleCountryChange}>
-                <SelectTrigger className="w-auto md:w-[150px] bg-card border-border text-card-foreground focus:ring-ring focus:border-primary text-xs md:text-sm p-2 h-9 md:h-10">
+                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                   <SelectValue placeholder="Country" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover text-popover-foreground border-border z-[50]">
+                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
                   {Object.keys(countryData).map((c) => (
-                    <SelectItem key={c} value={c} className="hover:bg-accent focus:bg-accent">
+                    <SelectItem key={c} value={c} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">
                       {c}
                     </SelectItem>
                   ))}
@@ -450,23 +510,23 @@ export default function ChatMainPage() {
               </Select>
 
               <Select onValueChange={handleRegionChange} value={region} disabled={!country || availableRegions.length === 0}>
-                <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
+                <SelectTrigger className="w-full md:w-[180px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                   <SelectValue placeholder="Select Region/State" />
                 </SelectTrigger>
-                <SelectContent className="z-[50]">
+                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
                   {availableRegions.map((r) => (
-                    <SelectItem key={r} value={r}>{r}</SelectItem>
+                    <SelectItem key={r} value={r} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">{r}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
               <Select onValueChange={handleElectionChange} value={selectedElection} disabled={!country || availableElections.length === 0}>
-                <SelectTrigger className="w-full md:w-[180px] shadow-none focus:ring-0 focus:outline-none">
+                <SelectTrigger className="w-full md:w-[180px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                   <SelectValue placeholder="Select Election" />
                 </SelectTrigger>
-                <SelectContent className="z-[50]">
+                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
                   {availableElections.map((election) => (
-                    <SelectItem key={election} value={election}>{election}</SelectItem>
+                    <SelectItem key={election} value={election} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">{election}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -474,7 +534,7 @@ export default function ChatMainPage() {
             <Button
               type="submit"
               disabled={isLoading || !input.trim() || !country || !region || !selectedElection}
-              className="p-2 aspect-square rounded-full shadow-none"
+              className="p-2 aspect-square rounded-full bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />

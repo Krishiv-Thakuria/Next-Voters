@@ -1,10 +1,15 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import { Analytics } from "@vercel/analytics/react";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-const inter = Inter({ subsets: ['latin'] })
+const poppins = Poppins({ 
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins'
+})
 
 export const metadata = {
   title: 'Next Voters',
@@ -18,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${poppins.variable} font-poppins`}>
         {children}
         <Analytics />
       </body>
