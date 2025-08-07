@@ -165,7 +165,7 @@ export default function LandingPage() {
           </p>
           
             {/* Search Card */}
-            <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-4 shadow-sm mb-6">
+            <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
               <form onSubmit={handleSubmit}>
                 <div className="relative">
                   <input
@@ -187,7 +187,7 @@ export default function LandingPage() {
             </div>
 
                 {/* Dropdowns - minimal, clean selectors */}
-                <div className="flex justify-start gap-8 mt-6 pl-1">
+                <div className="flex flex-wrap items-center gap-x-10 gap-y-3 mt-6 pt-5 border-t border-gray-200">
                   {/* Country */}
                   <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
                     <select
