@@ -233,6 +233,13 @@ export default function LandingPage() {
                   </select>
                 </div>
               </form>
+              {/* Link to document chat (Bills) */}
+              <div className="mt-3 text-center">
+                <a href="/docs" className="inline-flex items-center gap-2 text-[13px] text-gray-700 hover:text-gray-900 font-poppins underline-offset-2 hover:underline">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16l4-4h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+                  Chat with a bill (analyze legislation)
+                </a>
+            </div>
           </div>
         </div>
       </section>
