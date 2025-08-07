@@ -144,22 +144,20 @@ export default function ChatMainPage() {
     if (storedDataToProcess && append) {
       const { question, country: storedCountry, region: storedRegion, election: storedElection } = storedDataToProcess;
       
-      // Use a delay to ensure state updates are fully processed
+      // Use a longer delay to ensure state updates are fully processed before API call
       setTimeout(() => {
         // Set the input field value for display
         handleInputChange({ target: { value: question } } as React.ChangeEvent<HTMLInputElement>);
         
-        // Directly send the message using append function with the updated body parameters
-        append({
-          role: 'user',
-          content: question
-        }, {
-          body: {
-            location: `${storedRegion}, ${storedCountry}`,
-            election: storedElection
-          }
-        });
-      }, 300);
+        // Additional delay to ensure state is committed before API call
+        setTimeout(() => {
+          // Directly send the message using append function - the body will use current state
+          append({
+            role: 'user',
+            content: question
+          });
+        }, 100);
+      }, 500);
       
       // Clear the stored data
       setStoredDataToProcess(null);
