@@ -187,7 +187,7 @@ export default function LandingPage() {
             </div>
 
                 {/* Dropdowns - minimal, clean selectors */}
-                <div className="flex flex-wrap items-center gap-x-10 gap-y-3 mt-6 pt-5 border-t border-gray-200">
+                <div className="flex items-center md:flex-nowrap flex-wrap whitespace-nowrap gap-x-12 gap-y-3 mt-6 pt-5 border-t border-gray-200">
                   {/* Country */}
                   <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
                     <select
