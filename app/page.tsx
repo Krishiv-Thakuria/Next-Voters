@@ -153,7 +153,7 @@ export default function LandingPage() {
             <div className="animated-hero pattern absolute inset-0"></div>
           </div>
 
-          <div className="relative max-w-[680px] mx-auto px-6 text-center">
+          <div className="relative max-w-[1000px] mx-auto px-6 text-center">
           {/* Main Title */}
           <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
             Next Voters
@@ -189,7 +189,7 @@ export default function LandingPage() {
                 {/* Dropdowns - minimal, clean selectors */}
                 <div className="flex items-center md:flex-nowrap flex-wrap whitespace-nowrap gap-x-12 gap-y-3 mt-6 pt-5 border-t border-gray-200">
                   {/* Country */}
-                  <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
+                  <div className="inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
                     <select
                       value={country}
                       onChange={(e) => {
@@ -197,7 +197,7 @@ export default function LandingPage() {
                         setRegion('');
                         setElection(electionOptions[e.target.value]?.[0] || '');
                       }}
-                      className="appearance-none bg-transparent pr-6 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
+                      className="appearance-none bg-transparent pr-0 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
                     >
                       {Object.keys(countryData).map((countryName) => (
                         <option key={countryName} value={countryName}>
@@ -205,15 +205,15 @@ export default function LandingPage() {
                         </option>
                       ))}
                     </select>
-                    <svg className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg className="ml-2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                   </div>
 
                   {/* Region */}
-                  <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
+                  <div className="inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
                     <select
                       value={region}
                       onChange={(e) => setRegion(e.target.value)}
-                      className="appearance-none bg-transparent pr-6 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
+                      className="appearance-none bg-transparent pr-0 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
                       disabled={!availableRegions.length}
                     >
                       <option value="">Select Region/State</option>
@@ -223,15 +223,15 @@ export default function LandingPage() {
                         </option>
                       ))}
                     </select>
-                    <svg className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg className="ml-2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                     </div>
 
                   {/* Election */}
-                  <div className="relative inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
+                  <div className="inline-flex items-center rounded-lg px-2 py-2 hover:bg-gray-50">
                     <select
                       value={election}
                       onChange={(e) => setElection(e.target.value)}
-                      className="appearance-none bg-transparent pr-6 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
+                      className="appearance-none bg-transparent pr-0 text-[16px] text-gray-800 font-poppins focus:outline-none disabled:opacity-50"
                       disabled={!availableElections.length}
                     >
                       <option value="">Select Election</option>
@@ -241,7 +241,7 @@ export default function LandingPage() {
                         </option>
                       ))}
                     </select>
-                    <svg className="absolute right-1 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg className="ml-2 h-4 w-4 text-gray-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                   </div>
                 </div>
               </form>
