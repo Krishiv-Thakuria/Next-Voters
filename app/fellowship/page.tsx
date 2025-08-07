@@ -78,9 +78,7 @@ export default function FellowshipPage() {
                 Create viral content that impacts millions
               </h3>
               <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
-                Fellows will be directly involved in our viral messaging campaigns with 
-                millions of views on social pages, empowering millions of voters by 
-                making democracy and discussions truly accessible to their vision.
+              Fellows will be directly trained by a viral marketing expert with millions of views on TikTok pages, empowering millions of voters by raising awareness on accessible tools provided by Next Voters.
               </p>
             </div>
 
@@ -90,8 +88,7 @@ export default function FellowshipPage() {
                 Lead real change in your community
               </h3>
               <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
-                Fellows will empower young voters in their local community of 
-                choice (school, district, city) by bringing big Next Voters tools.
+              Fellows will empower young voters in their local community of choice (school, district, etc) by integrating Next Voters technology.
               </p>
             </div>
           </div>
