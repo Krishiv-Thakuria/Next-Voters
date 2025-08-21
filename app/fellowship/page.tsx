@@ -94,29 +94,62 @@ export default function FellowshipPage() {
           </div>
         </div>
 
-        {/* Mentorship Section */}
+        {/* Featured Speakers & Mentors */}
         <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
           <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-poppins">
-            Exclusive mentorship with civic leaders
+            Featured Speakers & Mentors
           </h2>
-          
-          <p className="text-[14px] text-gray-700 mb-12 font-poppins leading-relaxed">
-            From politicians, to podcasters to brilliant civic and social organizations, 
-            fellows receive exclusive guidance from established leaders in the movement - 
-            part of our exclusive mentorship network.
-          </p>
-          
-          {/* Mentor Placeholders */}
-          <div className="flex justify-center gap-6 mb-8">
-            {[1, 2, 3, 4].map((index) => (
-              <div key={index} className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center border border-gray-300">
-                <span className="text-[24px] text-gray-400 font-poppins">?</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+            {/* Morris P. Fiorina */}
+            <div className="bg-white border border-gray-300 rounded-xl p-6 shadow-sm">
+              <div className="flex flex-col items-center text-center">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL09e96PtVn5lTnHNXYrEnsfM7BMPiV9D67g&s"
+                  alt="Professor Morris P. Fiorina"
+                  className="w-28 h-28 rounded-full object-cover mb-4 border border-gray-300"
+                />
+                <h3 className="text-[18px] font-semibold text-gray-900 font-poppins">Professor Morris P. Fiorina</h3>
+                <p className="text-[13px] text-gray-600 font-poppins mb-4">Professor of Political Science, Stanford University</p>
               </div>
-            ))}
+              <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
+                Morris P. Fiorina is a leading American political scientist at Stanford University and the Hoover Institution, renowned for his research on representation, public opinion, and the myth of a deeply polarized electorate.
+              </p>
+              <div className="mt-4 flex items-center justify-center">
+                <img
+                  src="https://logos-world.net/wp-content/uploads/2021/10/Stanford-Symbol.png"
+                  alt="Stanford University logo"
+                  className="h-24 md:h-28 w-auto"
+                />
+              </div>
+            </div>
+
+            {/* Diana C. Mutz */}
+            <div className="bg-white border border-gray-300 rounded-xl p-6 shadow-sm">
+              <div className="flex flex-col items-center text-center">
+                <img
+                  src="https://web.sas.upenn.edu/endowed-professors/files/2019/12/Mutz_Diane-sq-1920x1920.jpg"
+                  alt="Professor Diana C. Mutz"
+                  className="w-28 h-28 rounded-full object-cover mb-4 border border-gray-300"
+                />
+                <h3 className="text-[18px] font-semibold text-gray-900 font-poppins">Professor Diana C. Mutz</h3>
+                <p className="text-[13px] text-gray-600 font-poppins mb-4">Professor of Political Science & Communication, University of Pennsylvania</p>
+              </div>
+              <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
+                Diana C. Mutz is a prominent scholar of political psychology and public opinion at the University of Pennsylvania, widely recognized for her work on cross-cutting political exposure and the dynamics of democratic discourse.
+              </p>
+              <div className="mt-4 flex items-center justify-center">
+                <img
+                  src="https://branding.web-resources.upenn.edu/sites/default/files/styles/card_3x2/public/2022-03/UniversityofPennsylvania_FullLogo_RGB-4_0.png?h=ab080a2f&itok=tu_jMFEm"
+                  alt="University of Pennsylvania logo"
+                  className="h-24 md:h-28 w-auto"
+                />
+              </div>
+            </div>
           </div>
-          
-          <p className="text-[12px] text-gray-500 font-poppins">
-            Mentors to be announced soon, check back later!
+
+          <p className="text-[12px] text-gray-500 font-poppins mt-6">
+            More speakers will be revealed soon — stay tuned!
           </p>
         </div>
 
