@@ -1,5 +1,6 @@
 import { StreamingTextResponse, Message } from 'ai';
 import { verifyTurnstileToken } from '@/lib/turnstile';
+import { db } from '@/lib/database';
 
 // IMPORTANT: Set the runtime to edge
 // export const runtime = 'edge';
@@ -324,6 +325,12 @@ export async function POST(req: Request) {
             controller.enqueue(encoder.encode(char));
             await new Promise(resolve => setTimeout(resolve, 2));
           }
+
+          await db
+            .insertInto("chats")
+            .values({
+                
+            })
 
           controller.close();
         } catch (error) {

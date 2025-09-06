@@ -1,13 +1,7 @@
 import { db } from "@/lib/database";
 
 export async function GET() {
-  try {
-    // Get all chats from the database
-    const chats = await db
-      .selectFrom("chats")
-      .selectAll()
-      .execute();
-    
+  try {    
     // Get the count of all chats
     const chatCount = await db
       .selectFrom("chats")
@@ -15,7 +9,6 @@ export async function GET() {
       .executeTakeFirst();
     
     return Response.json({
-      chats,
       totalChats: chatCount?.total || 0
     });
   } catch (error) {
