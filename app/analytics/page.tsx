@@ -5,7 +5,6 @@ import React from 'react'
 import { useQuery } from '@tanstack/react-query';
 
 const Analytics = () => {
-
   const { data, isLoading, error } = useQuery<AnalyticsType>({
         queryKey: ['analytics-data-fetch'],
         queryFn: async () => {
@@ -19,6 +18,7 @@ const Analytics = () => {
   });
 
   if (isLoading) return <p className="text-gray-500">Loading...</p>;
+  if (error) return <p className="text-red-500">Error in fetching analytics</p>
 
   return (
     <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mt-6">
