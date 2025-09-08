@@ -12,9 +12,6 @@ export interface ChatCountTable {
 
   // Global counts of all requests 
   requests: number
-
-  // Last time count was updated
-  updated_at: ColumnType<Date, string | undefined, never>
 }
 
 export type ChatCount = Selectable<ChatCountTable>
