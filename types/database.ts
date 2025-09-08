@@ -7,8 +7,11 @@ export interface Database {
 export interface ChatCountTable {
   id: Generated<number>
 
-  // Global count of all chats
+  // Global count of all responses
   responses: number
+
+  // Global counts of all requests 
+  requests: number
 
   // Last time count was updated
   updated_at: ColumnType<Date, string | undefined, never>
