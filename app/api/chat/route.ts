@@ -1,7 +1,7 @@
 import { StreamingTextResponse, Message } from 'ai';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 import { db } from '@/lib/database';
-import { handleIncrementResponse } from '@/lib/analytics';
+import { handleIncrementRequest, handleIncrementResponse } from '@/lib/analytics';
 
 // IMPORTANT: Set the runtime to edge
 // export const runtime = 'edge';
@@ -286,9 +286,17 @@ export async function POST(req: Request) {
   try {
     const { messages, location, election } = await req.json();
 
-    const userPrompt = (messages as Message[]).slice(-1)[0]?.content || 'No prompt provided';
-    const safeLocation = location || 'an unspecified location';
-    const safeElection = election || 'Not Specified';
+    const defaultUserPrompt = "No prompt provided";
+    const defaultSafeLocation = "An unspecified location";
+    const defaultSafeElection = "Not specified";
+
+    const userPrompt = (messages as Message[]).slice(-1)[0]?.content || defaultUserPrompt;
+    const safeLocation = location || defaultSafeLocation;
+    const safeElection = election || defaultSafeElection;
+
+    if (userPrompt !== defaultUserPrompt) {
+        handleIncrementRequest();
+    }
 
     console.log('API Received - Prompt:', userPrompt, 'Location:', safeLocation, 'Election:', safeElection);
 
