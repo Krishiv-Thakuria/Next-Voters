@@ -21,18 +21,21 @@ export const handleIncrementRequest = async () => {
 }
 
 export const handleGetResponseCount = async () => {
-    const responses = await db
+    const row = await db
         .selectFrom("chat_count")
         .select('responses')
         .where('id', '=', 1)
+        .executeTakeFirst() // only one document (no arrays)
 
-    return responses
+    return row?.responses ?? 0
 }
 
 export const handleGetRequestCount = async () => {
-    const requests = await db
+    const row = await db
         .selectFrom("chat_count")
         .select("requests")
         .where("id", "=", 1)
-    return requests
+        .executeTakeFirst() // only one document (no arrays)
+
+    return row?.requests ?? 0
 }

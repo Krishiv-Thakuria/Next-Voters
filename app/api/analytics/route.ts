@@ -11,7 +11,7 @@ export async function GET() {
     });
   } catch (error) {
     return Response.json(
-      { error: "Failed to fetch analytics... Try again later!" },
+      { error: error.message},
       { status: 500 }
     );
   }

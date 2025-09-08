@@ -15,7 +15,7 @@ const Analytics = () => {
         const data = await response.json();
         setAnalytics(data);
       } catch (error) {
-        alert("Failed to fetch analytics at this moment in time.")
+        alert(error.message)
       } finally {
         setIsLoading(false);
       }
