@@ -19,3 +19,20 @@ export const handleIncrementRequest = async () => {
         .where('id', '=', 1)
         .execute()
 }
+
+export const handleGetResponseCount = async () => {
+    const responses = await db
+        .selectFrom("chat_count")
+        .select('responses')
+        .where('id', '=', 1)
+
+    return responses
+}
+
+export const handleGetRequestCount = async () => {
+    const requests = await db
+        .selectFrom("chat_count")
+        .select("requests")
+        .where("id", "=", 1)
+    return requests
+}
