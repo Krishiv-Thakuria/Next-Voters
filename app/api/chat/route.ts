@@ -1,6 +1,7 @@
 import { StreamingTextResponse, Message } from 'ai';
 import { verifyTurnstileToken } from '@/lib/turnstile';
 import { db } from '@/lib/database';
+import { handleIncrementResponse } from '@/lib/analytics';
 
 // IMPORTANT: Set the runtime to edge
 // export const runtime = 'edge';
@@ -326,16 +327,9 @@ export async function POST(req: Request) {
             await new Promise(resolve => setTimeout(resolve, 2));
           }
 
-          // Increment chat count for anayltics
-          await db
-            .updateTable("chat_count")
-            .set(eb => ({
-              responses: eb('responses', '+', 2)
-            }))
-            .where('id', '=', 1) 
-            .execute()
-
           controller.close();
+          
+          handleIncrementResponse();
         } catch (error) {
           console.error('Streaming error:', error);
           const errorMessage = `Error generating responses: ${error instanceof Error ? error.message : 'Unknown error'}`;
