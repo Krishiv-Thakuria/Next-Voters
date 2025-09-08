@@ -8,7 +8,7 @@ export interface ChatCountTable {
   id: Generated<number>
 
   // Global count of all chats
-  count: number
+  responses: number
 
   // Last time count was updated
   updated_at: ColumnType<Date, string | undefined, never>

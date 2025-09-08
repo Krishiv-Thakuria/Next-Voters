@@ -330,7 +330,7 @@ export async function POST(req: Request) {
           await db
             .updateTable("chat_count")
             .set(eb => ({
-              count: eb('count', '+', 1)
+              responses: eb('responses', '+', 2)
             }))
             .where('id', '=', 1) 
             .execute()
