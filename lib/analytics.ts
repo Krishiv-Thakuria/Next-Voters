@@ -9,3 +9,13 @@ export const handleIncrementResponse = async () => {
         .where('id', '=', 1) 
         .execute()
 }
+
+export const handleIncrementRequest = async () => {
+    await db 
+        .updateTable("chat_count")
+        .set(eb => ({
+            requests: eb("requests", "+", 1)
+        }))
+        .where('id', '=', 1)
+        .execute()
+}
