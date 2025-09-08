@@ -10,7 +10,6 @@ export async function GET() {
       responseCount
     });
   } catch (error) {
-    console.log(error.message)
     return Response.json(
       { error: error.message},
       { status: 500 }
