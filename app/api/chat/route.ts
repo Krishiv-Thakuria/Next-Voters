@@ -326,11 +326,14 @@ export async function POST(req: Request) {
             await new Promise(resolve => setTimeout(resolve, 2));
           }
 
+          // Increment chat count for anayltics
           await db
-            .insertInto("chats")
-            .values({
-                
-            })
+            .updateTable("chat_count")
+            .set(eb => ({
+              count: eb('count', '+', 1)
+            }))
+            .where('id', '=', 1) 
+            .execute()
 
           controller.close();
         } catch (error) {
