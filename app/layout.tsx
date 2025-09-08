@@ -1,7 +1,6 @@
 import './globals.css'
 import { Poppins } from 'next/font/google'
-import { Analytics } from "@vercel/analytics/react";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Root from '@/components/root'
 
 const poppins = Poppins({ 
   weight: ['300', '400', '500', '600', '700'],
@@ -20,15 +19,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-
-  const queryClient = new QueryClient()
+  
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-poppins`}>
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <Analytics />
-        </QueryClientProvider>
+        <Root>{children}</Root>      
       </body>
     </html>
   )
