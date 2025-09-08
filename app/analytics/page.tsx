@@ -15,7 +15,7 @@ const Analytics = () => {
         const data = await response.json();
         setAnalytics(data);
       } catch (error) {
-        alert(error.message)
+        alert(error)
       } finally {
         setIsLoading(false);
       }

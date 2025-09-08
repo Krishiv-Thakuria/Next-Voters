@@ -10,6 +10,7 @@ const dialect = new PostgresDialect({
     password: process.env.PGPASSWORD,
     port: 5434,
     max: 10,
+    ssl: { rejectUnauthorized: false }, // for Neon
   })
 })
 
