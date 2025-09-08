@@ -1,3 +1,5 @@
+"use client"
+
 import { Analytics as AnalyticsType } from '@/types/analytics'
 import React, { useEffect, useState } from 'react'
 
