@@ -1,17 +1,18 @@
+import { NextResponse } from "next/server";
 import { handleGetRequestCount, handleGetResponseCount } from "@/lib/analytics";
 
 export async function GET() {
-  try {    
+  try {
     const responseCount = await handleGetResponseCount();
     const requestCount = await handleGetRequestCount();
-    
-    return Response.json({
+
+    return NextResponse.json({
       requestCount,
-      responseCount
+      responseCount,
     });
-  } catch (error) {
-    return Response.json(
-      { error: error.message},
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
       { status: 500 }
     );
   }
