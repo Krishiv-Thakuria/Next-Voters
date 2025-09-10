@@ -17,6 +17,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^1.0.1
         version: 1.0.1
+      '@qdrant/qdrant-js':
+        specifier: ^1.15.1
+        version: 1.15.1(typescript@5.0.4)
       '@radix-ui/react-accordion':
         specifier: ^1.2.11
         version: 1.2.12(@types/react-dom@18.2.4)(@types/react@18.2.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -303,6 +306,22 @@ packages:
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
+  '@bufbuild/connect-node@0.10.1':
+    resolution: {integrity: sha512-l70tmks+txIzggO+kPkaOQmAapiBavK3rqTGsUTIlwk2nuuq8dUCIBnhbRxgZlyF67pNA1FTzoOucv/A3RteGA==}
+    engines: {node: '>=16.0.0'}
+    deprecated: Connect has moved to its own org @connectrpc and has a stable v1. Run `npx @connectrpc/connect-migrate@latest` to update. See https://github.com/connectrpc/connect-es/releases/tag/v0.13.1 for details.
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.2.1
+
+  '@bufbuild/connect@0.10.1':
+    resolution: {integrity: sha512-rqdZakAdajdSnRO342K7S3gZnUPMYXF2JsUDMA4vpR34SYdWYXiL2mclUMTaUk+EfLK04ulyejNaFAc0e5o8Qw==}
+    deprecated: Connect has moved to its own org @connectrpc and has a stable v1. Run `npx @connectrpc/connect-migrate@latest` to update. See https://github.com/connectrpc/connect-es/releases/tag/v0.13.1 for details.
+    peerDependencies:
+      '@bufbuild/protobuf': ^1.2.1
+
+  '@bufbuild/protobuf@1.10.1':
+    resolution: {integrity: sha512-wJ8ReQbHxsAfXhrf9ixl0aYbZorRuOWpBNzm8pL8ftmSxQx/wnJD5Eg861NwJU/czy2VXFIebCeZnZrI9rktIQ==}
+
   '@cfworker/json-schema@4.1.1':
     resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
 
@@ -547,6 +566,28 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@qdrant/js-client-grpc@1.15.1':
+    resolution: {integrity: sha512-r0THWNDIyWMwcly4PRouX2UwTPcPcTyyNrPG1mgIuWZ9iNaTZntsPB5rQ0GX5fyjW77Jjy8Aa8U8TQu6F7HU4A==}
+    engines: {node: '>=18.0.0', pnpm: '>=8'}
+    peerDependencies:
+      typescript: '>=4.1'
+
+  '@qdrant/js-client-rest@1.15.1':
+    resolution: {integrity: sha512-FAPMz6Z7RFj9vUun8R9e8SYcX6EkZtdfYfnh5lFXWcjEaat9q/jce1baAJCWAr3k8yHh62HpzCRYOatLVII28g==}
+    engines: {node: '>=18.17.0', pnpm: '>=8'}
+    peerDependencies:
+      typescript: '>=4.7'
+
+  '@qdrant/openapi-typescript-fetch@1.2.6':
+    resolution: {integrity: sha512-oQG/FejNpItrxRHoyctYvT3rwGZOnK4jr3JdppO/c78ktDvkWiPXPHNsrDf33K9sZdRb6PR7gi4noIapu5q4HA==}
+    engines: {node: '>=18.0.0', pnpm: '>=8'}
+
+  '@qdrant/qdrant-js@1.15.1':
+    resolution: {integrity: sha512-mrqZU5XQE13tKKAZHlMeEMZCoa76HerhakASrsLIJrHWkupB5Q6ONVm7QtNn9xP+DUKi6JTIvWmGzrTwCQhYDg==}
+    engines: {node: '>=18.17.0', pnpm: '>=8'}
+    peerDependencies:
+      typescript: '>=4.1'
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -1165,6 +1206,9 @@ packages:
 
   '@rushstack/eslint-patch@1.12.0':
     resolution: {integrity: sha512-5EwMtOqvJMMa3HbmxLlF74e+3/HhwBTMcvt3nqVJgGCozO6hzIPOBlwm8mGVNR9SN2IJpxSnlxczyDjcn7qIyw==}
+
+  '@sevinf/maybe@0.5.0':
+    resolution: {integrity: sha512-ARhyoYDnY1LES3vYI0fiG6e9esWfTNcXcO6+MPJJXcnyMV3bim4lnFt45VXouV7y82F4x3YH8nOQ6VztuvUiWg==}
 
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
@@ -2577,6 +2621,9 @@ packages:
 
   hastscript@9.0.1:
     resolution: {integrity: sha512-g7df9rMFX/SPi34tyGCyUBREQoKkapwdY/T04Qn9TDWfHhAYt4/I0gMVirzK5wEzeUqIjEB+LXC/ypb7Aqno5w==}
+
+  headers-polyfill@3.3.0:
+    resolution: {integrity: sha512-5e57etwBpNcDc0b6KCVWEh/Ro063OxPvzVimUdM0/tsYM/T7Hfy3kknIGj78SFTOhNd8AZY41U8mOHoO4LzmIQ==}
 
   html-url-attributes@3.0.1:
     resolution: {integrity: sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==}
@@ -4095,6 +4142,10 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
+  undici@6.21.3:
+    resolution: {integrity: sha512-gBLkYIlEnSp8pFbT64yFgGE6UIB9tAkhukC23PmMDCe5Nd+cRqKxSjw5y54MK2AZMgZfJWMaNE4nYUHgi1XEOw==}
+    engines: {node: '>=18.17'}
+
   unified@11.0.5:
     resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
 
@@ -4335,6 +4386,18 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@bufbuild/connect-node@0.10.1(@bufbuild/protobuf@1.10.1)':
+    dependencies:
+      '@bufbuild/connect': 0.10.1(@bufbuild/protobuf@1.10.1)
+      '@bufbuild/protobuf': 1.10.1
+      headers-polyfill: 3.3.0
+
+  '@bufbuild/connect@0.10.1(@bufbuild/protobuf@1.10.1)':
+    dependencies:
+      '@bufbuild/protobuf': 1.10.1
+
+  '@bufbuild/protobuf@1.10.1': {}
 
   '@cfworker/json-schema@4.1.1': {}
 
@@ -4578,6 +4641,28 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@qdrant/js-client-grpc@1.15.1(typescript@5.0.4)':
+    dependencies:
+      '@bufbuild/connect': 0.10.1(@bufbuild/protobuf@1.10.1)
+      '@bufbuild/connect-node': 0.10.1(@bufbuild/protobuf@1.10.1)
+      '@bufbuild/protobuf': 1.10.1
+      typescript: 5.0.4
+
+  '@qdrant/js-client-rest@1.15.1(typescript@5.0.4)':
+    dependencies:
+      '@qdrant/openapi-typescript-fetch': 1.2.6
+      '@sevinf/maybe': 0.5.0
+      typescript: 5.0.4
+      undici: 6.21.3
+
+  '@qdrant/openapi-typescript-fetch@1.2.6': {}
+
+  '@qdrant/qdrant-js@1.15.1(typescript@5.0.4)':
+    dependencies:
+      '@qdrant/js-client-grpc': 1.15.1(typescript@5.0.4)
+      '@qdrant/js-client-rest': 1.15.1(typescript@5.0.4)
+      typescript: 5.0.4
 
   '@radix-ui/number@1.1.1': {}
 
@@ -5235,6 +5320,8 @@ snapshots:
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.12.0': {}
+
+  '@sevinf/maybe@0.5.0': {}
 
   '@standard-schema/utils@0.3.0': {}
 
@@ -6850,6 +6937,8 @@ snapshots:
       hast-util-parse-selector: 4.0.0
       property-information: 7.1.0
       space-separated-tokens: 2.0.2
+
+  headers-polyfill@3.3.0: {}
 
   html-url-attributes@3.0.1: {}
 
@@ -8607,6 +8696,8 @@ snapshots:
   undici-types@5.26.5: {}
 
   undici-types@6.21.0: {}
+
+  undici@6.21.3: {}
 
   unified@11.0.5:
     dependencies:
