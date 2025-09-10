@@ -25,7 +25,7 @@ export const handleGetResponseCount = async () => {
         .selectFrom("chat_count")
         .select('responses')
         .where('id', '=', 1)
-        .executeTakeFirst() // only one document (no arrays)
+        .executeTakeFirst() 
 
     return row?.responses ?? 0
 }
@@ -35,7 +35,7 @@ export const handleGetRequestCount = async () => {
         .selectFrom("chat_count")
         .select("requests")
         .where("id", "=", 1)
-        .executeTakeFirst() // only one document (no arrays)
+        .executeTakeFirst() 
 
     return row?.requests ?? 0
 }
