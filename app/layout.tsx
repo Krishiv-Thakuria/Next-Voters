@@ -1,8 +1,6 @@
 import './globals.css'
 import { Poppins } from 'next/font/google'
-import { Analytics } from "@vercel/analytics/react";
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import Root from '@/components/root'
 
 const poppins = Poppins({ 
   weight: ['300', '400', '500', '600', '700'],
@@ -21,11 +19,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-poppins`}>
-        {children}
-        <Analytics />
+        <Root>{children}</Root>      
       </body>
     </html>
   )
