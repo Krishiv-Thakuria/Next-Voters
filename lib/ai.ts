@@ -1,7 +1,7 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
 
-const generateLLMResponse = () => {
+const generateLLMResponse = async () => {
     const { object } = await generateObject({
     model: 'openai/gpt-4.1',
     schema: z.object({
