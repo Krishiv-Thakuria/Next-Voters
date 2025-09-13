@@ -11,6 +11,7 @@ const groq = createGroq({
 export const generateResponses = async (prompt: string, country: "USA" | "Canada") => {
     const politicalPartiesMap = {
         USA: [
+            
             {
                 party: "Republican",
                 partyPrompt: ""
