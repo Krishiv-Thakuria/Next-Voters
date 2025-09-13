@@ -1,4 +1,4 @@
-import { generateObject } from 'ai';
+import { generateObject, embed } from 'ai';
 import { createGroq } from '@ai-sdk/groq';
 import { z } from 'zod';
 
@@ -25,4 +25,13 @@ export const generateResponse = async (prompt: string) => {
     });
 
     return object
+}
+
+export const generateEmbeddings = async (value: string) => {
+    const { embedding } = await embed({
+        model: groq.textEmbeddingModel('text-embedding-3-small'),
+        value
+    })
+
+    return embedding
 }
