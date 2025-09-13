@@ -1,6 +1,8 @@
 import { generateObject, embed } from 'ai';
+import { client } from "./qdrant"
 import { createGroq } from '@ai-sdk/groq';
 import { z } from 'zod';
+import { politicalPartiesMap } from '@/data/political-prompts';
 
 // Define a custom env variable for API key
 const groq = createGroq({
@@ -8,33 +10,6 @@ const groq = createGroq({
 })
 
 export const generateResponses = async (prompt: string, country: "USA" | "Canada") => {
-    const politicalPartiesMap = {
-        USA: [
-            
-            {
-                party: "Republican",
-                partyPrompt: ""
-            },
-            {
-                party: "Democratic",
-                partyPrompt: ""
-            }
-        ],
-        Canada: [
-            {
-                party: "Conservatives",
-                partyPrompt: ""
-            }, 
-            {
-                party: "Democractic",
-                partyPrompt: ""
-            }, {
-                party: "Liberal",
-                partyPrompt: ""
-            }
-        ]
-    }
-
     const parties = politicalPartiesMap[country]
 
     const responses = await Promise.all(
@@ -69,6 +44,42 @@ export const generateEmbeddings = async (value: string) => {
     return embedding
 }
 
+export const addEmbeddings = async (
+    vectorEmbeddings: number[],
+    author: string,
+    url: string,
+    document_name: string
+) => {
+    const collectionName = "political_documents"
+    const collection = await client.getCollection(collectionName)
+
+    if (!collection) {
+        await client.createCollection(collectionName, {
+            vectors: {
+                size: 4,
+                distance: "Cosine"
+            },
+            optimizers_config: {
+                default_segment_number: 2,
+            },
+            replication_factor: 2
+        }),
+        client.upsert(collectionName, {
+            wait: true,
+            points: [{
+                id: 1,
+                vector: vectorEmbeddings,
+                payload: {
+                    author,
+                    url,
+                    document_name
+                }
+            }]
+        })
+    }
+}
+
 export const searchEmbeddings = async () => {
 
 }
+
