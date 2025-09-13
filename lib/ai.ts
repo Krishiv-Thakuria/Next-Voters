@@ -2,6 +2,7 @@ import { generateObject, embed } from 'ai';
 import { createGroq } from '@ai-sdk/groq';
 import { z } from 'zod';
 
+
 // Define a custom env variable for API key
 const groq = createGroq({
     apiKey: process.env.GROQ_API_AUTH_KEY
@@ -67,4 +68,8 @@ export const generateEmbeddings = async (value: string) => {
     })
 
     return embedding
+}
+
+export const searchEmbeddings = async () => {
+
 }
