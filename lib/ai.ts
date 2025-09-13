@@ -1,9 +1,10 @@
 import { generateObject } from 'ai';
+import { groq } from '@ai-sdk/groq';
 import { z } from 'zod';
 
-const generateLLMResponse = async () => {
+export const generateResponse = async () => {
     const { object } = await generateObject({
-    model: 'openai/gpt-4.1',
+    model: groq('openai/gpt-4.1'),
     schema: z.object({
         recipe: z.object({
         name: z.string(),
@@ -14,5 +15,5 @@ const generateLLMResponse = async () => {
     prompt: 'Generate a lasagna recipe.',
     });
 
-    return object.message
+    return object
 }
