@@ -43,10 +43,9 @@ export const generateResponses = async (prompt: string, country: "USA" | "Canada
             generateObject({
                 model: groq('openai/gpt-4.1'),
                 schema: z.object({
-                    recipe: z.object({
-                        name: z.string(),
-                        ingredients: z.array(z.object({ name: z.string(), amount: z.string() })),
-                        steps: z.array(z.string()),
+                    message: z.object({
+                        answer: z.string(),
+                        citation: z.string(),
                     }),
                 }),
                 system: `
