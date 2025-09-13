@@ -7,7 +7,7 @@ const groq = createGroq({
     apiKey: process.env.GROQ_API_AUTH_KEY
 })
 
-export const generateResponse = async (prompt: string, country: "USA" | "Canada") => {
+export const generateResponses = async (prompt: string, country: "USA" | "Canada") => {
     const politicalPartiesMap = {
         USA: [
             {
