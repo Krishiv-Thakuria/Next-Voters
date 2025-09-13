@@ -7,34 +7,57 @@ const groq = createGroq({
     apiKey: process.env.GROQ_API_AUTH_KEY
 })
 
-export const generateResponse = async (prompt: string, politicalParty: string, country: "USA" | "Canada") => {
-    const usaPoliticalParties = ["Republican", "Democractic"]
-    const canadaPoliticalParties = ["Conservatives", "Democractic", "Liberal"]
-    const errorMessage = "The political party is not correct"
-
-    if (country != "USA" && !usaPoliticalParties.includes(politicalParty)) {
-        throw new Error(errorMessage)
-    } else if (country != "Canada" && !canadaPoliticalParties.includes(politicalParty)) {
-        throw new Error(errorMessage)
+export const generateResponse = async (prompt: string, country: "USA" | "Canada") => {
+    const politicalPartiesMap = {
+        USA: [
+            {
+                party: "Republican",
+                partyPrompt: ""
+            },
+            {
+                party: "Democratic",
+                partyPrompt: ""
+            }
+        ],
+        Canada: [
+            {
+                party: "Conservatives",
+                partyPrompt: ""
+            }, 
+            {
+                party: "Democractic",
+                partyPrompt: ""
+            }, {
+                party: "Liberal",
+                partyPrompt: ""
+            }
+        ]
     }
 
-    const { object } = await generateObject({
-        model: groq('openai/gpt-4.1'),
-        schema: z.object({
-            recipe: z.object({
-            name: z.string(),
-            ingredients: z.array(z.object({ name: z.string(), amount: z.string() })),
-            steps: z.array(z.string()),
-            }),
-        }),
-        system: `
-        You are an expert in politics and civic discourse. 
-        Generate a detailed and non-partisan response to the following prompt given.
-        `,
-        prompt,
-    });
+    const parties = politicalPartiesMap[country]
 
-    return object
+    const responses = await Promise.all(
+        parties.map((party, partyPrompt) =>
+            generateObject({
+                model: groq('openai/gpt-4.1'),
+                schema: z.object({
+                    recipe: z.object({
+                        name: z.string(),
+                        ingredients: z.array(z.object({ name: z.string(), amount: z.string() })),
+                        steps: z.array(z.string()),
+                    }),
+                }),
+                system: `
+                    You are an expert in politics and civic discourse. 
+                    Generate a detailed and non-partisan response to the following prompt given in relation to this political party: ${party}
+                    This is some extra context about what the party is to help you find the necessary content: ${partyPrompt}
+                `,
+                prompt,
+            }).then(result => result.object)
+        )
+    )
+
+    return responses
 }
 
 export const generateEmbeddings = async (value: string) => {
