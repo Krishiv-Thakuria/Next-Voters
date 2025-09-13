@@ -1,8 +1,13 @@
 import { generateObject } from 'ai';
-import { groq } from '@ai-sdk/groq';
+import { createGroq } from '@ai-sdk/groq';
 import { z } from 'zod';
 
-export const generateResponse = async () => {
+// Define a custom env variable for API key
+const groq = createGroq({
+    apiKey: process.env.GROQ_API_AUTH_KEY
+})
+
+export const generateResponse = async (prompt: string) => {
     const { object } = await generateObject({
         model: groq('openai/gpt-4.1'),
         schema: z.object({
@@ -12,7 +17,11 @@ export const generateResponse = async () => {
             steps: z.array(z.string()),
             }),
         }),
-        prompt: 'Generate a lasagna recipe.',
+        system: `
+        You are an expert in politics and civic discourse. 
+        Generate a detailed and non-partisan response to the following prompt given.
+        `,
+        prompt,
     });
 
     return object
