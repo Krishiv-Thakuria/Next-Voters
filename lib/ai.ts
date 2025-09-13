@@ -82,4 +82,3 @@ export const addEmbeddings = async (
 export const searchEmbeddings = async () => {
 
 }
-
