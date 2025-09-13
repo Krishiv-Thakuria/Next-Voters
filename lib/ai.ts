@@ -7,7 +7,17 @@ const groq = createGroq({
     apiKey: process.env.GROQ_API_AUTH_KEY
 })
 
-export const generateResponse = async (prompt: string) => {
+export const generateResponse = async (prompt: string, politicalParty: string, country: "USA" | "Canada") => {
+    const usaPoliticalParties = ["Republican", "Democractic"]
+    const canadaPoliticalParties = ["Conservatives", "Democractic", "Liberal"]
+    const errorMessage = "The political party is not correct"
+
+    if (country != "USA" && !usaPoliticalParties.includes(politicalParty)) {
+        throw new Error(errorMessage)
+    } else if (country != "Canada" && !canadaPoliticalParties.includes(politicalParty)) {
+        throw new Error(errorMessage)
+    }
+
     const { object } = await generateObject({
         model: groq('openai/gpt-4.1'),
         schema: z.object({
