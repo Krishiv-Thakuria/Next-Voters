@@ -4,6 +4,7 @@ import { createGroq } from '@ai-sdk/groq';
 import { z } from 'zod';
 import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
+import { generateId } from './random';
 
 // Define a custom env variable for API key
 const groq = createGroq({
@@ -49,20 +50,7 @@ export const addEmbeddings = async (
     const collectionName = "political_documents"
     const collection = await client.getCollection(collectionName)
 
-    if (collection) {
-        await client.updateVectors(collectionName, {
-            wait: true,
-            points: [{
-                id: 2,
-                vector: vectorEmbeddings,
-                payload: {
-                    author,
-                    url,
-                    document_name
-                }
-            }]
-        })
-    } else {
+    if (!collection) {
         await client.createCollection(collectionName, {
             vectors: {
                 size: 4,
@@ -73,20 +61,20 @@ export const addEmbeddings = async (
             },
             replication_factor: 2
         })
-
-        await client.upsert(collectionName, {
-            wait: true,
-            points: [{
-                id: 1,
-                vector: vectorEmbeddings,
-                payload: {
-                    author,
-                    url,
-                    document_name
-                }
-            }]
-        })
     }
+
+    await client.upsert(collectionName, {
+        wait: true,
+        points: [{
+            id: generateId(),
+            vector: vectorEmbeddings,
+            payload: {
+                author,
+                url,
+                document_name
+            }
+            }]
+    })
 }
 
 export const searchEmbeddings = async () => {
