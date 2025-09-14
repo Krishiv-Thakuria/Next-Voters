@@ -1,0 +1,93 @@
+import { generateObject, embed } from 'ai';
+import { client } from "./qdrant"
+import { createGroq } from '@ai-sdk/groq';
+import { z } from 'zod';
+import { politicalPartiesMap } from '@/data/political-prompts';
+import { handleSystemPrompt } from '@/data/prompts';
+import { generateId } from './random';
+import { collectionName } from '@/data/qdrant';
+
+// Define a custom env variable for API key
+const groq = createGroq({
+    apiKey: process.env.GROQ_API_AUTH_KEY
+})
+
+export const generateResponses = async (prompt: string, country: "USA" | "Canada") => {
+    const parties = politicalPartiesMap[country]
+
+    const responses = await Promise.all(
+        parties.map((partyInfo) =>
+            generateObject({
+                model: groq('openai/gpt-4.1'),
+                schema: z.object({
+                    message: z.object({
+                        answer: z.string(),
+                        citation: z.string(),
+                    }),
+                }),
+                system: handleSystemPrompt(partyInfo.party, partyInfo.partyPrompt),
+                prompt,
+            }).then(result => result.object)
+        )
+    )
+    return responses
+}
+
+export const generateEmbeddings = async (value: string) => {
+    const { embedding } = await embed({
+        model: groq.textEmbeddingModel('text-embedding-3-small'),
+        value
+    })
+
+    return embedding
+}
+
+export const addEmbeddings = async (
+    vectorEmbeddings: number[],
+    author: string,
+    url: string,
+    document_name: string
+) => {
+    const collection = await client.getCollection(collectionName)
+
+    if (!collection) {
+        await client.createCollection(collectionName, {
+            vectors: {
+                size: 4,
+                distance: "Cosine"
+            },
+            optimizers_config: {
+                default_segment_number: 2,
+            },
+            replication_factor: 2
+        })
+    }
+
+    await client.upsert(collectionName, {
+        wait: true,
+        points: [{
+            id: generateId(),
+            vector: vectorEmbeddings,
+            payload: {
+                author,
+                url,
+                document_name
+            }
+        }]
+    })
+}
+
+export const searchEmbeddings = async (userQuery: string) => {
+    // Turn query to vector embeddings so vector db can search
+    const vectorEmbeddings = await generateEmbeddings(userQuery)
+    
+    client.search(collectionName, {
+        vector: vectorEmbeddings
+    })
+}
+
+export const chunkDocument = async () => {
+    // ADD LOGIC
+}
+
+
