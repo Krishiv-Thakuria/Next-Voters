@@ -3,7 +3,7 @@ import { client } from "./qdrant"
 import { createGroq } from '@ai-sdk/groq';
 import { z } from 'zod';
 import { politicalPartiesMap } from '@/data/political-prompts';
-import { systemPrompt } from '@/data/prompts';
+import { handleSystemPrompt } from '@/data/prompts';
 
 // Define a custom env variable for API key
 const groq = createGroq({
@@ -23,7 +23,7 @@ export const generateResponses = async (prompt: string, country: "USA" | "Canada
                         citation: z.string(),
                     }),
                 }),
-                system: systemPrompt(partyInfo.party, partyInfo.partyPrompt),
+                system: handleSystemPrompt(partyInfo.party, partyInfo.partyPrompt),
                 prompt,
             }).then(result => result.object)
         )
