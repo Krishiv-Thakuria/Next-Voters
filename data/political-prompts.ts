@@ -2,25 +2,25 @@ export const politicalPartiesMap = {
     USA: [
         {
             party: "Republican",
-            partyPrompt: ""
+            partyPrompt: "Test"
         },
         {
             party: "Democratic",
-            partyPrompt: ""
+            partyPrompt: "Test"
         }
     ],
     
     Canada: [
         {
             party: "Conservatives",
-            partyPrompt: ""
+            partyPrompt: "Test"
         }, 
         {
             party: "Democractic",
-            partyPrompt: ""
+            partyPrompt: "Test"
         }, {
             party: "Liberal",
-            partyPrompt: ""
+            partyPrompt: "Test"
         }
     ]
 }
