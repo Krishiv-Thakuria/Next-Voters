@@ -49,7 +49,20 @@ export const addEmbeddings = async (
     const collectionName = "political_documents"
     const collection = await client.getCollection(collectionName)
 
-    if (!collection) {
+    if (collection) {
+        await client.updateVectors(collectionName, {
+            wait: true,
+            points: [{
+                id: 2,
+                vector: vectorEmbeddings,
+                payload: {
+                    author,
+                    url,
+                    document_name
+                }
+            }]
+        })
+    } else {
         await client.createCollection(collectionName, {
             vectors: {
                 size: 4,
@@ -59,8 +72,9 @@ export const addEmbeddings = async (
                 default_segment_number: 2,
             },
             replication_factor: 2
-        }),
-        client.upsert(collectionName, {
+        })
+
+        await client.upsert(collectionName, {
             wait: true,
             points: [{
                 id: 1,
