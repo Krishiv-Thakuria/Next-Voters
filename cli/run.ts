@@ -29,7 +29,7 @@ try {
     const contentType = response.headers.get("content-type") || "";
 
     if (contentType.includes("application/pdf")) {
-        log(chalk.green("sigma"));
+        log(chalk.green("Retrieved PDF document!"));
     } else {
         throw new Error("The link did not return a PDF document.");
     }
