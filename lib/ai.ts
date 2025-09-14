@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
 import { generateId } from './random';
+import { collectionName } from '@/data/qdrant';
 
 // Define a custom env variable for API key
 const groq = createGroq({
@@ -47,7 +48,6 @@ export const addEmbeddings = async (
     url: string,
     document_name: string
 ) => {
-    const collectionName = "political_documents"
     const collection = await client.getCollection(collectionName)
 
     if (!collection) {
@@ -77,6 +77,17 @@ export const addEmbeddings = async (
     })
 }
 
-export const searchEmbeddings = async () => {
-
+export const searchEmbeddings = async (userQuery: string) => {
+    // Turn query to vector embeddings so vector db can search
+    const vectorEmbeddings = await generateEmbeddings(userQuery)
+    
+    client.search(collectionName, {
+        vector: vectorEmbeddings
+    })
 }
+
+
+
+
+
+
