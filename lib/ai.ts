@@ -86,8 +86,8 @@ export const searchEmbeddings = async (userQuery: string) => {
     })
 }
 
-
-
-
+export const chunkDocument = async () => {
+    // ADD LOGIC
+}
 
 

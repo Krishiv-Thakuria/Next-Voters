@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import { log } from "console";
 import inquirer from "inquirer";
+import { chunkDocument } from "@/lib/ai"
 
 log(chalk.blue("Welcome to Next Voters' CLI tooling!"));
 
@@ -30,6 +31,7 @@ try {
 
     if (contentType.includes("application/pdf")) {
         log(chalk.green("Retrieved PDF document!"));
+        await chunkDocument();
     } else {
         throw new Error("The link did not return a PDF document.");
     }
