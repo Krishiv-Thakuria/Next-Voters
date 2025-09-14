@@ -73,7 +73,7 @@ export const addEmbeddings = async (
                 url,
                 document_name
             }
-            }]
+        }]
     })
 }
 
