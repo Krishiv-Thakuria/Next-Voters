@@ -29,8 +29,12 @@ try {
             validate: (input) => input.trim() !== "" || "Document name cannot be empty",
         },
     ]);
+    const { 
+        documentLink, 
+        author, 
+        document_name 
+    } = answers;
 
-    const { documentLink, author, document_name } = answers;
     log(chalk.green("Valid link inputted. Checking document type..."));
 
     const response = await fetch(documentLink);
@@ -51,9 +55,9 @@ try {
         await addEmbeddings(
             chunks,
             vectorEmbeddings, 
-            answers.author, 
-            answers.documentLink, 
-            answers.document_name
+            author, 
+            documentLink, 
+            document_name
         ); 
 
         log(chalk.blue("Embeddings added successfully!"));
