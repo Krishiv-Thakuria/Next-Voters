@@ -29,8 +29,7 @@ export const generateResponses = async (
                 model: cohere(MODEL_NAME),
                 schema: z.object({
                     message: z.object({
-                        answer: z.string(),
-                        citation: z.string(),
+                        answer: z.string()
                     }),
                 }),
                 system: handleSystemPrompt(party, partyPrompt, contexts),
