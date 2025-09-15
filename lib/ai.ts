@@ -1,16 +1,17 @@
 import { generateObject, embed } from 'ai';
 import { client } from "./qdrant"
-import { createGroq } from '@ai-sdk/groq';
+import { createCohere } from '@ai-sdk/cohere';
 import { z } from 'zod';
 import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
 import { generateId } from './random';
 import { collectionName } from '@/data/qdrant';
 import pdfParse from "pdf-parse";
+import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
 
 // Define a custom env variable for API key
-const groq = createGroq({
-    apiKey: process.env.GROQ_API_AUTH_KEY
+const cohere = createCohere({
+    apiKey: process.env.COHERE_API_KEY
 })
 
 export const generateResponses = async (
@@ -25,7 +26,7 @@ export const generateResponses = async (
             const { party, partyPrompt } = partyInfo
             
             generateObject({
-                model: groq('openai/gpt-4.1'),
+                model: cohere(MODEL_NAME),
                 schema: z.object({
                     message: z.object({
                         answer: z.string(),
@@ -63,7 +64,7 @@ export const addEmbeddings = async (
 
     textChunks.forEach(async text => {
         const { embedding } = await embed({
-            model: groq.textEmbeddingModel('text-embedding-3-small'),
+            model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
             value: text
         })
 
@@ -88,7 +89,7 @@ export const addEmbeddings = async (
 export const searchEmbeddings = async (userQuery: string) => {
     // Turn user query to vector embeddings so vector db can understand + search
     const { embedding: vectorEmbeddings } = await embed({
-            model: groq.textEmbeddingModel('text-embedding-3-small'),
+            model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
             value: userQuery
     })
 

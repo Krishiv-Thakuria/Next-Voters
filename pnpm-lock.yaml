@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@ai-sdk/groq':
-        specifier: ^2.0.19
-        version: 2.0.19(zod@3.25.76)
+      '@ai-sdk/cohere':
+        specifier: ^2.0.10
+        version: 2.0.10(zod@3.25.76)
       '@ai-sdk/react':
         specifier: ^2.0.42
         version: 2.0.42(react@18.2.0)(zod@3.25.76)
@@ -279,6 +279,12 @@ importers:
 
 packages:
 
+  '@ai-sdk/cohere@2.0.10':
+    resolution: {integrity: sha512-EatRRsJ8yWEEnmZ1Ine8Pb5YtweHsVWe4wWGQbYikC1VxaSlJ9vWQB1CsBHjyTTK/EElihVl4eTsdyfh8OQByA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4
+
   '@ai-sdk/gateway@1.0.21':
     resolution: {integrity: sha512-yQPrMb1v0P8GwmmpcCT2DGPfgJVRkJ9QaRRJGO0+Em+wI+Xv3lvHHIc3ImVR3jjVfJPih/cNWWALUgRERfQaxQ==}
     engines: {node: '>=18'}
@@ -287,12 +293,6 @@ packages:
 
   '@ai-sdk/gateway@1.0.22':
     resolution: {integrity: sha512-1rffatIFhyCrXo+uUmJzeUw1fHU/E9k3sSb7LMNzdyafjupnZJKg+GXkhESzvsdQ3kRa61ruziZ3qCFRJExXgw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4
-
-  '@ai-sdk/groq@2.0.19':
-    resolution: {integrity: sha512-VegT0g1X7b2zDYOQvBx1YzKdnBtkyIsGnUBDW4JOft88jv0vUe+sE1H9cvRbKgt2Pd0970JuRM9Ok9D4WYP4+A==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4
@@ -4457,6 +4457,12 @@ packages:
 
 snapshots:
 
+  '@ai-sdk/cohere@2.0.10(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.0
+      '@ai-sdk/provider-utils': 3.0.9(zod@3.25.76)
+      zod: 3.25.76
+
   '@ai-sdk/gateway@1.0.21(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0
@@ -4464,12 +4470,6 @@ snapshots:
       zod: 3.25.76
 
   '@ai-sdk/gateway@1.0.22(zod@3.25.76)':
-    dependencies:
-      '@ai-sdk/provider': 2.0.0
-      '@ai-sdk/provider-utils': 3.0.9(zod@3.25.76)
-      zod: 3.25.76
-
-  '@ai-sdk/groq@2.0.19(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0
       '@ai-sdk/provider-utils': 3.0.9(zod@3.25.76)
