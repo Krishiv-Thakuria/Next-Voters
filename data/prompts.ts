@@ -1,4 +1,8 @@
-export const handleSystemPrompt = (party: string, partyPrompt: string, contexts: string[]) => {
+export const handleSystemPrompt = (
+    party: string, 
+    partyPrompt: string, 
+    contexts: string[]
+) => {
     const formattedContext = contexts
         .map((context, index) => `${index + 1}. ${context}`)
         .join('\n');
