@@ -40,22 +40,8 @@ export const generateResponses = async (
     return responses
 }
 
-export const generateEmbeddings = (chunks: string[]) => {
-    const embeddings = [];
-    chunks.forEach(async text => {
-        const { embedding } = await embed({
-            model: groq.textEmbeddingModel('text-embedding-3-small'),
-            value: text
-        })
-        embeddings.push(embedding)
-    })
-
-    return embeddings
-}
-
 export const addEmbeddings = async (
     textChunks: string[],
-    vectorEmbeddings: number[],
     author: string,
     url: string,
     document_name: string
@@ -76,14 +62,19 @@ export const addEmbeddings = async (
     }
 
     textChunks.forEach(async text => {
+        const { embedding } = await embed({
+            model: groq.textEmbeddingModel('text-embedding-3-small'),
+            value: text
+        })
+
         await client.upsert(collectionName, {
             wait: true,
             points: [{
                 id: generateId(),
-                vector: vectorEmbeddings,
+                vector: embedding,
                 payload: {
                     text,
-                    citiation: {
+                    citation: {
                         author,
                         url,
                         document_name

@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { log } from "console";
 import inquirer from "inquirer";
-import { addEmbeddings, chunkDocument, generateEmbeddings } from "@/lib/ai";
+import { addEmbeddings, chunkDocument } from "@/lib/ai";
 
 log(chalk.blue("Welcome to Next Voters' CLI tooling!"));
 
@@ -50,11 +50,9 @@ try {
 
         const pdfBuffer = await response.arrayBuffer();
         const chunks = await chunkDocument(pdfBuffer);
-        const vectorEmbeddings = await generateEmbeddings(chunks);
 
         await addEmbeddings(
             chunks,
-            vectorEmbeddings, 
             author, 
             documentLink, 
             document_name
