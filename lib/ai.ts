@@ -6,6 +6,7 @@ import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
 import { generateId } from './random';
 import { collectionName } from '@/data/qdrant';
+import pdfParse from "pdf-parse";
 
 // Define a custom env variable for API key
 const groq = createGroq({
@@ -33,17 +34,21 @@ export const generateResponses = async (prompt: string, country: "USA" | "Canada
     return responses
 }
 
-export const generateEmbeddings = async (value: string) => {
-    const { embedding } = await embed({
-        model: groq.textEmbeddingModel('text-embedding-3-small'),
-        value
+export const generateEmbeddings = (chunks: string[]) => {
+    const embeddings = [];
+    chunks.forEach(async text => {
+        const { embedding } = await embed({
+            model: groq.textEmbeddingModel('text-embedding-3-small'),
+            value: text
+        })
+        embeddings.push(embedding)
     })
 
-    return embedding
+    return embeddings
 }
 
 export const addEmbeddings = async (
-    text: string,
+    textChunks: string[],
     vectorEmbeddings: number[],
     author: string,
     url: string,
@@ -64,25 +69,32 @@ export const addEmbeddings = async (
         })
     }
 
-    await client.upsert(collectionName, {
-        wait: true,
-        points: [{
-            id: generateId(),
-            vector: vectorEmbeddings,
-            payload: {
-                author,
-                url,
-                document_name,
-                text
-            }
-        }]
+    textChunks.forEach(async text => {
+        await client.upsert(collectionName, {
+            wait: true,
+            points: [{
+                id: generateId(),
+                vector: vectorEmbeddings,
+                payload: {
+                    text,
+                    citiation: {
+                        author,
+                        url,
+                        document_name
+                    },
+                }
+            }]
+        })
     })
 }
 
 export const searchEmbeddings = async (userQuery: string) => {
-    // Turn query to vector embeddings so vector db can search
-    const vectorEmbeddings = await generateEmbeddings(userQuery)
-    
+    // Turn user query to vector embeddings so vector db can understand + search
+    const { embedding: vectorEmbeddings } = await embed({
+            model: groq.textEmbeddingModel('text-embedding-3-small'),
+            value: userQuery
+    })
+
     const response = await client.search(collectionName, {
         vector: vectorEmbeddings
     })
@@ -90,6 +102,23 @@ export const searchEmbeddings = async (userQuery: string) => {
     return response;
 }
 
-export const chunkDocument = async () => {
-    // ADD LOGIC
-}
+export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
+    const buffer = Buffer.from(pdfBuffer);
+
+    const data = await pdfParse(buffer);
+    const text = data.text;
+
+    const sentences = text
+        .split(/(?<=[.!?])\s+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+    // Chunking based on each sentence because all words should be similar in meaning/concept
+    const chunks: string[] = [];
+    for (let i = 0; i < sentences.length; i += 1) {
+        const chunk = sentences.slice(i, i + 3).join(" ");
+        chunks.push(chunk);
+    }
+
+    return chunks;
+};
