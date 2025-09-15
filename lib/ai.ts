@@ -110,7 +110,7 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
 
     const sentences = text
         .split(/(?<=[.!?])\s+/)
-        .map(s => s.trim())
+        .map(sentence => sentence.trim())
         .filter(Boolean);
 
     // Chunking based on each sentence because all words should be similar in meaning/concept
