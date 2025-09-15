@@ -146,13 +146,6 @@ export default function LandingPage() {
       <main className="w-full">
         {/* Hero with animated background */}
         <section className="relative pt-20 pb-8">
-          {/* Animated background (pattern + subtle rotating gradient) */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="animated-hero overlay absolute inset-0"></div>
-            <div className="animated-hero gradient absolute -inset-[20%]"></div>
-            <div className="animated-hero pattern absolute inset-0"></div>
-          </div>
-
           <div className="relative max-w-[1000px] mx-auto px-6 text-center">
           {/* Main Title */}
           <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
