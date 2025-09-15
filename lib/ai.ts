@@ -21,7 +21,9 @@ export const generateResponses = async (
     const parties = politicalPartiesMap[country]
 
     const responses = await Promise.all(
-        parties.map((partyInfo) =>
+        parties.map((partyInfo) => {
+            const { party, partyPrompt } = partyInfo
+            
             generateObject({
                 model: groq('openai/gpt-4.1'),
                 schema: z.object({
@@ -30,10 +32,10 @@ export const generateResponses = async (
                         citation: z.string(),
                     }),
                 }),
-                system: handleSystemPrompt(partyInfo.party, partyInfo.partyPrompt, contexts),
+                system: handleSystemPrompt(party, partyPrompt, contexts),
                 prompt,
             }).then(result => result.object)
-        )
+        })
     )
     return responses
 }
