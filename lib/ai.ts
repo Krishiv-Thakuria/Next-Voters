@@ -8,7 +8,7 @@ import { generateId } from './random';
 import { collectionName } from '@/data/qdrant';
 import pdfParse from "pdf-parse";
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
-import { Country } from '@/types/supported-countries';
+import { SupportedCountry } from '@/types/supported-countries';
 
 // Define a custom env variable for API key
 const cohere = createCohere({
