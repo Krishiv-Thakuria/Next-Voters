@@ -43,6 +43,7 @@ export const generateEmbeddings = async (value: string) => {
 }
 
 export const addEmbeddings = async (
+    text: string,
     vectorEmbeddings: number[],
     author: string,
     url: string,
@@ -71,7 +72,8 @@ export const addEmbeddings = async (
             payload: {
                 author,
                 url,
-                document_name
+                document_name,
+                text
             }
         }]
     })
@@ -81,11 +83,11 @@ export const searchEmbeddings = async (userQuery: string) => {
     // Turn query to vector embeddings so vector db can search
     const vectorEmbeddings = await generateEmbeddings(userQuery)
     
-    const response = client.search(collectionName, {
+    const response = await client.search(collectionName, {
         vector: vectorEmbeddings
     })
-    
-    return response
+
+    return response;
 }
 
 export const chunkDocument = async () => {
