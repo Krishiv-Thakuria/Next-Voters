@@ -13,7 +13,7 @@ const groq = createGroq({
     apiKey: process.env.GROQ_API_AUTH_KEY
 })
 
-export const generateResponses = async (prompt: string, country: "USA" | "Canada") => {
+export const generateResponses = async (prompt: string, country: "USA" | "Canada", contexts: string[]) => {
     const parties = politicalPartiesMap[country]
 
     const responses = await Promise.all(
@@ -26,7 +26,7 @@ export const generateResponses = async (prompt: string, country: "USA" | "Canada
                         citation: z.string(),
                     }),
                 }),
-                system: handleSystemPrompt(partyInfo.party, partyInfo.partyPrompt),
+                system: handleSystemPrompt(partyInfo.party, partyInfo.partyPrompt, contexts),
                 prompt,
             }).then(result => result.object)
         )
