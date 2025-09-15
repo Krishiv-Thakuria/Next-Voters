@@ -1,1 +1,1 @@
-export type Country = "USA" | "Canada"
+export type SupportedCountry = "USA" | "Canada"

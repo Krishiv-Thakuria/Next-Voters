@@ -17,7 +17,7 @@ const cohere = createCohere({
 
 export const generateResponses = async (
     prompt: string, 
-    country: Country, 
+    country: SupportedCountry, 
     contexts: string[]
 ) => {
     const parties = politicalPartiesMap[country]
