@@ -81,13 +81,13 @@ export const searchEmbeddings = async (userQuery: string) => {
     // Turn query to vector embeddings so vector db can search
     const vectorEmbeddings = await generateEmbeddings(userQuery)
     
-    client.search(collectionName, {
+    const response = client.search(collectionName, {
         vector: vectorEmbeddings
     })
+    
+    return response
 }
 
 export const chunkDocument = async () => {
     // ADD LOGIC
 }
-
-
