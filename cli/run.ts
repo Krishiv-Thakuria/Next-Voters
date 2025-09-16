@@ -28,11 +28,18 @@ try {
             message: "What is the name of the document?",
             validate: (input) => input.trim() !== "" || "Document name cannot be empty",
         },
+        {
+            type: "input",
+            name: "collectionName",
+            message: "What is the name of the collection to store embeddings in?",
+            validate: (input) => input.trim() !== "" || "Collection name cannot be empty",
+        },
     ]);
     const { 
         documentLink, 
         author, 
-        document_name 
+        document_name,
+        collectionName
     } = answers;
 
     log(chalk.green("Valid link inputted. Checking document type..."));
@@ -55,7 +62,8 @@ try {
             chunks,
             author, 
             documentLink, 
-            document_name
+            document_name,
+            collectionName
         ); 
 
         log(chalk.blue("Embeddings added successfully!"));

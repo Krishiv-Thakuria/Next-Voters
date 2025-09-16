@@ -1,1 +1,0 @@
-export const collectionName = "political_documents"
