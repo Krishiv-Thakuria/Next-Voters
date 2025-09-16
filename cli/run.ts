@@ -24,7 +24,7 @@ try {
         },
         {
             type: "input",
-            name: "document_name",
+            name: "documentName",
             message: "What is the name of the document?",
             validate: (input) => input.trim() !== "" || "Document name cannot be empty",
         },
@@ -38,7 +38,7 @@ try {
     const { 
         documentLink, 
         author, 
-        document_name,
+        documentName,
         collectionName
     } = answers;
 
@@ -62,7 +62,7 @@ try {
             chunks,
             author, 
             documentLink, 
-            document_name,
+            documentName,
             collectionName
         ); 
 
