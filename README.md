@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="/public/logo/nextvoters.png" width="20%" alt="DailySAT" />
+  <img src="/public/logo/nextvoters.png" width="20%" alt="NextVoters" />
 </div>
 <hr>
 <div align="center" style="line-height: 1;">
