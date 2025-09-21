@@ -7,7 +7,7 @@ import supportedCountriesDetails from "@/data/supported-countries";
 import { SupportedCountry } from "@/types/supported-countries";
 
 export const POST = async (request: NextRequest) => {
-  const { userQuery, country } = await request.json();
+  const { query, country } = await request.json();
   const responses = [];
 
   const countryDetail = supportedCountriesDetails.find(countryItem => countryItem.name === country);
@@ -38,7 +38,7 @@ export const POST = async (request: NextRequest) => {
     const citations = [];
 
     const embeddings = await searchEmbeddings(
-      userQuery, 
+      query, 
       "political_documents", 
       filterObject
     );
@@ -49,7 +49,7 @@ export const POST = async (request: NextRequest) => {
     }) ;
 
     const response = await generateResponses(
-      userQuery,
+      query,
       countryDetail.name as SupportedCountry, 
       contexts,
     );
