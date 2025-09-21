@@ -1,4 +1,6 @@
-const supportedCountries = [
+import { SupportedCountryDetails } from "@/types/supported-countries";
+
+const supportedCountriesDetails: SupportedCountryDetails[] = [
   { 
     code: 'US', 
     name: 'United States',
@@ -18,4 +20,4 @@ const supportedCountries = [
 }
 ]
 
-export default supportedCountries;
+export default supportedCountriesDetails;
