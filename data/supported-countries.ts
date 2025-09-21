@@ -18,7 +18,7 @@ const supportedCountriesDetails: SupportedCountryDetails[] = [
         { name: 'Conservative Party'},
         { name: 'New Democratic Party (NDP)'},
     ]
-}
+  }
 ]
 
 export default supportedCountriesDetails;
