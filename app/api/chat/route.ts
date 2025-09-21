@@ -55,13 +55,13 @@ export const POST = async (request: NextRequest) => {
     );
 
     responses.push({
-      country: countryDetail.name,
       response,
       citations
     });
   })
 
   return Response.json({
-    responses
+    responses,
+    countryCode: countryDetail.code
   });
 }
