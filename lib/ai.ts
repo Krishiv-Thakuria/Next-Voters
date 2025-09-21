@@ -88,15 +88,23 @@ export const addEmbeddings = async (
     );
 };
 
-export const searchEmbeddings = async (userQuery: string, collectionName: string) => {
+export const searchEmbeddings = async (
+    userQuery: string, 
+    collectionName: string, 
+    filterCriteria: any = null
+) => {
     const { embedding: vectorEmbeddings } = await embed({
         model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
         value: userQuery
     });
 
+
     const response = await client.search(collectionName, {
-        vector: vectorEmbeddings
-    });
+        vector: vectorEmbeddings,
+        limit: 5,
+        with_payload: true,
+        filter: filterCriteria ? filterCriteria : []
+    })
 
     return response;
 };

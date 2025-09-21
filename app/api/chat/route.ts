@@ -1,15 +1,51 @@
 import { generateResponses, searchEmbeddings } from "@/lib/ai";
 import { NextRequest } from "next/server"
 
+// This includes the list of supported countries and their political parties
+import supportedCountriesDetails from "@/data/supported-countries";
+
+import { SupportedCountry } from "@/types/supported-countries";
+
 export const POST = async (request: NextRequest) => {
   const { userQuery, country } = await request.json();
-  const embeddings = await searchEmbeddings(userQuery, "political_documents");
-  const contexts = embeddings.map(embedding => embedding.payload.text) as string[];
+  const responses = [];
 
-   // DO SOME COOL UNIQUE STUFF HERE WHICH WILL HELP USERS WITH UNDERSTANDING LEGISLATIVE DOCUMENTS
-  const response = await generateResponses(userQuery, country, contexts);
+  const countryDetail = supportedCountriesDetails.find(countryItem => countryItem.name === country);
+
+  countryDetail.politicalParties.map(async (party) => {
+    // Filter based on qdrant payload values (country + political affiliation/party)
+    const filterObject = {
+      must: [
+        {
+          key: "country",
+          match: { value: country },
+        },
+        {
+          key: "political_affiliation",
+          match: { value: party.name}, 
+        }
+      ],
+    }
+
+    const embeddings = await searchEmbeddings(
+      userQuery, 
+      "political_documents", 
+      filterObject
+    );
+    const context = embeddings.map(embedding => embedding.payload.text) as string[];
+    const response = await generateResponses(
+      userQuery,
+      countryDetail.name as SupportedCountry, 
+      context
+    );
+
+    responses.push({
+      country: countryDetail.name,
+      response
+    })
+  })
 
   return Response.json({
-    response
+    responses
   });
 }
