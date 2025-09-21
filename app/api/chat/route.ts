@@ -12,6 +12,12 @@ export const POST = async (request: NextRequest) => {
 
   const countryDetail = supportedCountriesDetails.find(countryItem => countryItem.name === country);
 
+  if (!countryDetail) {
+    return Response.json({
+      error: "Country not supported"
+    }, { status: 400 });
+  }
+
   countryDetail.politicalParties.map(async (party) => {
     // Filter based on qdrant payload values (country + political affiliation/party)
     const filterObject = {
