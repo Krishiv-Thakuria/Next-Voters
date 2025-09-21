@@ -38,16 +38,20 @@ export const POST = async (request: NextRequest) => {
       "political_documents", 
       filterObject
     );
+
     const context = embeddings.map(embedding => embedding.payload.text) as string[];
+    const citations = embeddings.map(embeddings => embeddings.payload.citation) as string[];
+
     const response = await generateResponses(
       userQuery,
       countryDetail.name as SupportedCountry, 
-      context
+      context,
     );
 
     responses.push({
       country: countryDetail.name,
-      response
+      response,
+      citations
     });
   })
 
