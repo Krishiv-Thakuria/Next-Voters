@@ -9,7 +9,7 @@ const supportedCountriesDetails: SupportedCountryDetails[] = [
         { name: 'Republican Party'}
     ] 
   },
-  
+
   { 
     code: 'CA', 
     name: 'Canada',
