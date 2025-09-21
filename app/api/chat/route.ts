@@ -39,6 +39,7 @@ export const POST = async (request: NextRequest) => {
       filterObject
     );
 
+    // Get the information from the payload to use as context for the AI model
     const context = embeddings.map(embedding => embedding.payload.text) as string[];
     const citations = embeddings.map(embeddings => embeddings.payload.citation) as string[];
 
