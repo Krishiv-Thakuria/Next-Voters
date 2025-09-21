@@ -33,20 +33,25 @@ export const POST = async (request: NextRequest) => {
       ],
     };
 
+    // Store contexts and citations separately which is given by embeddings
+    const contexts = [];
+    const citations = [];
+
     const embeddings = await searchEmbeddings(
       userQuery, 
       "political_documents", 
       filterObject
     );
 
-    // Get the information from the payload to use as context for the AI model
-    const context = embeddings.map(embedding => embedding.payload.text) as string[];
-    const citations = embeddings.map(embeddings => embeddings.payload.citation) as string[];
+    embeddings.map(embedding => {
+      contexts.push(embedding.payload.text);
+      citations.push(embedding.payload.citation);
+    }) ;
 
     const response = await generateResponses(
       userQuery,
       countryDetail.name as SupportedCountry, 
-      context,
+      contexts,
     );
 
     responses.push({
