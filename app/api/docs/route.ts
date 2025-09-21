@@ -8,10 +8,10 @@ export const POST = async (request: NextRequest) => {
   const contexts = [];
   const citations = [];
 
-    embeddings.map(embedding => {
+  embeddings.map(embedding => {
       contexts.push(embedding.payload.text);
       citations.push(embedding.payload.citation);
-    }) ;
+  }) ;
 
   // DO SOME COOL UNIQUE STUFF HERE WHICH WILL HELP USERS WITH UNDERSTANDING LEGISLATIVE DOCUMENTS
   const response = await generateResponses(userQuery, country, contexts);
