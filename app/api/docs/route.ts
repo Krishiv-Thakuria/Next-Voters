@@ -4,12 +4,20 @@ import { NextRequest } from "next/server"
 export const POST = async (request: NextRequest) => {
   const { userQuery, country } = await request.json();
   const embeddings = await searchEmbeddings(userQuery, "legislative_documents");
-  const contexts = embeddings.map(embedding => embedding.payload.text) as string[];
+
+  const contexts = [];
+  const citations = [];
+
+    embeddings.map(embedding => {
+      contexts.push(embedding.payload.text);
+      citations.push(embedding.payload.citation);
+    }) ;
 
   // DO SOME COOL UNIQUE STUFF HERE WHICH WILL HELP USERS WITH UNDERSTANDING LEGISLATIVE DOCUMENTS
   const response = await generateResponses(userQuery, country, contexts);
 
   return Response.json({
-    response
+    response,
+    citations
   });
 }
