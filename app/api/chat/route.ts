@@ -31,7 +31,7 @@ export const POST = async (request: NextRequest) => {
           match: { value: party.name}, 
         }
       ],
-    }
+    };
 
     const embeddings = await searchEmbeddings(
       userQuery, 
@@ -48,7 +48,7 @@ export const POST = async (request: NextRequest) => {
     responses.push({
       country: countryDetail.name,
       response
-    })
+    });
   })
 
   return Response.json({
