@@ -1,6 +1,6 @@
 import { SupportedRegionDetails } from "@/types/supported-regions";
 
-// Shared elections
+// Shared election types
 const usStateElections = [
   "State Legislative Election",
   "State Executive Election",
