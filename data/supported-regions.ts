@@ -39,13 +39,13 @@ const supportedRegions: SupportedRegionDetails[] = [
   {
     code: "CA-US",
     name: "California",
-    politicalParties: ["Democratic Party", "Republican Party"],
+    politicalParties: ["California Democratic Party", "California Republican Party"],
     elections: usStateElections,
   },
   {
     code: "TX-US",
     name: "Texas",
-    politicalParties: ["Democratic Party", "Republican Party"],
+    politicalParties: ["Texas Democratic Party", "Texas Republican Party"],
     elections: usStateElections,
   },
 
