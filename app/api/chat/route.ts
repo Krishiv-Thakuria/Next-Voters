@@ -2,9 +2,9 @@ import { generateResponses, searchEmbeddings } from "@/lib/ai";
 import { NextRequest } from "next/server"
 
 // This includes the list of supported countries and their political parties
-import supportedCountriesDetails from "@/data/supported-countries";
+import supportedCountriesDetails from "@/data/supported-regions";
 
-import { SupportedCountry } from "@/types/supported-countries";
+import { SupportedCountry } from "@/types/supported-regions";
 
 export const POST = async (request: NextRequest) => {
   const { query, region, electionType } = await request.json();

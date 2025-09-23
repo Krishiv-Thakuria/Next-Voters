@@ -1,4 +1,4 @@
-import { SupportedRegionDetails } from "@/types/supported-countries";
+import { SupportedRegionDetails } from "@/types/supported-regions";
 
 // Shared elections
 const usStateElections = [

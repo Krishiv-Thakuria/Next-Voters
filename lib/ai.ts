@@ -7,7 +7,7 @@ import { handleSystemPrompt } from '@/data/prompts';
 import { generateId } from './random';
 import pdfParse from "pdf-parse";
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
-import { SupportedCountry } from '@/types/supported-countries';
+import { SupportedCountry } from '@/types/supported-regions';
 
 const cohere = createCohere({
     apiKey: process.env.COHERE_API_KEY
