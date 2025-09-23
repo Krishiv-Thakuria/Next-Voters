@@ -1,7 +1,8 @@
 export type SupportedCountry = "USA" | "Canada"
 
-export interface SupportedCountryDetails {
+export interface SupportedRegionDetails {
     code: string;
     name: string;
-    politicalParties: { name: string }[];
+    politicalParties: string[];
+    elections?: string[];
 }

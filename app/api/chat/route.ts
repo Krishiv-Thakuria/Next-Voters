@@ -7,28 +7,30 @@ import supportedCountriesDetails from "@/data/supported-countries";
 import { SupportedCountry } from "@/types/supported-countries";
 
 export const POST = async (request: NextRequest) => {
-  const { query, country } = await request.json();
+  const { query, region, electionType } = await request.json();
   const responses = [];
 
-  const countryDetail = supportedCountriesDetails.find(countryItem => countryItem.name === country);
+  const regionDetail = supportedCountriesDetails.find(
+    regionItem => regionItem.name === region && regionItem.elections.includes(electionType)
+  );
 
-  if (!countryDetail) {
+  if (!regionDetail) {
     return Response.json({
-      error: "Country not supported"
+      error: "Region or election type are not supported"
     }, { status: 400 });
   }
 
-  countryDetail.politicalParties.map(async (party) => {
+  regionDetail.politicalParties.map(async (party) => {
     // Filter based on qdrant payload values (country + political affiliation/party)
     const filterObject = {
       must: [
         {
           key: "country",
-          match: { value: country },
+          match: { value: region },
         },
         {
           key: "political_affiliation",
-          match: { value: party.name}, 
+          match: { value: party}, 
         }
       ],
     };
@@ -50,7 +52,7 @@ export const POST = async (request: NextRequest) => {
 
     const response = await generateResponses(
       query,
-      countryDetail.name as SupportedCountry, 
+      regionDetail.name as SupportedCountry, 
       contexts,
     );
 
@@ -62,6 +64,6 @@ export const POST = async (request: NextRequest) => {
 
   return Response.json({
     responses,
-    countryCode: countryDetail.code
+    countryCode: regionDetail.code
   });
 }
