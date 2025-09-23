@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Header from './common/header';
 
 interface RootInterface {
     children: React.ReactNode
@@ -22,6 +23,7 @@ const Root: React.FC<RootInterface> = ({ children }) => {
   
   return (
     <QueryClientProvider client={queryClient}>
+        <Header />
         {children}
     </QueryClientProvider>
   )
