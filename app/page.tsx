@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import { handleSetPreference, handleGetPreference } from "@/lib/preferences";
 import { Preference } from "@/types/preferences";
