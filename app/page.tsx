@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/common/header';
 
 const countryData: Record<string, string[]> = {
   USA: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
@@ -126,23 +127,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="w-full">
-        <div className="max-w-[1200px] mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <a
-              href="/fellowship"
-              className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
-            >
-              BECOME A FELLOW
-            </a>
-        </div>
-          <div className="flex items-center">
-            <span className="text-[18px] font-bold text-gray-900 font-poppins">NV</span>
-          </div>
-        </div>
-      </header>
-
       <main className="w-full">
         {/* Hero with animated background */}
         <section className="relative pt-20 pb-8">
