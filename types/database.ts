@@ -6,11 +6,7 @@ export interface Database {
 
 export interface ChatCountTable {
   id: Generated<number>
-
-  // Global count of all responses
   responses: number
-
-  // Global counts of all requests 
   requests: number
 }
 
