@@ -14,15 +14,19 @@ export default function LandingPage() {
     handleSetPreference(newPref.election, newPref.region, newPref.party);
   };
 
-  const handleFindParties = (regionName: string) => {
+  const handleFindRegions = () => {
+    return supportedRegions.map((region) => region.name);
+  }
+
+  const handleFindParties = () => {
     const region =
-      supportedRegions.find((region) => region.name === regionName)
+      supportedRegions.find((region) => region.name === preference.region)
     return region ? region.politicalParties : [];
   };
 
-  const handleFindElections = (regionName: string) => {
+  const handleFindElections = () => {
     const region =
-      supportedRegions.find((region) => region.name === regionName)
+      supportedRegions.find((region) => region.name === preference.region)
     return region ? region.elections : [];
   }
 
@@ -73,16 +77,16 @@ export default function LandingPage() {
                 <Dropdown
                   label="Select Region"
                   value={preference?.region || ""}
-                  options={["Canada", "USA"]}
+                  options={handleFindRegions()}
                   onChange={(val) => {
                     updatePreference("region", val)
-                    handleFindParties(preference?.region) 
+                    handleFindParties() 
                   }}
                 />
                 <Dropdown
                   label="Select Election"
                   value={preference?.election || ""}
-                  options={handleFindElections(preference?.region || "")}
+                  options={handleFindElections()}
                   onChange={(val) => updatePreference("election", val)}
                 />
               </div>
