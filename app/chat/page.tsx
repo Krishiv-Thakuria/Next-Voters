@@ -49,15 +49,15 @@ const messages = [
 
 const Chat = () => {
   return (
-    <div className="flex flex-col bg-gray-50">
+    <div className="h-screen bg-gray-50">
       {/* Main Chat Container */}
-      <div className="flex flex-col min-h-screen bg-white overflow-hidden">
+      <div className="flex flex-col flex-1 bg-white overflow-hidden">
         {/* Messages Container - Takes remaining space and scrolls */}
-        <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div className="flex-1 overflow-y-auto px-4 py-8">
           <div className="flex flex-col max-w-6xl mx-auto">
             {messages.map((msg, idx) =>
               msg.from === "me" ? (
-                <div key={idx} className="flex justify-end">
+                <div key={idx} className="flex justify-end mb-4">
                   <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
                     <div>
                       {Array.isArray(msg.text) ? (
@@ -83,7 +83,7 @@ const Chat = () => {
                   </div>
                 </div>
               ) : (
-                <div key={idx} className="flex justify-start">
+                <div key={idx} className="flex justify-start mb-4">
                   <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
                     <img
                       src={msg.img}
@@ -101,7 +101,7 @@ const Chat = () => {
         </div>
 
         {/* Fixed Input Area */}
-        <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3">
+        <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-20">
           <div className="flex items-center space-x-3 max-w-4xl mx-auto">
             <input
               className="flex-1 bg-gray-50 py-3 px-4 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-gray-500"
@@ -109,7 +109,7 @@ const Chat = () => {
               placeholder="Type your message..."
             />
             <button
-              className="bg-black text-white px-6 py-3 rounded-full transition-colors duration-200 text-sm font-medium"
+              className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors duration-200 text-sm font-medium"
               onClick={() => console.log("Send message")}
             >
               Send
