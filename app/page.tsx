@@ -1,18 +1,17 @@
 "use client"
 
-import React, { useState } from "react";
-import { handleSetPreference, handleGetPreference } from "@/lib/preferences";
+import React from "react";
+import usePreference from "@/hooks/preferences";
 import { Preference } from "@/types/preferences";
 import supportedRegions from "@/data/supported-regions";
 import Dropdown from "@/components/ui/dropdown";
 
 export default function LandingPage() {
-  const [preference, setPreference] = useState<Preference>(handleGetPreference());
+ const { preference, handleSetPreference, handleGetPreference, removePreference } = usePreference();
 
   const updatePreference = (field: keyof Preference, value: string) => {
     const newPref = { ...preference, [field]: value };
     handleSetPreference(newPref.election, newPref.region, newPref.party);
-    setPreference(handleGetPreference());
   };
 
   const handleFindParties = (regionName: string) => {
@@ -67,7 +66,7 @@ export default function LandingPage() {
               <div className="flex items-center md:flex-nowrap flex-wrap gap-x-12 gap-y-3 mt-6 pt-5 border-t border-gray-200">
                 <Dropdown
                   label="Select Region"
-                  value={preference.region || ""}
+                  value={preference?.region || ""}
                   options={["Canada", "USA"]}
                   onChange={(val) => {
                     updatePreference("region", val)
@@ -76,7 +75,7 @@ export default function LandingPage() {
                 />
                 <Dropdown
                   label="Select Election"
-                  value={preference.election || ""}
+                  value={preference?.election || ""}
                   options={[
                     "Federal Election 2025",
                     "General Election",
