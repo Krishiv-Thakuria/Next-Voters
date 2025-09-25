@@ -7,7 +7,7 @@ import supportedRegions from "@/data/supported-regions";
 import Dropdown from "@/components/ui/dropdown";
 
 export default function LandingPage() {
- const { preference, handleSetPreference, handleGetPreference, removePreference } = usePreference();
+ const { preference, handleSetPreference} = usePreference();
 
   const updatePreference = (field: keyof Preference, value: string) => {
     const newPref = { ...preference, [field]: value };
