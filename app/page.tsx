@@ -16,9 +16,15 @@ export default function LandingPage() {
 
   const handleFindParties = (regionName: string) => {
     const region =
-      supportedRegions.find((r) => r.name === regionName)
+      supportedRegions.find((region) => region.name === regionName)
     return region ? region.politicalParties : [];
   };
+
+  const handleFindElections = (regionName: string) => {
+    const region =
+      supportedRegions.find((region) => region.name === regionName)
+    return region ? region.elections : [];
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -76,11 +82,7 @@ export default function LandingPage() {
                 <Dropdown
                   label="Select Election"
                   value={preference?.election || ""}
-                  options={[
-                    "Federal Election 2025",
-                    "General Election",
-                    "Provincial Election",
-                  ]}
+                  options={handleFindElections(preference?.region || "")}
                   onChange={(val) => updatePreference("election", val)}
                 />
               </div>
