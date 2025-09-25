@@ -70,7 +70,7 @@ export default function LandingPage() {
                   options={["Canada", "USA"]}
                   onChange={(val) => {
                     updatePreference("region", val)
-                    handleFindParties(preference.region) 
+                    handleFindParties(preference?.region) 
                   }}
                 />
                 <Dropdown
