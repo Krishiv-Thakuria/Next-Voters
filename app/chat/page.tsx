@@ -5,12 +5,10 @@ const messages = [
   {
     from: "me",
     text: "Welcome to group everyone !",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "other",
     text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat at praesentium...",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "me",
@@ -18,32 +16,26 @@ const messages = [
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, reiciendis!",
     ],
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "other",
     text: "happy holiday guys!",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "me",
     text: "Thanks for the warm welcome!",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "other",
     text: "Looking forward to our collaboration",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "me",
     text: "Absolutely! This is going to be great",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
   {
     from: "other",
     text: "Let me know if you need any help getting started",
-    img: "https://source.unsplash.com/vpOeXr5wmR4/600x600",
   },
 ];
 
@@ -75,21 +67,11 @@ const Chat = () => {
                         </div>
                       )}
                     </div>
-                    <img
-                      src={msg.img}
-                      className="object-cover h-8 w-8 rounded-full flex-shrink-0"
-                      alt="me"
-                    />
                   </div>
                 </div>
               ) : (
                 <div key={idx} className="flex justify-start mb-4">
                   <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
-                    <img
-                      src={msg.img}
-                      className="object-cover h-8 w-8 rounded-full flex-shrink-0"
-                      alt="other"
-                    />
                     <div className="py-2 px-3 bg-gray-100 rounded-br-2xl rounded-tr-2xl rounded-tl-lg text-gray-800 text-sm">
                       {msg.text}
                     </div>
