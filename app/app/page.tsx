@@ -12,7 +12,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
-export default function ChatMainPage() {
+const LegislativeChatPage = () => {
   return (
     <div className="h-screen bg-white text-gray-900 flex flex-col font-poppins">
       {/* Header */}
@@ -199,3 +199,5 @@ export default function ChatMainPage() {
     </div>
   );
 }
+
+export default LegislativeChatPage;
