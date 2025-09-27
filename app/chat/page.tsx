@@ -47,9 +47,9 @@ const Chat = () => {
         {/* Messages Container - Takes remaining space and scrolls */}
         <div className="flex-1 overflow-y-auto px-4 py-8">
           <div className="flex flex-col max-w-6xl mx-auto">
-            {messages.map((msg, idx) =>
+            {messages.map((msg, index) =>
               msg.from === "me" ? (
-                <div key={idx} className="flex justify-end mb-4">
+                <div key={index} className="flex justify-end mb-4">
                   <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
                     <div>
                       {Array.isArray(msg.text) ? (
@@ -70,7 +70,7 @@ const Chat = () => {
                   </div>
                 </div>
               ) : (
-                <div key={idx} className="flex justify-start mb-4">
+                <div key={index} className="flex justify-start mb-4">
                   <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
                     <div className="py-2 px-3 bg-gray-100 rounded-br-2xl rounded-tr-2xl rounded-tl-lg text-gray-800 text-sm">
                       {msg.text}
