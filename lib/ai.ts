@@ -20,6 +20,8 @@ const mistral = createMistral({
     apiKey: process.env.MISTRAL_EMBEDDING_API_KEY
 })
 
+// Functions to generate proper AI response
+
 export const generateResponses = async (
     prompt: string, 
     country: SupportedCountry, 
@@ -46,6 +48,51 @@ export const generateResponses = async (
 
     return responses;
 };
+
+export const searchEmbeddings = async (
+    userQuery: string, 
+    collectionName: string, 
+    filterCriteria: any = null
+) => {
+    const { embedding: vectorEmbeddings } = await embed({
+        model: mistral.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+        value: userQuery
+    });
+
+
+    const response = await client.search(collectionName, {
+        vector: vectorEmbeddings,
+        limit: 5,
+        with_payload: true,
+        filter: filterCriteria ? filterCriteria : []
+    })
+
+    return response;
+};
+
+
+// Functions to add documents to RAG system
+
+export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
+    const buffer = Buffer.from(pdfBuffer);
+
+    const data = await pdfParse(buffer);
+    const text = data.text;
+
+    const sentences = text
+        .split(/(?<=[.!?])\s+/)
+        .map(sentence => sentence.trim())
+        .filter(Boolean);
+
+    const chunks: string[] = [];
+    for (let i = 0; i < sentences.length; i += 1) {
+        const chunk = sentences.slice(i, i + 3).join(" ");
+        chunks.push(chunk);
+    }
+
+    return chunks;
+};
+
 
 export const addEmbeddings = async (
     textChunks: string[],
@@ -93,45 +140,4 @@ export const addEmbeddings = async (
             });
         })
     );
-};
-
-export const searchEmbeddings = async (
-    userQuery: string, 
-    collectionName: string, 
-    filterCriteria: any = null
-) => {
-    const { embedding: vectorEmbeddings } = await embed({
-        model: mistral.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-        value: userQuery
-    });
-
-
-    const response = await client.search(collectionName, {
-        vector: vectorEmbeddings,
-        limit: 5,
-        with_payload: true,
-        filter: filterCriteria ? filterCriteria : []
-    })
-
-    return response;
-};
-
-export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
-    const buffer = Buffer.from(pdfBuffer);
-
-    const data = await pdfParse(buffer);
-    const text = data.text;
-
-    const sentences = text
-        .split(/(?<=[.!?])\s+/)
-        .map(sentence => sentence.trim())
-        .filter(Boolean);
-
-    const chunks: string[] = [];
-    for (let i = 0; i < sentences.length; i += 1) {
-        const chunk = sentences.slice(i, i + 3).join(" ");
-        chunks.push(chunk);
-    }
-
-    return chunks;
 };
