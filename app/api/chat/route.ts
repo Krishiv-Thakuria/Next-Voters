@@ -57,6 +57,7 @@ export const POST = async (request: NextRequest) => {
     );
 
     responses.push({
+      party,
       response,
       citations
     });

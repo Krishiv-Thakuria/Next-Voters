@@ -66,12 +66,15 @@ const messages: Message[] = [
 ];
 
 const Chat = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get('message');
   const [message, setMessage] = useState(initialMessage || '');
-  const [isMounted, setIsMounted] = useState(false);
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
   const { handleSetPreference, handleGetPreference } = usePreference();
   const preference = handleGetPreference();
   const selectedRegion = supportedRegions.find(region => region.name === preference?.region);
@@ -81,20 +84,39 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      console.log("Send message:", message);
-      setMessage('');
-      inputRef.current?.focus();
-    }
-  };
-
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
+
+  const handleSendMessage = async () => {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: message,
+        region: preference?.region,
+        electionType: preference?.election
+      })
+    })
+    const data = await response.json();
+
+    chatHistory.push({ type: 'me', text: message });
+    chatHistory.push({ type: 'agent', parties: [{
+        partyName: data.responses[0]?.party,
+        text: data.responses[0]?.response || "I'm sorry, I don't have an answer for that."
+      }, {
+        partyName: data.responses[1]?.party,
+        text: data.responses[1]?.response || "I'm sorry, I don't have an answer for that."
+    }]});
+
+    setChatHistory([...chatHistory]);
+    setMessage('');
+  }
 
   if (!isMounted) {
     return (
