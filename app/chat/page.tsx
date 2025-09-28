@@ -6,6 +6,8 @@ import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "../components/message-bubble";
 import { Message } from "@/types/message";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import supportedRegions from "@/data/supported-regions";
 
 const messages: Message[] = [
   {
@@ -69,8 +71,9 @@ const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
-  const { handleGetPreference } = usePreference();
+  const { handleSetPreference, handleGetPreference } = usePreference();
   const preference = handleGetPreference();
+  const selectedRegion = supportedRegions.find(region => region.name === preference?.region);
 
   useEffect(() => {
     setIsMounted(true);
@@ -149,6 +152,39 @@ const Chat = () => {
                 onKeyPress={handleKeyPress}
                 style={{ minHeight: '44px', height: 'auto' }}
               />
+
+              <div className="flex space-x-2 mt-2">
+                <Select defaultValue={preference?.region} onValueChange={(value) => handleSetPreference(null, value)}>
+                  <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                    <SelectValue placeholder="Country" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
+                    {supportedRegions.map(region =>(
+                      <SelectItem key={region.code} value={region.name} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">
+                        {region.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select defaultValue={preference?.election} onValueChange={(value) => handleSetPreference(value, null)}>
+                  <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                      <SelectValue placeholder="Country" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
+                      {selectedRegion.elections.map(election => (
+                        <SelectItem 
+                          key={election} 
+                          value={election} 
+                          className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                        >
+                          {election}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                </Select>
+              </div>
+
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim()}

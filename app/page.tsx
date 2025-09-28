@@ -20,7 +20,7 @@ const Home = () => {
 
   const updatePreference = (field: keyof Preference, value: string) => {
     const newPref = { ...preference, [field]: value };
-    handleSetPreference(newPref.election, newPref.region, newPref.party);
+    handleSetPreference(newPref.election, newPref.region);
   };
 
   const handleFindRegions = () => {
