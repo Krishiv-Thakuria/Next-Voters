@@ -9,7 +9,8 @@ import { Message } from "@/types/message";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import supportedRegions from "@/data/supported-regions";
 import { Button } from "@/components/ui/button";
-import { SendHorizonal } from "lucide-react";
+import { MessageCircle, SendHorizonal } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const messages: Message[] = [
   {
@@ -147,13 +148,29 @@ const Chat = () => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
-          {messages.map((msg, index) => (
-            <MessageBubble 
-              key={index} 
-              message={msg} 
-              isFromMe={msg.type === "me"} 
-            />
-          ))}
+          {chatHistory.length > 0 ? (
+            chatHistory.map((msg, index) => (
+              <MessageBubble
+                key={index}
+                message={msg}
+                isFromMe={msg.type === "me"}
+              />
+            ))
+          ) : (
+            <div className="flex items-center justify-center h-full p-8">
+              <Card className="bg-slate-50 w-full max-w-md">
+                <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                    <MessageCircle className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-2">No messages yet</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Start a conversation by typing a message below. Your chat history will appear here.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
