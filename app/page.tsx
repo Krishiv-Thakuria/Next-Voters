@@ -6,10 +6,13 @@ import { Preference } from "@/types/preferences";
 import supportedRegions from "@/data/supported-regions";
 import Dropdown from "@/components/ui/dropdown";
 import { Spinner } from "@/components/ui/spinner";
+import { useRouter } from 'next/navigation';
 
 export default function LandingPage() {
+ const router = useRouter();
  const { preference, handleSetPreference} = usePreference();
  const [isMounted, setIsMounted] = useState(false);
+ const [message, setMessage] = useState("");  
 
  useEffect(() => {
     setIsMounted(true);
@@ -34,6 +37,12 @@ export default function LandingPage() {
     const region =
       supportedRegions.find((region) => region.name === preference?.region)
     return region ? region.elections : [];
+  }
+
+  const handleRedirectToChat = () => {
+    router.push(
+      `/chat?message=${message}`
+    );
   }
 
   if (!isMounted) return (
@@ -63,10 +72,12 @@ export default function LandingPage() {
                   type="text"
                   placeholder="Ask any question about policy or legislation"
                   className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-400 bg-gray-50 font-poppins"
+                  onChange={(event) => setMessage(event.target.value)}
                 />
                 <button
                   type="button"
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+                  onClick={handleRedirectToChat}
                 >
                   <svg
                     className="w-4 h-4 text-white"

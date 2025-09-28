@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { useSearchParams } from 'next/navigation';
 
 const messages = [
   {
@@ -40,6 +41,10 @@ const messages = [
 ];
 
 const Chat = () => {
+  const searchParams = useSearchParams();
+  const initialMessage = searchParams.get('message');
+  const [message, setMessage] = useState(initialMessage);
+
   return (
     <div className="h-screen bg-gray-50">
       {/* Main Chat Container */}
@@ -86,11 +91,13 @@ const Chat = () => {
         <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-20">
           <div className="flex items-center space-x-3 max-w-4xl mx-auto">
             <input
-              className="flex-1 bg-gray-50 py-3 px-4 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-gray-500"
+              className="flex-1 bg-gray-50 py-3 px-4 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-gray-500 text-black"
               type="text"
+              value={message}
               placeholder="Type your message..."
+              onChange={(e) => setMessage(e.target.value)}
             />
-            <button
+            <button 
               className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors duration-200 text-sm font-medium"
               onClick={() => console.log("Send message")}
             >
