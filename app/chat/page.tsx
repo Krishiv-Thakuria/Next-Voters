@@ -3,55 +3,62 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
 import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
-import MessageBubble from "../components/message-bubble";
+import MessageBubble, { Message } from "../components/message-bubble";
 
-const messages = [
+const messages: Message[] = [
   {
-    from: "me",
+    type: "me",
     text: "Welcome to group everyone !"
   },
   {
-    from: "ai",
-    partyOne: {
-      partyName: "Democratic Party",
-      text: "Thank you! Excited to be here and looking forward to working with all of you."
-    },
-    partyTwo: {
-      partyName: "Republican Party",
-      text: "Thanks for the warm welcome! We're eager to contribute and collaborate on this project."
-    }
+    type: "agent",
+    parties: [
+      {
+        partyName: "Democratic Party",
+        text: "Thank you! Excited to be here and looking forward to working with all of you."
+      },
+      {
+        partyName: "Republican Party",
+        text: "Thanks for the warm welcome! We're eager to contribute and collaborate on this project."
+      }
+    ]
   },
   {
-    from: "me",
+    type: "me",
     text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
   },
   {
-    from: "ai",
-    partyOne: {
-      partyName: "Democratic Party",
-      text: "Looking forward to our collaboration on this project and achieving great results together."
-    },
-    partyTwo: {
-      partyName: "Republican Party",
-      text: "We're excited about the opportunities ahead and are committed to making this a success for everyone involved."
-    }
+    type: "agent",
+    parties: [
+      {
+        partyName: "Democratic Party",
+        text: "Looking forward to our collaboration on this project and achieving great results together."
+      },
+      {
+        partyName: "Republican Party",
+        text: "We're excited about the opportunities ahead and are committed to making this a success for everyone involved."
+      }
+    ]
   },
   {
-    from: "me",
+    type: "me",
     text: "Absolutely! This is going to be great",
   },
   {
-    from: "ai",
-    partyOne: {
-      partyName: "Democratic Party",
-      text: "Happy holidays everyone! 🎉",
-    },
-    partyTwo: {
-      partyName: "Republican Party",
-      text: "Wishing everyone a joyful holiday season and a prosperous new year! The church should be honoured! 🎄✨",
-    }
+    type: "agent",
+    parties: [
+      {
+        partyName: "Democratic Party",
+        text: "Happy holidays everyone! 🎉",
+      },
+      {
+        partyName: "Republican Party",
+        text: "Wishing everyone a joyful holiday season and a prosperous new year! The church should be honoured! 🎄✨",
+      }
+    ]
   }
 ];
+
 
 const Chat = () => {
   const searchParams = useSearchParams();
@@ -119,7 +126,7 @@ const Chat = () => {
             <MessageBubble 
               key={index} 
               message={msg} 
-              isFromMe={msg.from === "me"} 
+              isFromMe={msg.type === "me"} 
             />
           ))}
           <div ref={messagesEndRef} />

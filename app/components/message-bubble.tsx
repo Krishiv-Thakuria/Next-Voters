@@ -1,49 +1,64 @@
 import React, { FC } from 'react'
 import PoliticalPerspective from './political-perspective';
 
+type Party = {
+  partyName: string;
+  text: string;
+};
+
+type MeMessage = {
+  type: "me";
+  text: string; // always required
+};
+
+type AgentMessage = {
+  type: "agent";
+  parties: [Party, Party]; // always exactly 2
+};
+
+export type Message = MeMessage | AgentMessage;
+
 interface MessageBubbleProps {
-    message: { 
-        text?: string, 
-        partyOne?: {
-            partyName: string,
-            text: string
-        }, 
-        partyTwo?: {
-            partyName: string,
-            text: string
-        } 
-    };
+    message: Message; 
     isFromMe: boolean;
 }
 
-const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
+const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
   const myMessage = "py-3 px-4 rounded-2xl shadow-sm max-w-md bg-red-500 text-white rounded-br-md ml-auto";
   const AIMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
-  return (
-    <div className={`flex ${isFromMe ? 'justify-end' : 'justify-start'} mb-4`}>
-      <div className={isFromMe ? myMessage : AIMessage}>
-        {isFromMe ? (
+  if (message.type === "me") {
+    // TypeScript now knows message is MeMessage
+    return (
+      <div className="flex justify-end mb-4">
+        <div className={myMessage}>
           <p className="text-sm">{message.text}</p>
-        ) : (
+        </div>
+      </div>
+    );
+  } else {
+    // TypeScript now knows message is AgentMessage
+    return (
+      <div className="flex justify-start mb-4">
+        <div className={AIMessage}>
           <div className="w-screen flex space-x-3">
             <PoliticalPerspective
-              title={message?.partyOne?.partyName}
-              content={message?.partyOne.text}
+              title={message.parties[0].partyName}
+              content={message.parties[0].text}
               loading={false}
               color="blue"
             />
             <PoliticalPerspective
-              title={message?.partyTwo?.partyName}
-              content={message?.partyTwo.text}
+              title={message.parties[1].partyName}
+              content={message.parties[1].text}
               loading={false}
               color="red"
             />
           </div>
-        )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default MessageBubble;
