@@ -20,8 +20,8 @@ export const POST = async (request: NextRequest) => {
     }, { status: 400 });
   }
 
-  regionDetail.politicalParties.map(async (party) => {
-    // Filter based on qdrant payload values (country + political affiliation/party)
+  regionDetail.politicalParties.map(async (partyName) => {
+    // Filter based on qdrant payload values (country + political affiliation/partyName)
     const filterObject = {
       must: [
         {
@@ -30,7 +30,7 @@ export const POST = async (request: NextRequest) => {
         },
         {
           key: "political_affiliation",
-          match: { value: party}, 
+          match: { value: partyName}, 
         }
       ],
     };
@@ -57,7 +57,7 @@ export const POST = async (request: NextRequest) => {
     );
 
     responses.push({
-      party,
+      partyName,
       response,
       citations
     });

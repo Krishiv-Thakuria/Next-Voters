@@ -107,10 +107,10 @@ const Chat = () => {
 
     chatHistory.push({ type: 'me', text: message });
     chatHistory.push({ type: 'agent', parties: [{
-        partyName: data.responses[0]?.party,
+        partyName: data.responses[0]?.partyName,
         text: data.responses[0]?.response || "I'm sorry, I don't have an answer for that."
       }, {
-        partyName: data.responses[1]?.party,
+        partyName: data.responses[1]?.partyName,
         text: data.responses[1]?.response || "I'm sorry, I don't have an answer for that."
     }]});
 
