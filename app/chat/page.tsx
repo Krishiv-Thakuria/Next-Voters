@@ -78,12 +78,10 @@ const Chat = () => {
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
 
+  }, []);
+  
   const handleSendMessage = () => {
     if (message.trim()) {
       console.log("Send message:", message);
