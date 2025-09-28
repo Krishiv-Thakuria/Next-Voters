@@ -70,10 +70,6 @@ const Chat = () => {
     }
   };
 
-  const getInitials = (name) => {
-    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
-  };
-
   return (
     <div className="h-screen bg-slate-50 flex flex-col">
       {/* Chat Header */}
