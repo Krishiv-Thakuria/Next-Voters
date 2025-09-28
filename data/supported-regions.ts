@@ -8,7 +8,6 @@ const usStateElections = [
 
 const canadaProvincialElections = [
   "Provincial Election",
-  "Territorial Election",
 ];
 
 const supportedRegions: SupportedRegionDetails[] = [
