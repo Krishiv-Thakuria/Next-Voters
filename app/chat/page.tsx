@@ -11,7 +11,7 @@ const messages = [
     text: "Welcome to group everyone !",
   },
   {
-    from: "other",
+    from: "ai",
     text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat at praesentium, quisquam eligendi...",
   },
   {
@@ -19,11 +19,11 @@ const messages = [
     text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
   },
   {
-    from: "other",
+    from: "ai",
     text: "Happy holidays everyone! 🎉",
   },
   {
-    from: "me",
+    from: "ai",
     text: "Thanks for the warm welcome!",
   },
   {
@@ -42,37 +42,32 @@ const messages = [
 
 const lastConservative = "Conservatives focus on fiscal responsibility, small government, and traditional values.";
 const lastLiberal = "Liberals emphasize social equality, healthcare access, and progressive policies.";
-
 const MessageBubble = ({ message, isFromMe }) => {
-  const baseClasses = "py-3 px-4 rounded-2xl shadow-sm max-w-md";
-  const myClasses = `${baseClasses} bg-red-500 text-white rounded-br-md ml-auto`;
-  const otherClasses = `${baseClasses} bg-white border border-slate-200 rounded-bl-md`;
-
+  const myMessage = "py-3 px-4 rounded-2xl shadow-sm max-w-md bg-red-500 text-white rounded-br-md ml-auto";
+  const AIMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
+  
   return (
     <div className={`flex ${isFromMe ? 'justify-end' : 'justify-start'} mb-4`}>
-      <div className={isFromMe ? myClasses : otherClasses}>
-        {message.text === "Let me know if you need any help getting started with anything" ? (
-          <div className="space-y-4">
-            <p className="text-sm leading-relaxed text-slate-700 mb-4">{message.text}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <PoliticalPerspective
-                title="Conservative Party"
-                subtitle="Based on official 2025 party platform"
-                content={lastConservative}
-                loading={false}
-                color="blue"
-              />
-              <PoliticalPerspective
-                title="Liberal Party"
-                subtitle="Based on official 2025 party platform"
-                content={lastLiberal}
-                loading={false}
-                color="red"
-              />
-            </div>
-          </div>
+      <div className={isFromMe ? myMessage : AIMessage}>
+        {isFromMe ? (
+          <p className="text-sm">{message.text}</p>
         ) : (
-          <p className="text-sm leading-relaxed">{message.text}</p>
+          <div className="w-screen flex space-x-3">
+            <PoliticalPerspective
+              title="Conservative Party"
+              subtitle="Based on official 2025 party platform"
+              content={lastConservative}
+              loading={false}
+              color="blue"
+            />
+            <PoliticalPerspective
+              title="Liberal Party"
+              subtitle="Based on official 2025 party platform"
+              content={lastLiberal}
+              loading={false}
+              color="red"
+            />
+          </div>
         )}
       </div>
     </div>

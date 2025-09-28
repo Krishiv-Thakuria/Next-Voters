@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PartyCardProps {
   title: string;
@@ -9,42 +10,27 @@ interface PartyCardProps {
 }
 
 const PoliticalPerspective: FC<PartyCardProps> = ({ title, subtitle, content, loading, color }) => {
-  const colors = {
-    blue: {
-      border: "border-blue-600",
-      bg: "bg-blue-50",
-      text: "text-blue-800",
-      borderSecondary: "border-blue-200",
-      loadingText: "text-blue-600",
-    },
-    red: {
-      border: "border-red-600",
-      bg: "bg-red-50",
-      text: "text-red-800",
-      borderSecondary: "border-red-200",
-      loadingText: "text-red-600",
-    },
-  };
-
-  const c = colors[color];
-
+  const colorClass = color === "blue" ? "blue-600" : "red-600";
+  
   return (
-    <div className="w-full md:w-[30%] flex flex-col">
-      <div className={`border-b-2 ${c.border} pb-2 mb-4`}>
-        <h2 className={`text-xl font-bold uppercase tracking-wider ${c.border}`}>{title}</h2>
-        <p className={`text-xs ${c.border} opacity-75`}>{subtitle}</p>
-      </div>
-      <div className={`flex-1 ${c.bg} p-5 rounded-lg shadow-md overflow-y-auto h-64 md:h-96 border-2 ${c.borderSecondary} relative`}>
-        {loading && (
-          <div className="absolute inset-0 bg-opacity-50 flex items-center justify-center" style={{ backgroundColor: c.bg }}>
-            <div className={`animate-pulse ${c.loadingText}`}>Loading...</div>
-          </div>
-        )}
-        <p className={`whitespace-pre-line ${c.text} leading-relaxed`}>
+    <Card className="bg-white border border-gray-200 rounded-lg shadow-sm w-full md:w-[30%]">
+      <CardHeader className="border-b border-gray-200 p-4">
+        <CardTitle className={`text-${colorClass} text-lg font-semibold font-poppins`}>
+          {title}
+        </CardTitle>
+        <p className="text-xs text-gray-500 font-poppins">{subtitle}</p>
+      </CardHeader>
+      <CardContent className="p-4">
+        <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+              <div className={`animate-pulse text-${colorClass}`}>Loading...</div>
+            </div>
+          )}
           {content || `The ${title} perspective will appear here...`}
-        </p>
-      </div>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
