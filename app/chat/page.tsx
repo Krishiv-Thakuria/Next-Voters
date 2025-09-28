@@ -23,14 +23,6 @@ const messages = [
     text: "Happy holidays everyone! 🎉",
   },
   {
-    from: "ai",
-    text: "Thanks for the warm welcome!",
-  },
-  {
-    from: "other",
-    text: "Looking forward to our collaboration on this project",
-  },
-  {
     from: "me",
     text: "Absolutely! This is going to be great",
   },
