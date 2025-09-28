@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
+import usePreference from "@/hooks/preferences";
+import { Spinner } from "@/components/ui/spinner";
 
 const messages = [
   {
@@ -44,8 +46,15 @@ const Chat = () => {
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get('message');
   const [message, setMessage] = useState(initialMessage || '');
+  const [isMounted, setIsMounted] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const { handleGetPreference } = usePreference();
+  const preference = handleGetPreference();
+
+  useEffect(() => {
+    setIsMounted(true);
+  })
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,18 +79,28 @@ const Chat = () => {
     }
   };
 
+  if (!isMounted) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <Spinner size="lg" className="bg-black" />
+    </div>
+  );
+
+
   return (
     <div className="h-screen bg-slate-50 flex flex-col">
       {/* Chat Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold text-sm">GP</span>
+            <div className="mr-2.5">
+              <span className="text-blue-800 font-semibold text-xl">N</span>
+              <span className="text-red-800 font-semibold text-xl">V</span>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-slate-900">Group Project</h1>
-              <p className="text-sm text-slate-500">4 members online</p>
+              <h1 className="text-lg font-semibold text-slate-900">Chat Platform</h1>
+              <p className="text-sm text-slate-500">
+                {preference ? `${preference.region} | ${preference.election}` : 'No preferences set'}
+              </p>
             </div>
           </div>
         </div>
