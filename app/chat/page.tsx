@@ -110,7 +110,7 @@ const Chat = () => {
         <div className="max-w-4xl mx-auto flex items-center space-x-3">
           <div className="mr-2.5">
             <span className="text-blue-800 font-semibold text-xl">N</span>
-            <span className="text-red-800 font-semibold text-xl">V</span>
+            <span className="text-red-700 font-semibold text-xl">V</span>
           </div>
           <div>
             <h1 className="text-lg font-semibold text-slate-900">Chat Platform</h1>
