@@ -2,7 +2,17 @@ import React, { FC } from 'react'
 import PoliticalPerspective from './political-perspective';
 
 interface MessageBubbleProps {
-    message: { text: string };
+    message: { 
+        text?: string, 
+        partyOne?: {
+            partyName: string,
+            text: string
+        }, 
+        partyTwo?: {
+            partyName: string,
+            text: string
+        } 
+    };
     isFromMe: boolean;
 }
 
@@ -18,16 +28,16 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
         ) : (
           <div className="w-screen flex space-x-3">
             <PoliticalPerspective
-              title="Conservative Party"
+              title={message?.partyOne?.partyName}
               subtitle="Based on official 2025 party platform"
-              content={message.text}
+              content={message?.partyOne.text}
               loading={false}
               color="blue"
             />
             <PoliticalPerspective
-              title="Liberal Party"
+              title={message?.partyTwo?.partyName}
               subtitle="Based on official 2025 party platform"
-              content={message.text}
+              content={message?.partyTwo.text}
               loading={false}
               color="red"
             />

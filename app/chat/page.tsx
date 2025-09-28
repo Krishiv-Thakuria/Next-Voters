@@ -8,11 +8,18 @@ import MessageBubble from "../components/message-bubble";
 const messages = [
   {
     from: "me",
-    text: "Welcome to group everyone !",
+    text: "Welcome to group everyone !"
   },
   {
     from: "ai",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat at praesentium, quisquam eligendi...",
+    partyOne: {
+      partyName: "Democratic Party",
+      text: "Thank you! Excited to be here and looking forward to working with all of you."
+    },
+    partyTwo: {
+      partyName: "Republican Party",
+      text: "Thanks for the warm welcome! We're eager to contribute and collaborate on this project."
+    }
   },
   {
     from: "me",
@@ -20,15 +27,29 @@ const messages = [
   },
   {
     from: "ai",
-    text: "Happy holidays everyone! 🎉",
+    partyOne: {
+      partyName: "Democratic Party",
+      text: "Looking forward to our collaboration on this project and achieving great results together."
+    },
+    partyTwo: {
+      partyName: "Republican Party",
+      text: "We're excited about the opportunities ahead and are committed to making this a success for everyone involved."
+    }
   },
   {
     from: "me",
     text: "Absolutely! This is going to be great",
   },
   {
-    from: "other",
-    text: "Let me know if you need any help getting started with anything",
+    from: "ai",
+    partyOne: {
+      partyName: "Democratic Party",
+      text: "Happy holidays everyone! 🎉",
+    },
+    partyTwo: {
+      partyName: "Republican Party",
+      text: "Wishing everyone a joyful holiday season and a prosperous new year! The church should be honoured! 🎄✨",
+    }
   }
 ];
 
