@@ -9,7 +9,9 @@
     "debug:win": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:cli": "tsc ./cli/index.ts --outDir dist/cli",
+    "cli": "pnpm run build:cli && npx ts-node ./cli/index.ts"
   },
   "dependencies": {
     "@ai-sdk/groq": "^2.0.22",
