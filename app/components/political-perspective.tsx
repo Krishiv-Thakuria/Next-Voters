@@ -3,13 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PartyCardProps {
   title: string;
-  subtitle: string;
   content?: string;
   loading?: boolean;
   color: "blue" | "red";
 }
 
-const PoliticalPerspective: FC<PartyCardProps> = ({ title, subtitle, content, loading, color }) => {
+const PoliticalPerspective: FC<PartyCardProps> = ({ 
+    title, 
+    content, 
+    loading, 
+    color 
+}) => {
   const colorClass = color === "blue" ? "blue-600" : "red-600";
   
   return (
@@ -18,7 +22,6 @@ const PoliticalPerspective: FC<PartyCardProps> = ({ title, subtitle, content, lo
         <CardTitle className={`text-${colorClass} text-lg font-semibold font-poppins`}>
           {title}
         </CardTitle>
-        <p className="text-xs text-gray-500 font-poppins">{subtitle}</p>
       </CardHeader>
       <CardContent className="p-4">
         <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins relative">

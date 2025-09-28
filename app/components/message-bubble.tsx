@@ -29,14 +29,12 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
           <div className="w-screen flex space-x-3">
             <PoliticalPerspective
               title={message?.partyOne?.partyName}
-              subtitle="Based on official 2025 party platform"
               content={message?.partyOne.text}
               loading={false}
               color="blue"
             />
             <PoliticalPerspective
               title={message?.partyTwo?.partyName}
-              subtitle="Based on official 2025 party platform"
               content={message?.partyTwo.text}
               loading={false}
               color="red"
