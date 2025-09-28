@@ -8,6 +8,8 @@ import MessageBubble from "../components/message-bubble";
 import { Message } from "@/types/message";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import supportedRegions from "@/data/supported-regions";
+import { Button } from "@/components/ui/button";
+import { SendHorizonal } from "lucide-react";
 
 const messages: Message[] = [
   {
@@ -62,7 +64,6 @@ const messages: Message[] = [
     ]
   }
 ];
-
 
 const Chat = () => {
   const searchParams = useSearchParams();
@@ -145,57 +146,73 @@ const Chat = () => {
             <div className="flex-1 relative">
               <textarea
                 ref={inputRef}
-                className="w-full bg-slate-50 py-3 px-4 pr-12 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
+                className="w-full bg-slate-50 py-3 px-4 pr-14 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
                 value={message}
                 placeholder="Type your message..."
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                style={{ minHeight: '44px', height: 'auto' }}
+                rows={1}
+                style={{ 
+                  minHeight: '44px', 
+                  height: 'auto',
+                  lineHeight: '1.5'
+                }}
               />
+              <Button
+                onClick={handleSendMessage}
+                disabled={!message.trim()}
+                size="sm"
+                className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
+              >
+                <SendHorizonal size={14} className="ml-0.5" />
+              </Button>
 
-              <div className="flex space-x-2 mt-2">
-                <Select defaultValue={preference?.region} onValueChange={(value) => handleSetPreference(null, value)}>
+              {/* Selection Controls */}
+              <div className="flex space-x-2 mt-3">
+                <Select 
+                  value={preference?.region || ""} 
+                  onValueChange={(value) => handleSetPreference(null, value)}
+                >
                   <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                     <SelectValue placeholder="Country" />
                   </SelectTrigger>
                   <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
-                    {supportedRegions.map(region =>(
-                      <SelectItem key={region.code} value={region.name} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">
+                    {supportedRegions.map(region => (
+                      <SelectItem 
+                        key={region.code} 
+                        value={region.name} 
+                        className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                      >
                         {region.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                <Select defaultValue={preference?.election} onValueChange={(value) => handleSetPreference(value, null)}>
+                <Select 
+                  value={preference?.election || ""} 
+                  onValueChange={(value) => handleSetPreference(value, null)}
+                  disabled={!selectedRegion}
+                >
                   <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
-                      <SelectValue placeholder="Country" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
-                      {selectedRegion.elections.map(election => (
-                        <SelectItem 
-                          key={election} 
-                          value={election} 
-                          className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
-                        >
-                          {election}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
+                    <SelectValue placeholder="Election" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
+                    {selectedRegion?.elections?.map(election => (
+                      <SelectItem 
+                        key={election} 
+                        value={election} 
+                        className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                      >
+                        {election}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
-
-              <button
-                onClick={handleSendMessage}
-                disabled={!message.trim()}
-                className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 text-white rounded-full flex items-center justify-center transition-colors duration-200"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </button>
             </div>
           </div>
+          
           <p className="text-xs text-slate-400 mt-2 text-center">
             Press Enter to send, Shift+Enter for new line
           </p>
