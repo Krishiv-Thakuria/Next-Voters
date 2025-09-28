@@ -9,7 +9,10 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			'poppins': ['var(--font-poppins)', 'sans-serif'],
+  			poppins: [
+  				'var(--font-poppins)',
+  				'sans-serif'
+  			]
   		},
   		backgroundImage: {
   			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -88,11 +91,20 @@ module.exports = {
   				to: {
   					height: '0'
   				}
+  			},
+  			'spinner-leaf-fade': {
+  				'0%, 100%': {
+  					opacity: '0'
+  				},
+  				'50%': {
+  					opacity: '1'
+  				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			'spinner-leaf-fade': 'spinner-leaf-fade 800ms linear infinite'
   		}
   	}
   },

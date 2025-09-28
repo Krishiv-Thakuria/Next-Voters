@@ -5,6 +5,7 @@ import usePreference from "@/hooks/preferences";
 import { Preference } from "@/types/preferences";
 import supportedRegions from "@/data/supported-regions";
 import Dropdown from "@/components/ui/dropdown";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LandingPage() {
  const { preference, handleSetPreference} = usePreference();
@@ -35,7 +36,11 @@ export default function LandingPage() {
     return region ? region.elections : [];
   }
 
-  if (!isMounted) return null;
+  if (!isMounted) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <Spinner size="lg" className="bg-black" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white">
