@@ -6,13 +6,10 @@ const messages = [
   {
     from: "me",
     text: "Welcome to group everyone !",
-    timestamp: "10:30 AM"
   },
   {
     from: "other",
     text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat at praesentium, quisquam eligendi...",
-    timestamp: "10:32 AM",
-    user: "Sarah"
   },
   {
     from: "me",
@@ -20,35 +17,26 @@ const messages = [
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, reiciendis!"
     ],
-    timestamp: "10:33 AM"
   },
   {
     from: "other",
     text: "Happy holidays everyone! 🎉",
-    timestamp: "10:35 AM",
-    user: "Mike"
   },
   {
     from: "me",
     text: "Thanks for the warm welcome!",
-    timestamp: "10:36 AM"
   },
   {
     from: "other",
     text: "Looking forward to our collaboration on this project",
-    timestamp: "10:38 AM",
-    user: "Sarah"
   },
   {
     from: "me",
     text: "Absolutely! This is going to be great",
-    timestamp: "10:39 AM"
   },
   {
     from: "other",
     text: "Let me know if you need any help getting started with anything",
-    timestamp: "10:40 AM",
-    user: "Mike"
   }
 ];
 
@@ -92,7 +80,7 @@ const Chat = () => {
       <div className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
               <span className="text-white font-semibold text-sm">GP</span>
             </div>
             <div>
@@ -115,38 +103,26 @@ const Chat = () => {
                       msg.text.map((t, i) => (
                         <div
                           key={i}
-                          className="py-3 px-4 bg-blue-500 text-white rounded-2xl rounded-br-md shadow-sm"
+                          className="py-3 px-4 bg-red-500 text-white rounded-2xl rounded-br-md shadow-sm"
                         >
                           <p className="text-sm leading-relaxed">{t}</p>
                         </div>
                       ))
                     ) : (
-                      <div className="py-3 px-4 bg-blue-500 text-white rounded-2xl rounded-br-md shadow-sm">
+                      <div className="py-3 px-4 bg-red-500 text-white rounded-2xl rounded-br-md shadow-sm">
                         <p className="text-sm leading-relaxed">{msg.text}</p>
                       </div>
                     )}
-                    <p className="text-xs text-slate-500 text-right px-1">{msg.timestamp}</p>
-                  </div>
-                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-medium text-xs">You</span>
                   </div>
                 </div>
               </div>
             ) : (
               <div key={index} className="flex justify-start">
                 <div className="flex items-end space-x-3 max-w-md">
-                  <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-slate-600 font-medium text-xs">
-                      {getInitials(msg.user)}
-                    </span>
-                  </div>
                   <div className="space-y-1">
                     <div className="py-3 px-4 bg-white border border-slate-200 rounded-2xl rounded-bl-md shadow-sm">
                       <p className="text-sm leading-relaxed text-slate-800">{msg.text}</p>
                     </div>
-                    <p className="text-xs text-slate-500 px-1">
-                      {msg.user} • {msg.timestamp}
-                    </p>
                   </div>
                 </div>
               </div>
@@ -163,7 +139,7 @@ const Chat = () => {
             <div className="flex-1 relative">
               <textarea
                 ref={inputRef}
-                className="w-full bg-slate-50 py-3 px-4 pr-12 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
+                className="w-full bg-slate-50 py-3 px-4 pr-12 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
                 value={message}
                 placeholder="Type your message..."
                 onChange={(e) => setMessage(e.target.value)}
@@ -177,7 +153,7 @@ const Chat = () => {
                 <button
                   onClick={handleSendMessage}
                   disabled={!message.trim()}
-                  className="w-8 h-8 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-300 text-white rounded-full flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 text-white rounded-full flex items-center justify-center transition-colors duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
