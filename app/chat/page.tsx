@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
 import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
+import PoliticalPerspective from "../components/political-perspective";
 
 const messages = [
   {
@@ -15,10 +16,7 @@ const messages = [
   },
   {
     from: "me",
-    text: [
-      "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, reiciendis!"
-    ],
+    text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
   },
   {
     from: "other",
@@ -42,6 +40,45 @@ const messages = [
   }
 ];
 
+const lastConservative = "Conservatives focus on fiscal responsibility, small government, and traditional values.";
+const lastLiberal = "Liberals emphasize social equality, healthcare access, and progressive policies.";
+
+const MessageBubble = ({ message, isFromMe }) => {
+  const baseClasses = "py-3 px-4 rounded-2xl shadow-sm max-w-md";
+  const myClasses = `${baseClasses} bg-red-500 text-white rounded-br-md ml-auto`;
+  const otherClasses = `${baseClasses} bg-white border border-slate-200 rounded-bl-md`;
+
+  return (
+    <div className={`flex ${isFromMe ? 'justify-end' : 'justify-start'} mb-4`}>
+      <div className={isFromMe ? myClasses : otherClasses}>
+        {message.text === "Let me know if you need any help getting started with anything" ? (
+          <div className="space-y-4">
+            <p className="text-sm leading-relaxed text-slate-700 mb-4">{message.text}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <PoliticalPerspective
+                title="Conservative Party"
+                subtitle="Based on official 2025 party platform"
+                content={lastConservative}
+                loading={false}
+                color="blue"
+              />
+              <PoliticalPerspective
+                title="Liberal Party"
+                subtitle="Based on official 2025 party platform"
+                content={lastLiberal}
+                loading={false}
+                color="red"
+              />
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm leading-relaxed">{message.text}</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Chat = () => {
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get('message');
@@ -54,14 +91,10 @@ const Chat = () => {
 
   useEffect(() => {
     setIsMounted(true);
-  })
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const handleSendMessage = () => {
@@ -79,75 +112,47 @@ const Chat = () => {
     }
   };
 
-  if (!isMounted) return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <Spinner size="lg" className="bg-black" />
-    </div>
-  );
-
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Spinner size="lg" className="bg-black" />
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen bg-slate-50 flex flex-col">
-      {/* Chat Header */}
+      {/* Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center space-x-3">
-            <div className="mr-2.5">
-              <span className="text-blue-800 font-semibold text-xl">N</span>
-              <span className="text-red-800 font-semibold text-xl">V</span>
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-slate-900">Chat Platform</h1>
-              <p className="text-sm text-slate-500">
-                {preference ? `${preference.region} | ${preference.election}` : 'No preferences set'}
-              </p>
-            </div>
+        <div className="max-w-4xl mx-auto flex items-center space-x-3">
+          <div className="mr-2.5">
+            <span className="text-blue-800 font-semibold text-xl">N</span>
+            <span className="text-red-800 font-semibold text-xl">V</span>
+          </div>
+          <div>
+            <h1 className="text-lg font-semibold text-slate-900">Chat Platform</h1>
+            <p className="text-sm text-slate-500">
+              {preference ? `${preference.region} | ${preference.election}` : 'No preferences set'}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Messages Container */}
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-4">
-          {messages.map((msg, index) =>
-            msg.from === "me" ? (
-              <div key={index} className="flex justify-end">
-                <div className="flex items-end space-x-2 max-w-md">
-                  <div className="space-y-1">
-                    {Array.isArray(msg.text) ? (
-                      msg.text.map((t, i) => (
-                        <div
-                          key={i}
-                          className="py-3 px-4 bg-red-500 text-white rounded-2xl rounded-br-md shadow-sm"
-                        >
-                          <p className="text-sm leading-relaxed">{t}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="py-3 px-4 bg-red-500 text-white rounded-2xl rounded-br-md shadow-sm">
-                        <p className="text-sm leading-relaxed">{msg.text}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div key={index} className="flex justify-start">
-                <div className="flex items-end space-x-3 max-w-md">
-                  <div className="space-y-1">
-                    <div className="py-3 px-4 bg-white border border-slate-200 rounded-2xl rounded-bl-md shadow-sm">
-                      <p className="text-sm leading-relaxed text-slate-800">{msg.text}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )
-          )}
+        <div className="max-w-4xl mx-auto">
+          {messages.map((msg, index) => (
+            <MessageBubble 
+              key={index} 
+              message={msg} 
+              isFromMe={msg.from === "me"} 
+            />
+          ))}
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Message Input */}
+      {/* Input */}
       <div className="bg-white border-t border-slate-200 px-4 py-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end space-x-3">
@@ -159,22 +164,17 @@ const Chat = () => {
                 placeholder="Type your message..."
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                style={{
-                  minHeight: '44px',
-                  height: 'auto'
-                }}
+                style={{ minHeight: '44px', height: 'auto' }}
               />
-              <div className="absolute right-2 bottom-2">
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!message.trim()}
-                  className="w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 text-white rounded-full flex items-center justify-center transition-colors duration-200"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                </button>
-              </div>
+              <button
+                onClick={handleSendMessage}
+                disabled={!message.trim()}
+                className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 text-white rounded-full flex items-center justify-center transition-colors duration-200"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
             </div>
           </div>
           <p className="text-xs text-slate-400 mt-2 text-center">
