@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { FC } from 'react'
 import PoliticalPerspective from './political-perspective';
 
-const MessageBubble = ({ message, isFromMe }) => {
+interface MessageBubbleProps {
+    message: { text: string };
+    isFromMe: boolean;
+}
+
+const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
   const myMessage = "py-3 px-4 rounded-2xl shadow-sm max-w-md bg-red-500 text-white rounded-br-md ml-auto";
   const AIMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
@@ -15,14 +20,14 @@ const MessageBubble = ({ message, isFromMe }) => {
             <PoliticalPerspective
               title="Conservative Party"
               subtitle="Based on official 2025 party platform"
-              content={message}
+              content={message.text}
               loading={false}
               color="blue"
             />
             <PoliticalPerspective
               title="Liberal Party"
               subtitle="Based on official 2025 party platform"
-              content={message}
+              content={message.text}
               loading={false}
               color="red"
             />
