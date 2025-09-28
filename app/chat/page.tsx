@@ -1,109 +1,194 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
 
 const messages = [
   {
     from: "me",
     text: "Welcome to group everyone !",
+    timestamp: "10:30 AM"
   },
   {
     from: "other",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat at praesentium...",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat at praesentium, quisquam eligendi...",
+    timestamp: "10:32 AM",
+    user: "Sarah"
   },
   {
     from: "me",
     text: [
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, reiciendis!",
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis, reiciendis!"
     ],
+    timestamp: "10:33 AM"
   },
   {
     from: "other",
-    text: "happy holiday guys!",
+    text: "Happy holidays everyone! 🎉",
+    timestamp: "10:35 AM",
+    user: "Mike"
   },
   {
     from: "me",
     text: "Thanks for the warm welcome!",
+    timestamp: "10:36 AM"
   },
   {
     from: "other",
-    text: "Looking forward to our collaboration",
+    text: "Looking forward to our collaboration on this project",
+    timestamp: "10:38 AM",
+    user: "Sarah"
   },
   {
     from: "me",
     text: "Absolutely! This is going to be great",
+    timestamp: "10:39 AM"
   },
   {
     from: "other",
-    text: "Let me know if you need any help getting started",
-  },
+    text: "Let me know if you need any help getting started with anything",
+    timestamp: "10:40 AM",
+    user: "Mike"
+  }
 ];
 
 const Chat = () => {
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get('message');
-  const [message, setMessage] = useState(initialMessage);
+  const [message, setMessage] = useState(initialMessage || '');
+  const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      console.log("Send message:", message);
+      setMessage('');
+      inputRef.current?.focus();
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const getInitials = (name) => {
+    return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+  };
 
   return (
-    <div className="h-screen bg-gray-50">
-      {/* Main Chat Container */}
-      <div className="flex flex-col flex-1 bg-white overflow-hidden">
-        {/* Messages Container - Takes remaining space and scrolls */}
-        <div className="flex-1 overflow-y-auto px-4 py-8">
-          <div className="flex flex-col max-w-6xl mx-auto">
-            {messages.map((msg, index) =>
-              msg.from === "me" ? (
-                <div key={index} className="flex justify-end mb-4">
-                  <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
-                    <div>
-                      {Array.isArray(msg.text) ? (
-                        msg.text.map((t, i) => (
-                          <div
-                            key={i}
-                            className="mb-1 py-2 px-3 bg-red-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-lg text-white text-sm"
-                          >
-                            {t}
-                          </div>
-                        ))
-                      ) : (
-                        <div className="py-2 px-3 bg-red-500 rounded-bl-2xl rounded-tl-2xl rounded-tr-lg text-white text-sm">
-                          {msg.text}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div key={index} className="flex justify-start mb-4">
-                  <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
-                    <div className="py-2 px-3 bg-gray-100 rounded-br-2xl rounded-tr-2xl rounded-tl-lg text-gray-800 text-sm">
-                      {msg.text}
-                    </div>
-                  </div>
-                </div>
-              )
-            )}
+    <div className="h-screen bg-slate-50 flex flex-col">
+      {/* Chat Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-semibold text-sm">GP</span>
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold text-slate-900">Group Project</h1>
+              <p className="text-sm text-slate-500">4 members online</p>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Fixed Input Area */}
-        <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-20">
-          <div className="flex items-center space-x-3 max-w-4xl mx-auto">
-            <input
-              className="flex-1 bg-gray-50 py-3 px-4 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-gray-500 text-black"
-              type="text"
-              value={message}
-              placeholder="Type your message..."
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button 
-              className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition-colors duration-200 text-sm font-medium"
-              onClick={() => console.log("Send message")}
-            >
-              Send
-            </button>
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto space-y-4">
+          {messages.map((msg, index) =>
+            msg.from === "me" ? (
+              <div key={index} className="flex justify-end">
+                <div className="flex items-end space-x-2 max-w-md">
+                  <div className="space-y-1">
+                    {Array.isArray(msg.text) ? (
+                      msg.text.map((t, i) => (
+                        <div
+                          key={i}
+                          className="py-3 px-4 bg-blue-500 text-white rounded-2xl rounded-br-md shadow-sm"
+                        >
+                          <p className="text-sm leading-relaxed">{t}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-3 px-4 bg-blue-500 text-white rounded-2xl rounded-br-md shadow-sm">
+                        <p className="text-sm leading-relaxed">{msg.text}</p>
+                      </div>
+                    )}
+                    <p className="text-xs text-slate-500 text-right px-1">{msg.timestamp}</p>
+                  </div>
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-medium text-xs">You</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div key={index} className="flex justify-start">
+                <div className="flex items-end space-x-3 max-w-md">
+                  <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-slate-600 font-medium text-xs">
+                      {getInitials(msg.user)}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="py-3 px-4 bg-white border border-slate-200 rounded-2xl rounded-bl-md shadow-sm">
+                      <p className="text-sm leading-relaxed text-slate-800">{msg.text}</p>
+                    </div>
+                    <p className="text-xs text-slate-500 px-1">
+                      {msg.user} • {msg.timestamp}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      {/* Message Input */}
+      <div className="bg-white border-t border-slate-200 px-4 py-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-end space-x-3">
+            <div className="flex-1 relative">
+              <textarea
+                ref={inputRef}
+                className="w-full bg-slate-50 py-3 px-4 pr-12 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
+                value={message}
+                placeholder="Type your message..."
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                style={{
+                  minHeight: '44px',
+                  height: 'auto'
+                }}
+              />
+              <div className="absolute right-2 bottom-2">
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!message.trim()}
+                  className="w-8 h-8 bg-blue-500 hover:bg-blue-600 disabled:bg-slate-300 text-white rounded-full flex items-center justify-center transition-colors duration-200"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
+          <p className="text-xs text-slate-400 mt-2 text-center">
+            Press Enter to send, Shift+Enter for new line
+          </p>
         </div>
       </div>
     </div>

@@ -3,12 +3,14 @@
 import React, { useState, FC, ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Header from './common/header';
+import { usePathname } from 'next/navigation';
 
 interface RootInterface {
     children: ReactNode
 }
 
 const Root: FC<RootInterface> = ({ children }) => {
+    const pathname = usePathname();
     const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -23,7 +25,9 @@ const Root: FC<RootInterface> = ({ children }) => {
   
   return (
     <QueryClientProvider client={queryClient}>
-        <Header />
+        {pathname !== '/chat' &&
+          <Header />
+        }
         {children}
     </QueryClientProvider>
   )
