@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import usePreference from "@/hooks/preferences";
 import { Preference } from "@/types/preferences";
 import supportedRegions from "@/data/supported-regions";
@@ -8,6 +8,11 @@ import Dropdown from "@/components/ui/dropdown";
 
 export default function LandingPage() {
  const { preference, handleSetPreference} = usePreference();
+ const [isMounted, setIsMounted] = useState(false);
+
+ useEffect(() => {
+    setIsMounted(true);
+ })
 
   const updatePreference = (field: keyof Preference, value: string) => {
     const newPref = { ...preference, [field]: value };
@@ -20,15 +25,17 @@ export default function LandingPage() {
 
   const handleFindParties = () => {
     const region =
-      supportedRegions.find((region) => region.name === preference.region)
+      supportedRegions.find((region) => region.name === preference?.region)
     return region ? region.politicalParties : [];
   };
 
   const handleFindElections = () => {
     const region =
-      supportedRegions.find((region) => region.name === preference.region)
+      supportedRegions.find((region) => region.name === preference?.region)
     return region ? region.elections : [];
   }
+
+  if (!isMounted) return null;
 
   return (
     <div className="min-h-screen bg-white">
