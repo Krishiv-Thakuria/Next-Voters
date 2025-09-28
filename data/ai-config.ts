@@ -1,2 +1,2 @@
-export const MODEL_NAME = "command-r-plus"
-export const EMBEDDING_MODEL_NAME = "embed-english-v3.0"
+export const MODEL_NAME = "llama-3.1-8b-instant"
+export const EMBEDDING_MODEL_NAME = "mistral-echo"

@@ -1,6 +1,7 @@
 import { generateObject, embed } from 'ai';
 import { client } from "./qdrant";
-import { createCohere } from '@ai-sdk/cohere';
+import { createGroq } from '@ai-sdk/groq';
+import { createMistral } from '@ai-sdk/mistral';
 import { z } from 'zod';
 import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
@@ -9,8 +10,14 @@ import pdfParse from "pdf-parse";
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
 import { SupportedCountry } from '@/types/supported-regions';
 
-const cohere = createCohere({
-    apiKey: process.env.COHERE_API_KEY
+// For LLM
+const groq = createGroq({
+    apiKey: process.env.GROQ_LLM_API_KEY
+})
+
+// For embedding 
+const mistral = createMistral({
+    apiKey: process.env.MISTRAL_EMBEDDING_API_KEY
 })
 
 export const generateResponses = async (
@@ -25,7 +32,7 @@ export const generateResponses = async (
             const { party, partyPrompt } = partyInfo;
 
             return generateObject({
-                model: cohere(MODEL_NAME),
+                model: groq(MODEL_NAME),
                 schema: z.object({
                     message: z.object({
                         answer: z.string()
@@ -65,7 +72,7 @@ export const addEmbeddings = async (
     await Promise.all(
         textChunks.map(async text => {
             const { embedding } = await embed({
-                model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+                model: groq.textEmbeddingModel(EMBEDDING_MODEL_NAME),
                 value: text
             });
 
@@ -94,7 +101,7 @@ export const searchEmbeddings = async (
     filterCriteria: any = null
 ) => {
     const { embedding: vectorEmbeddings } = await embed({
-        model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+        model: mistral.textEmbeddingModel(EMBEDDING_MODEL_NAME),
         value: userQuery
     });
 
