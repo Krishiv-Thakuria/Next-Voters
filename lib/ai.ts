@@ -119,7 +119,7 @@ export const addEmbeddings = async (
     await Promise.all(
         textChunks.map(async text => {
             const { embedding } = await embed({
-                model: groq.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+                model: mistral.textEmbeddingModel(EMBEDDING_MODEL_NAME),
                 value: text
             });
 
