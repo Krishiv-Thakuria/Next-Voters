@@ -8,7 +8,7 @@ import Dropdown from "@/components/ui/dropdown";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from 'next/navigation';
 
-export default function LandingPage() {
+const Home = () => {
  const router = useRouter();
  const { preference, handleSetPreference} = usePreference();
  const [isMounted, setIsMounted] = useState(false);
@@ -231,3 +231,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+export default Home;
