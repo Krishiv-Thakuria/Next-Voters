@@ -11,9 +11,9 @@ export const POST = async (req: NextRequest) => {
     }
 
     // checking the db here
-    const isUserAdmin = handleGetUser(email)
+    const userAdminDb = await handleGetUser(email)
 
-    if (!isUserAdmin) {
+    if (userAdminDb === 0) {
         throw new Error("User is not an admin.")
     }
 
