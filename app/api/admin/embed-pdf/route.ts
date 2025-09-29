@@ -3,15 +3,31 @@ import { NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { documentLink, author, documentName, collectionName } = await request.json();
+    const { 
+      documentLink, 
+      author, 
+      documentName, 
+      collectionName,
+      region,
+      politicalAffiliation
+    } = await request.json();
 
     // Validate input
-    if (!documentLink || !/^https?:\/\/[^\s]+$/i.test(documentLink)) {
+    if (!/^https?:\/\/[^\s]+$/i.test(documentLink)) {
       return Response.json({ error: "Invalid or missing document link" }, { status: 400 });
     }
-    if (!author?.trim()) return Response.json({ error: "Author name cannot be empty" }, { status: 400 });
-    if (!documentName?.trim()) return Response.json({ error: "Document name cannot be empty" }, { status: 400 });
-    if (!collectionName?.trim()) return Response.json({ error: "Collection name cannot be empty" }, { status: 400 });
+    
+    if (
+      !documentLink || 
+      !author || 
+      !documentName || 
+      !collectionName || 
+      !region || 
+      !politicalAffiliation
+    ) {
+      throw new Error("Missing all required fields.")
+    }
+  
 
     // Fetch the PDF
     const response = await fetch(documentLink);
@@ -29,7 +45,15 @@ export const POST = async (request: NextRequest) => {
     const chunks = await chunkDocument(pdfBuffer);
 
     // Store embeddings
-    await addEmbeddings(chunks, author, documentLink, documentName, collectionName);
+    await addEmbeddings(
+      chunks, 
+      author, 
+      documentLink, 
+      documentName, 
+      collectionName,
+      region, 
+      politicalAffiliation
+    );
 
     return Response.json({ message: "Embeddings added successfully!" }, { status: 200 });
   } catch (error: any) {

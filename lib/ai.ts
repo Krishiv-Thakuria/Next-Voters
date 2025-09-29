@@ -96,7 +96,9 @@ export const addEmbeddings = async (
     author: string,
     url: string,
     document_name: string,
-    collectionName: string
+    collectionName: string,
+    region: string,
+    politicalAffiliation: string
   ) => {
     const collection = await client.getCollection(collectionName);
 
@@ -123,6 +125,8 @@ export const addEmbeddings = async (
             payload: {
               text,
               citation: { author, url, document_name },
+              region,
+              politicalAffiliation
             },
           }],
         });
