@@ -17,7 +17,7 @@ export const POST = async (req: NextRequest) => {
         throw new Error("User is not an admin.")
     }
 
-    const token = handleCreateToken(email);
+    const token = await handleCreateToken(email);
 
     await transporter.sendMail({
       from: `Next Voter's Internal Platform`,

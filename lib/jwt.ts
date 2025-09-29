@@ -1,8 +1,8 @@
-"use server"
+"use server";
 import jwt from "jsonwebtoken";
 
-// the :string is the expected return value type
-export const handleCreateToken = (email: string): string => {
+// returns a string token
+export const handleCreateToken = async (email: string): Promise<string> => {
   if (!process.env.JWT_PRIVATE_KEY) {
     throw new Error("JWT_PRIVATE_KEY is not defined in environment");
   }
@@ -14,7 +14,6 @@ export const handleCreateToken = (email: string): string => {
   };
 
   const token = jwt.sign(payload, process.env.JWT_PRIVATE_KEY, {
-    algorithm: "RS256",
     expiresIn: "5m", // set expiration for safety
   });
 
