@@ -16,8 +16,8 @@ const AdminAuth: FC<AdminAuthProps> = ({ children, className }) => {
   useEffect(() => {
     const verify = async () => {
       const jwtToken = prompt("What is your JWT token:");
-      if (!jwtToken) {
-        alert("You did not input anything. Try again.");
+      if (jwtToken === null) {
+        alert("Cancelled the operation. Redirecting...");
         setIsVerified(false);
         return;
       }
