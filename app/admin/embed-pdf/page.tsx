@@ -8,21 +8,25 @@ import { Spinner } from "@/components/ui/spinner";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import AdminAuth from "@/wrappers/AdminAuth";
 
-const embedPdf = async ({
-  documentLink,
-  author,
-  documentName,
-  collectionName,
-}: {
-  documentLink: string;
-  author: string;
-  documentName: string;
-  collectionName: string;
-}) => {
+const embedPdf = async (
+  documentLink: string,
+  author: string,
+  documentName: string,
+  collectionName: string,
+  region: string,
+  politicalAffilation: string
+) => {
   const response = await fetch("/api/embed-pdf", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ documentLink, author, documentName, collectionName }),
+    body: JSON.stringify({ 
+      documentLink, 
+      author, 
+      documentName,
+      collectionName,
+      region,
+      politicalAffilation
+    }),
   });
 
   const data = await response.json();
@@ -35,10 +39,19 @@ const EmbedPdfForm = () => {
   const [author, setAuthor] = useState("");
   const [documentName, setDocumentName] = useState("");
   const [collectionName, setCollectionName] = useState("");
+  const [region, setRegion] = useState("");
+  const [politicalAffilation, setPoliticalAffilation] = useState("");
   const [status, setStatus] = useState<null | { type: "success" | "error"; message: string }>(null);
 
   const mutation = useMutation({
-    mutationFn: () => embedPdf({ documentLink, author, documentName, collectionName }),
+    mutationFn: () => embedPdf(
+      documentLink, 
+      author, 
+      documentName, 
+      collectionName, 
+      region, 
+      politicalAffilation
+    ),
     onMutate: () => setStatus(null),
     onSuccess: (data) => {
       setStatus({ type: "success", message: data.message || "Embeddings added successfully!" });
@@ -93,6 +106,22 @@ const EmbedPdfForm = () => {
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
               value={collectionName}
               onChange={(e) => setCollectionName(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Collection Name"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Collection Name"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
+              value={politicalAffilation}
+              onChange={(e) => setPoliticalAffilation(e.target.value)}
               required
             />
 
