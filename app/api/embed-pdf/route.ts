@@ -1,0 +1,39 @@
+import { chunkDocument, addEmbeddings } from "@/lib/ai";
+import { NextRequest } from "next/server";
+
+export const POST = async (request: NextRequest) => {
+  try {
+    const { documentLink, author, documentName, collectionName } = await request.json();
+
+    // Validate input
+    if (!documentLink || !/^https?:\/\/[^\s]+$/i.test(documentLink)) {
+      return Response.json({ error: "Invalid or missing document link" }, { status: 400 });
+    }
+    if (!author?.trim()) return Response.json({ error: "Author name cannot be empty" }, { status: 400 });
+    if (!documentName?.trim()) return Response.json({ error: "Document name cannot be empty" }, { status: 400 });
+    if (!collectionName?.trim()) return Response.json({ error: "Collection name cannot be empty" }, { status: 400 });
+
+    // Fetch the PDF
+    const response = await fetch(documentLink);
+    if (!response.ok) {
+      return Response.json({ error: `Failed to fetch document. Status: ${response.status}` }, { status: response.status });
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+    if (!contentType.includes("application/pdf")) {
+      return Response.json({ error: "The link did not return a PDF document." }, { status: 400 });
+    }
+
+    // Convert PDF to buffer and chunk
+    const pdfBuffer = await response.arrayBuffer();
+    const chunks = await chunkDocument(pdfBuffer);
+
+    // Store embeddings
+    await addEmbeddings(chunks, author, documentLink, documentName, collectionName);
+
+    return Response.json({ message: "Embeddings added successfully!" }, { status: 200 });
+  } catch (error: any) {
+    console.error("Error in embed-pdf API:", error);
+    return Response.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+  }
+};
