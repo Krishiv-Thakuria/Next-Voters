@@ -5,20 +5,6 @@ import React from 'react';
 const FellowshipPage = () => {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="w-full">
-        <div className="max-w-[1200px] mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <a href="/" className="text-[14px] text-gray-700 hover:text-gray-900 font-poppins">
-              Home
-            </a>
-          </div>
-          <div className="flex items-center">
-            <a href="/" className="text-[18px] font-bold text-gray-900 font-poppins">NV</a>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="w-full">
         {/* Hero Section */}
