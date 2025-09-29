@@ -3,8 +3,9 @@ import React, { FC, ReactNode } from 'react'
 
 interface AdminAuthProps {
     children: ReactNode
+    className: string
 }
-const AdminAuth: FC<AdminAuthProps> = ({ children }) => {
+const AdminAuth: FC<AdminAuthProps> = ({ children, className }) => {
 
   const jwtToken = prompt("What is your JWT token:")
 
@@ -20,7 +21,7 @@ const AdminAuth: FC<AdminAuthProps> = ({ children }) => {
     return <p>Refresh page</p>
   }
 
-  return <>{children}</>
+  return <div className={className}>{children}</div>
   
 }
 

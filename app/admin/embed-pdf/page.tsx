@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import AdminAuth from "@/wrappers/AdminAuth";
 
 const embedPdf = async ({
   documentLink,
@@ -57,7 +58,7 @@ const EmbedPdfForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <AdminAuth className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-lg bg-white shadow-md border border-slate-200">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Embed PDF</h2>
@@ -118,7 +119,7 @@ const EmbedPdfForm = () => {
           )}
         </CardContent>
       </Card>
-    </div>
+    </AdminAuth>
   );
 };
 
