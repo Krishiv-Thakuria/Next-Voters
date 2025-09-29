@@ -1,4 +1,5 @@
 "use server";
+
 import jwt from "jsonwebtoken";
 
 // returns a string token
@@ -18,4 +19,18 @@ export const handleCreateToken = async (email: string): Promise<string> => {
   });
 
   return token;
+};
+
+
+export const handleVerifyToken = async (token: string): Promise<boolean> => {
+  try {
+    if (!process.env.JWT_PRIVATE_KEY) {
+      throw new Error("JWT_PRIVATE_KEY is not defined");
+    }
+
+    jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+    return true; 
+  } catch (err) {
+    return false; 
+  }
 };
