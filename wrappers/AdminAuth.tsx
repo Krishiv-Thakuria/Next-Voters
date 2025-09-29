@@ -1,28 +1,46 @@
+"use client"
+
 import { handleVerifyToken } from '@/lib/jwt'
-import React, { FC, ReactNode } from 'react'
+import { useRouter } from 'next/router'
+import React, { FC, ReactNode, useEffect, useState } from 'react'
 
 interface AdminAuthProps {
     children: ReactNode
     className: string
 }
+
 const AdminAuth: FC<AdminAuthProps> = ({ children, className }) => {
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
+  const router = useRouter();
 
-  const jwtToken = prompt("What is your JWT token:")
+  useEffect(() => {
+    const verify = async () => {
+      const jwtToken = prompt("What is your JWT token:");
+      if (!jwtToken) {
+        alert("You did not input anything. Try again.");
+        setIsVerified(false);
+        return;
+      }
+      const verified = await handleVerifyToken(jwtToken);
+      if (!verified) {
+        alert("Invalid token. You do not have the permission to view this page.");
+        setIsVerified(false);
+      } else {
+        setIsVerified(true);
+      }
+    };
+    verify();
+  }, []);
 
-  if (!jwtToken) {
-    alert("You did not input anything. Try agan.")
-    return <p>Refresh page</p>
+  if (isVerified === null) {
+    return <p>Verifying...</p>;
   }
-
-  const isVerified = handleVerifyToken(jwtToken)
 
   if (!isVerified) {
-    alert("Invalid token. You do not have the permission to view this page.")
-    return <p>Refresh page</p>
+    router.push("/admin/request-token")
   }
 
-  return <div className={className}>{children}</div>
-  
+  return <div className={className}>{children}</div>;
 }
 
 export default AdminAuth
