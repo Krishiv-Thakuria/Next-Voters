@@ -8,7 +8,7 @@ import { Mail, CheckCircle2, AlertCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 
 const requestToken = async (email: string) => {
-  const response = await fetch("/api/request-token", {
+  const response = await fetch("/api/admin/request-token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),

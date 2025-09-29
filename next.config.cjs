@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverActions: true,
+  },
   webpack: (config) => {
     // Add fallback for Node.js modules
     config.resolve.fallback = {
