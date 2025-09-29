@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
 import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
-import MessageBubble from "../components/message-bubble";
+import MessageBubble from "../../components/message-bubble";
 import { Message } from "@/types/message";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import supportedRegions from "@/data/supported-regions";
