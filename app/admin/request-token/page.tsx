@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Mail, CheckCircle2, AlertCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const requestToken = async (email: string) => {
   const response = await fetch("/api/admin/request-token", {
@@ -21,6 +22,7 @@ const requestToken = async (email: string) => {
 
 const AdminTokenPage = () => {
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: (email: string) => requestToken(email),
@@ -32,6 +34,7 @@ const AdminTokenPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutation.mutate(email);
+    router.push("/admin/embed-pdf");
   };
 
   return (
