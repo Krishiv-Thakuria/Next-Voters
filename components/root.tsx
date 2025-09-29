@@ -1,14 +1,16 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, FC, ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Header from './common/header';
+import { usePathname } from 'next/navigation';
 
 interface RootInterface {
-    children: React.ReactNode
+    children: ReactNode
 }
 
-const Root: React.FC<RootInterface> = ({ children }) => {
+const Root: FC<RootInterface> = ({ children }) => {
+    const pathname = usePathname();
     const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -23,7 +25,9 @@ const Root: React.FC<RootInterface> = ({ children }) => {
   
   return (
     <QueryClientProvider client={queryClient}>
-        <Header />
+        {pathname !== '/chat' &&
+          <Header />
+        }
         {children}
     </QueryClientProvider>
   )
