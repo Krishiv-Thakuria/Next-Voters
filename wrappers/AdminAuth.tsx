@@ -1,7 +1,7 @@
 "use client"
 
 import { handleVerifyToken } from '@/lib/jwt'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import React, { FC, ReactNode, useEffect, useState } from 'react'
 
 interface AdminAuthProps {
