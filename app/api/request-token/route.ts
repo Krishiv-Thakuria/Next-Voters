@@ -10,6 +10,7 @@ export const POST = async (req: NextRequest) => {
       throw new Error("Email has not been provided.")
     }
 
+    // checking the db here
     const isUserAdmin = handleGetUser(email)
 
     if (!isUserAdmin) {
