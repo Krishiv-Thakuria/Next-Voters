@@ -38,6 +38,7 @@ const AdminAuth: FC<AdminAuthProps> = ({ children, className }) => {
 
   if (!isVerified) {
     router.push("/admin/request-token")
+    return null
   }
 
   return <div className={className}>{children}</div>;
