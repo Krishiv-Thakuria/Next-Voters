@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import AdminAuth from "@/wrappers/AdminAuth";
+import supportedRegions from "@/data/supported-regions";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 const embedPdf = async (
   documentLink: string,
@@ -14,7 +16,7 @@ const embedPdf = async (
   documentName: string,
   collectionName: string,
   region: string,
-  politicalAffilation: string
+  politicalAffiliation: string
 ) => {
   const response = await fetch("/api/embed-pdf", {
     method: "POST",
@@ -25,7 +27,7 @@ const embedPdf = async (
       documentName,
       collectionName,
       region,
-      politicalAffilation
+      politicalAffiliation
     }),
   });
 
@@ -34,31 +36,62 @@ const embedPdf = async (
   return data;
 };
 
+const initialForm = {
+  documentLink: "",
+  author: "",
+  documentName: "",
+  collectionName: "",
+  region: "",
+  politicalAffiliation: "",
+};
+
 const EmbedPdfForm = () => {
-  const [documentLink, setDocumentLink] = useState("");
-  const [author, setAuthor] = useState("");
-  const [documentName, setDocumentName] = useState("");
-  const [collectionName, setCollectionName] = useState("");
-  const [region, setRegion] = useState("");
-  const [politicalAffilation, setPoliticalAffilation] = useState("");
+  const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<null | { type: "success" | "error"; message: string }>(null);
+
+  // Memoize political parties for the selected region
+  const politicalParties = useMemo(() => {
+    const found = supportedRegions.find((r) => r.name === form.region);
+    return found?.politicalParties ?? [];
+  }, [form.region]);
+
+  // When region changes, reset party
+  const handleRegionChange = (value: string) => {
+    setForm((prev) => ({
+      ...prev,
+      region: value,
+      politicalAffiliation: "", // Reset party!
+    }));
+  };
+
+  const handlePartyChange = (value: string) => {
+    setForm((prev) => ({
+      ...prev,
+      politicalAffiliation: value,
+    }));
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const mutation = useMutation({
     mutationFn: () => embedPdf(
-      documentLink, 
-      author, 
-      documentName, 
-      collectionName, 
-      region, 
-      politicalAffilation
+      form.documentLink, 
+      form.author, 
+      form.documentName, 
+      form.collectionName, 
+      form.region, 
+      form.politicalAffiliation
     ),
     onMutate: () => setStatus(null),
     onSuccess: (data) => {
       setStatus({ type: "success", message: data.message || "Embeddings added successfully!" });
-      setDocumentLink("");
-      setAuthor("");
-      setDocumentName("");
-      setCollectionName("");
+      setForm(initialForm);
     },
     onError: (error: any) => {
       setStatus({ type: "error", message: error.message || "Unexpected error occurred." });
@@ -77,53 +110,84 @@ const EmbedPdfForm = () => {
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Embed PDF</h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <input
+              name="documentLink"
               type="url"
               placeholder="Document Link"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={documentLink}
-              onChange={(e) => setDocumentLink(e.target.value)}
+              value={form.documentLink}
+              onChange={handleChange}
               required
             />
             <input
+              name="author"
               type="text"
               placeholder="Author"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
+              value={form.author}
+              onChange={handleChange}
               required
             />
             <input
+              name="documentName"
               type="text"
               placeholder="Document Name"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={documentName}
-              onChange={(e) => setDocumentName(e.target.value)}
+              value={form.documentName}
+              onChange={handleChange}
               required
             />
             <input
+              name="collectionName"
               type="text"
               placeholder="Collection Name"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={collectionName}
-              onChange={(e) => setCollectionName(e.target.value)}
+              value={form.collectionName}
+              onChange={handleChange}
               required
             />
-            <input
-              type="text"
-              placeholder="Region"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Political Affilation"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={politicalAffilation}
-              onChange={(e) => setPoliticalAffilation(e.target.value)}
-              required
-            />
+
+            <div className="flex space-x-2">
+              <Select
+                value={form.region}
+                onValueChange={handleRegionChange}
+              >
+                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                  <SelectValue placeholder="Region" />
+                </SelectTrigger>
+                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50] cursor-pointer">
+                  {supportedRegions?.map(region => (
+                    <SelectItem 
+                      key={region.code} 
+                      value={region.name} 
+                      className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                    >
+                      {region.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={form.politicalAffiliation || "Democratic Party"}
+                onValueChange={handlePartyChange}
+                disabled={!form.region}
+              >
+                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                  <SelectValue placeholder="Political Party" />
+                </SelectTrigger>
+                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50] cursor-pointer">
+                  {politicalParties.map(party => (
+                    <SelectItem 
+                      key={party} 
+                      value={party} 
+                      className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                    >
+                      {party}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             <Button
               type="submit"
