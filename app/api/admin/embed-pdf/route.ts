@@ -1,5 +1,5 @@
 import { chunkDocument, addEmbeddings } from "@/lib/ai";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -16,7 +16,7 @@ export const POST = async (request: NextRequest) => {
     
     // Validate input
     if (!/^https?:\/\/[^\s]+$/i.test(documentLink)) {
-      return Response.json({ error: "Invalid or missing document link" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid or missing document link" }, { status: 400 });
     }
     
     if (
@@ -34,12 +34,12 @@ export const POST = async (request: NextRequest) => {
     // Fetch the PDF
     const response = await fetch(documentLink);
     if (!response.ok) {
-      return Response.json({ error: `Failed to fetch document. Status: ${response.status}` }, { status: response.status });
+      return NextResponse.json({ error: `Failed to fetch document. Status: ${response.status}` }, { status: response.status });
     }
 
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("application/pdf")) {
-      return Response.json({ error: "The link did not return a PDF document." }, { status: 400 });
+      return NextResponse.json({ error: "The link did not return a PDF document." }, { status: 400 });
     }
 
     // Convert PDF to buffer and chunk
@@ -57,9 +57,9 @@ export const POST = async (request: NextRequest) => {
       politicalAffiliation
     );
 
-    return Response.json({ message: "Embeddings added successfully!" }, { status: 200 });
+    return NextResponse.json({ message: "Embeddings added successfully!" }, { status: 200 });
   } catch (error: any) {
     console.error("Error in embed-pdf API:", error);
-    return Response.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
 };
