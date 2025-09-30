@@ -110,7 +110,7 @@ const EmbedPdfForm = () => {
             />
             <input
               type="text"
-              placeholder="Collection Name"
+              placeholder="Region"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
@@ -118,7 +118,7 @@ const EmbedPdfForm = () => {
             />
             <input
               type="text"
-              placeholder="Collection Name"
+              placeholder="Political Affilation"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
               value={politicalAffilation}
               onChange={(e) => setPoliticalAffilation(e.target.value)}
