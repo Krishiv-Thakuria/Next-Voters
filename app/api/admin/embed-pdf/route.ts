@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   try {
+    const body = await request.json();
+
     const { 
       documentLink, 
       author, 
@@ -10,8 +12,8 @@ export const POST = async (request: NextRequest) => {
       collectionName,
       region,
       politicalAffiliation
-    } = await request.json();
-
+    } = body
+    
     // Validate input
     if (!/^https?:\/\/[^\s]+$/i.test(documentLink)) {
       return Response.json({ error: "Invalid or missing document link" }, { status: 400 });

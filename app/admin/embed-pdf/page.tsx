@@ -18,7 +18,7 @@ const embedPdf = async (
   region: string,
   politicalAffiliation: string
 ) => {
-  const response = await fetch("/api/admin/embed-pdf", {
+  const response = await fetch("/api/embed-pdf", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ 

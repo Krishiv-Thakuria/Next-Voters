@@ -1,5 +1,3 @@
-"use server"
-
 import {QdrantClient} from '@qdrant/qdrant-js';
 
 export const client = new QdrantClient({ 
