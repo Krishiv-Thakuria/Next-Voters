@@ -9,32 +9,7 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 import AdminAuth from "@/wrappers/AdminAuth";
 import supportedRegions from "@/data/supported-regions";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-
-const embedPdf = async (
-  documentLink: string,
-  author: string,
-  documentName: string,
-  collectionName: string,
-  region: string,
-  politicalAffiliation: string
-) => {
-  const response = await fetch("/api/admin/embed", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ 
-      documentLink, 
-      author, 
-      documentName,
-      collectionName,
-      region,
-      politicalAffiliation
-    }),
-  });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Failed to add embeddings.");
-  return data;
-};
+import { embedPdfAction } from "@/lib/embed-actions";
 
 const initialForm = {
   documentLink: "",
@@ -80,18 +55,22 @@ const EmbedPdfForm = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: () => embedPdf(
-      form.documentLink, 
-      form.author, 
-      form.documentName, 
-      form.collectionName, 
-      form.region, 
-      form.politicalAffiliation
-    ),
+    mutationFn: () => embedPdfAction({
+      documentLink: form.documentLink,
+      author: form.author,
+      documentName: form.documentName,
+      collectionName: form.collectionName,
+      region: form.region,
+      politicalAffiliation: form.politicalAffiliation
+    }),
     onMutate: () => setStatus(null),
     onSuccess: (data) => {
-      setStatus({ type: "success", message: data.message || "Embeddings added successfully!" });
-      setForm(initialForm);
+      if (data.success) {
+        setStatus({ type: "success", message: data.message || "Embeddings added successfully!" });
+        setForm(initialForm);
+      } else {
+        setStatus({ type: "error", message: data.error || "Failed to add embeddings." });
+      }
     },
     onError: (error: any) => {
       setStatus({ type: "error", message: error.message || "Unexpected error occurred." });

@@ -8,7 +8,13 @@ import { handleSystemPrompt } from '@/data/prompts';
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
 import { SupportedCountry } from '@/types/supported-regions';
 import { generateId } from './random';
-import pdfParse from "pdf-parse"
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Configure PDF.js worker for server-side usage
+if (typeof window === 'undefined') {
+  // Server-side: disable worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+}
 
 // For LLM
 const groq = createGroq({
@@ -72,9 +78,25 @@ export const searchEmbeddings = async (
 
   // Function to split PDF text into chunks
 export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
-    const buffer = Buffer.from(pdfBuffer);
-    const data = await pdfParse(buffer);
-    const text = data.text;
+    // Load PDF document with useSystemFonts disabled for server-side
+    const loadingTask = pdfjsLib.getDocument({ 
+      data: pdfBuffer,
+      useSystemFonts: false,
+      standardFontDataUrl: undefined
+    });
+    const pdf = await loadingTask.promise;
+    
+    let text = '';
+    
+    // Extract text from all pages
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item: any) => item.str)
+        .join(' ');
+      text += pageText + ' ';
+    }
 
     const sentences = text
       .split(/(?<=[.!?])\s+/)

@@ -1,10 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+"use server";
+
 import { chunkDocument, addEmbeddings } from "@/lib/ai";
 
-export async function POST(req: NextRequest) {
+export async function embedPdfAction(formData: {
+  documentLink: string;
+  author: string;
+  documentName: string;
+  collectionName: string;
+  region: string;
+  politicalAffiliation: string;
+}) {
   try {
-    const body = await req.json();
-
     const { 
       documentLink, 
       author, 
@@ -12,11 +18,14 @@ export async function POST(req: NextRequest) {
       collectionName,
       region,
       politicalAffiliation
-    } = body
+    } = formData;
     
     // Validate input
     if (!/^https?:\/\/[^\s]+$/i.test(documentLink)) {
-      return NextResponse.json({ error: "Invalid or missing document link" }, { status: 400 });
+      return { 
+        success: false, 
+        error: "Invalid or missing document link" 
+      };
     }
     
     if (
@@ -27,19 +36,27 @@ export async function POST(req: NextRequest) {
       !region || 
       !politicalAffiliation
     ) {
-      throw new Error("Missing all required fields.")
+      return { 
+        success: false, 
+        error: "Missing all required fields." 
+      };
     }
-  
 
     // Fetch the PDF
     const response = await fetch(documentLink);
     if (!response.ok) {
-      return NextResponse.json({ error: `Failed to fetch document. Status: ${response.status}` }, { status: response.status });
+      return { 
+        success: false, 
+        error: `Failed to fetch document. Status: ${response.status}` 
+      };
     }
 
     const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("application/pdf")) {
-      return NextResponse.json({ error: "The link did not return a PDF document." }, { status: 400 });
+      return { 
+        success: false, 
+        error: "The link did not return a PDF document." 
+      };
     }
 
     // Convert PDF to buffer and chunk
@@ -57,9 +74,15 @@ export async function POST(req: NextRequest) {
       politicalAffiliation
     );
 
-    return NextResponse.json({ message: "Embeddings added successfully!" }, { status: 200 });
+    return { 
+      success: true, 
+      message: "Embeddings added successfully!" 
+    };
   } catch (error: any) {
-    console.error("Error in embed-pdf API:", error);
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+    console.error("Error in embed-pdf action:", error);
+    return { 
+      success: false, 
+      error: error.message || "Internal Server Error" 
+    };
   }
 }
