@@ -1,5 +1,5 @@
-import { chunkDocument, addEmbeddings } from "@/lib/ai";
 import { NextRequest, NextResponse } from "next/server";
+import { chunkDocument, addEmbeddings } from "@/lib/ai";
 
 export const POST = async (request: NextRequest) => {
   try {
