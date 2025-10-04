@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chunkDocument, addEmbeddings } from "@/lib/ai";
 
-export const POST = async (req: NextRequest) => {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
@@ -62,4 +62,4 @@ export const POST = async (req: NextRequest) => {
     console.error("Error in embed-pdf API:", error);
     return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
-};
+}

@@ -104,7 +104,7 @@ export const addEmbeddings = async (
 
     if (!collection) {
       await client.createCollection(collectionName, {
-        vectors: { size: 4, distance: "Cosine" },
+        vectors: { size: 1024, distance: "Cosine" },
         optimizers_config: { default_segment_number: 2 },
         replication_factor: 2,
       });
