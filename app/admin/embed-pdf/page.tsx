@@ -47,7 +47,6 @@ const EmbedPdfForm = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
