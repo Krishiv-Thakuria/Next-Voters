@@ -125,6 +125,9 @@ const EmbedPdfForm = () => {
             <div className="flex space-x-2">
               <Select
                 value={form.region}
+                onValueChange={(value) => 
+                  setForm((prev) => ({ ...prev, region: value }))
+                }
               >
                 <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                   <SelectValue placeholder="Region" />
@@ -133,10 +136,7 @@ const EmbedPdfForm = () => {
                   {supportedRegions?.map(region => (
                     <SelectItem 
                       key={region.code} 
-                      value={region.name} 
-                      onSelect={() => 
-                        setForm((prev) => ({ ...prev, region: region.name }))
-                      }
+                      value={region.name}
                       className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
                     >
                       {region.name}
@@ -148,6 +148,9 @@ const EmbedPdfForm = () => {
               <Select
                 value={form.politicalAffiliation || "Democratic Party"}
                 disabled={!form.region}
+                onValueChange={(value) => 
+                  setForm((prev) => ({ ...prev, politicalAffiliation: value }))
+                }
               >
                 <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                   <SelectValue placeholder="Political Party" />
@@ -157,9 +160,6 @@ const EmbedPdfForm = () => {
                     <SelectItem 
                       key={party} 
                       value={party}
-                      onSelect={() => 
-                        setForm((prev) => ({ ...prev, politicalAffiliation: form.politicalAffiliation }))
-                      } 
                       className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
                     >
                       {party}
