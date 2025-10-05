@@ -3,12 +3,24 @@
 import React, { useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Card, 
+  CardContent 
+} from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { 
+  CheckCircle2, 
+  AlertCircle 
+} from "lucide-react";
 import AdminAuth from "@/wrappers/AdminAuth";
 import supportedRegions from "@/data/supported-regions";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { 
+  Select, 
+  SelectTrigger, 
+  SelectValue, 
+  SelectContent, 
+  SelectItem 
+} from "@/components/ui/select";
 import { embedPdfAction } from "@/lib/embed-actions";
 
 const initialForm = {
