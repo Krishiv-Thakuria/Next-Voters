@@ -50,19 +50,22 @@ const EmbedPdfForm = () => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
   const mutation = useMutation({
-    mutationFn: () => embedPdfAction({
-      documentLink: form.documentLink,
-      author: form.author,
-      documentName: form.documentName,
-      collectionName: form.collectionName,
-      region: form.region,
-      politicalAffiliation: form.politicalAffiliation
-    }),
+    mutationFn: async () => {
+      console.log(form);
+      return await embedPdfAction({
+        documentLink: form.documentLink,
+        author: form.author,
+        documentName: form.documentName,
+        collectionName: form.collectionName,
+        region: form.region,
+        politicalAffiliation: form.politicalAffiliation
+      });
+    },
     onMutate: () => setStatus(null),
     onSuccess: (data) => {
       if (data.success) {
