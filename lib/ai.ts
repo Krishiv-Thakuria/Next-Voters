@@ -8,13 +8,7 @@ import { handleSystemPrompt } from '@/data/prompts';
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
 import { SupportedCountry } from '@/types/supported-regions';
 import { generateId } from './random';
-import * as pdfjsLib from 'pdfjs-dist';
-
-// Configure PDF.js worker for server-side usage
-if (typeof window === 'undefined') {
-  // Server-side: disable worker
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
-}
+import { extractText } from 'unpdf';
 
 // For LLM
 const groq = createGroq({
@@ -78,31 +72,19 @@ export const searchEmbeddings = async (
 
   // Function to split PDF text into chunks
 export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
-    // Load PDF document with useSystemFonts disabled for server-side
-    const loadingTask = pdfjsLib.getDocument({ 
-      data: pdfBuffer,
-      useSystemFonts: false,
-      standardFontDataUrl: undefined
-    });
-    const pdf = await loadingTask.promise;
+    // Extract text from PDF using unpdf
+    const { text } = await extractText(new Uint8Array(pdfBuffer));
     
-    let text = '';
+    // Join all pages into a single text string
+    const fullText = Array.isArray(text) ? text.join(' ') : text;
     
-    // Extract text from all pages
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(' ');
-      text += pageText + ' ';
-    }
-
-    const sentences = text
+    // Split text into sentences
+    const sentences = fullText
       .split(/(?<=[.!?])\s+/)
       .map(sentence => sentence.trim())
       .filter(Boolean);
 
+    // Create overlapping chunks of 3 sentences each
     const chunks: string[] = [];
     for (let i = 0; i < sentences.length; i += 1) {
       const chunk = sentences.slice(i, i + 3).join(" ");
