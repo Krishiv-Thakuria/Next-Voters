@@ -104,9 +104,9 @@ export const addEmbeddings = async (
     region: string,
     politicalAffiliation: string
   ) => {
-    const collection = await client.getCollection(collectionName);
+    const collectionExists = await client.collectionExists(collectionName);
 
-    if (!collection) {
+    if (!collectionExists) {
       await client.createCollection(collectionName, {
         vectors: { size: 1024, distance: "Cosine" },
         optimizers_config: { default_segment_number: 2 },

@@ -79,7 +79,6 @@ export async function embedPdfAction(formData: {
       message: "Embeddings added successfully!" 
     };
   } catch (error: any) {
-    console.error("Error in embed-pdf action:", error);
     return { 
       success: false, 
       error: error.message || "Internal Server Error" 
