@@ -48,10 +48,11 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 - **Framework**: [Next.js 13+](https://nextjs.org/) - Modern React framework
 - **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs) - Streaming AI responses
-- **AI Model**: [Anthropic Claude](https://docs.anthropic.com/) - Advanced document analysis
+- **AI Model**: [command-r7b-12-2024](https://docs.cohere.com/) - Advanced document analysis
+- **Embedding Model**: [embed-english-v3.0](https://docs.cohere.com/) - Proper vector embedding generation
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Responsive design system
-- **UI Components**: [Radix UI](https://www.radix-ui.com/) - Accessible component library
-- **Database**: [Neon](https://neon.tech/) - Serverless PostgreSQL
+- **UI Components**: [Shadcn](https://www.shadcn.com/) - Accessible component library
+- **Database**: [Neon with Vercel Storage](https://neon.tech/) - Serverless PostgreSQL
 - **Vector Search**: [Qdrant](https://qdrant.tech/) - Semantic document search
 - **Deployment**: [Vercel](https://vercel.com/) - Seamless deployment and hosting
 
@@ -60,9 +61,7 @@ To combat political misinformation and empower Gen Z with the tools they need to
 ### Prerequisites
 - Node.js 18+ 
 - npm or pnpm package manager
-- Anthropic API key
+- get all creditionals specified in .env.example file
 
-### Installation
 
-1. **Clone the repository**
-   
+# Happy hacking 🚀
