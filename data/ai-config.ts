@@ -1,2 +1,2 @@
-export const MODEL_NAME = "llama-3.1-8b-instant"
-export const EMBEDDING_MODEL_NAME = "mistral-embed"
+export const MODEL_NAME = "command-r-model"
+export const EMBEDDING_MODEL_NAME = "embed-v3.0"
