@@ -1,2 +1,2 @@
 export const MODEL_NAME = "command-r-model"
-export const EMBEDDING_MODEL_NAME = "embed-v3.0"
+export const EMBEDDING_MODEL_NAME = "embed-english-v3.0"
