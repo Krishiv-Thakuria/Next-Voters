@@ -6,8 +6,8 @@ import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
 import { SupportedCountry } from '@/types/supported-regions';
-import { generateId } from './random';
 import { extractText } from 'unpdf';
+import { randomUUID } from 'crypto';
 
 const cohere = createCohere({
     apiKey: process.env.COHERE_API_KEY
@@ -115,7 +115,7 @@ export const addEmbeddings = async (
         await client.upsert(collectionName, {
           wait: true,
           points: [{
-            id: generateId(),
+            id: randomUUID(),
             vector: embedding,
             payload: {
               text,
