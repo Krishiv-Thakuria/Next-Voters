@@ -1,9 +1,9 @@
 <div align="center">
-  <img src="/public/logo/nextveters.png" width="20%" alt="NextVeters" />
+  <img src="/public/logo/nextvoters.png" width="20%" alt="nextvoters" />
 </div>
 <hr>
 <div align="center" style="line-height: 1;">
-  <a href="https://nextveters.com"><img alt="Demo"
+  <a href="https://nextvoters.com"><img alt="Demo"
     src="https://img.shields.io/badge/🚀%20Live%20Demo-DailySAT-2F80ED?color=2F80ED&logoColor=white"/></a>
   <a href="LICENSE-CODE"><img alt="Code License"
     src="https://img.shields.io/badge/Code%20License-MIT%202.0-00BFFF?color=00BFFF"/></a>
