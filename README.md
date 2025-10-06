@@ -1,9 +1,9 @@
 <div align="center">
-  <img src="/public/logo/nextvoters.png" width="20%" alt="NextVoters" />
+  <img src="/public/logo/nextveters.png" width="20%" alt="NextVeters" />
 </div>
 <hr>
 <div align="center" style="line-height: 1;">
-  <a href="https://nextvoters.com"><img alt="Demo"
+  <a href="https://nextveters.com"><img alt="Demo"
     src="https://img.shields.io/badge/🚀%20Live%20Demo-DailySAT-2F80ED?color=2F80ED&logoColor=white"/></a>
   <a href="LICENSE-CODE"><img alt="Code License"
     src="https://img.shields.io/badge/Code%20License-MIT%202.0-00BFFF?color=00BFFF"/></a>
@@ -12,7 +12,7 @@
 
 **Empowering the next generation of informed voters through AI-driven political education**
 
-Next Voters is an innovative educational platform that leverages artificial intelligence to help young citizens understand policy, legislation, and political platforms. In an era where 87% of people believe online disinformation has harmed their country's politics, Next Voters provides a trusted, fact-based approach to civic education.
+Next Vote is an innovative educational platform that LEVERAGES artificial intelligence to help young citizens understand policy, legislation, and political platforms. In an era where 87% of people believe online disinformation has harmed their country's politics, Next Vote provides a trusted, fact-based approach to civic education.
 
 ## 🎯 Mission
 
@@ -22,7 +22,7 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 ### 🔍 **Intelligent Policy Analysis**
 - AI-powered analysis of official political party platforms
-- Real-time document processing using Claude AI
+- Real-time document processing using Cohere AI platform
 - Side-by-side comparison of party positions on key issues
 - Streaming responses for immediate insights
 
@@ -65,68 +65,4 @@ To combat political misinformation and empower Gen Z with the tools they need to
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/Next-Voters.git
-   cd Next-Voters
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   pnpm install
-   ```
-
-3. **Set up environment variables**
-   Create a `.env.local` file in the root directory:
-   ```env
-   ANTHROPIC_API_KEY=your_anthropic_api_key_here
-   DATABASE_URL=your_database_url
-   QDRANT_URL=your_qdrant_instance_url
-   QDRANT_API_KEY=your_qdrant_api_key
-   ```
-
-4. **Run the development server**
-   ```bash
-   npm run dev
-   # or
-   pnpm dev
-   ```
-
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 📚 Document Sources
-
-The platform analyzes official political documents including:
-
-### 🇨🇦 Canadian Politics
-- **Conservative Party**: [2023 Platform Document](https://cpcassets.conservative.ca/wp-content/uploads/2023/11/23175001/990863517f7a575.pdf)
-- **Liberal Party**: [2025 Platform Document](https://liberal.ca/wp-content/uploads/sites/292/2025/04/Canada-Strong.pdf)
-- Provincial party platforms and legislative documents
-
-### 🇺🇸 US Politics
-- Democratic and Republican party platforms
-- Congressional bills and legislation
-- State-level political documents
-
-## 🏗 Architecture
-
-### AI-Powered Document Analysis
-- **Claude AI Integration**: Leverages Anthropic's Claude for comprehensive PDF analysis
-- **RAG Implementation**: Retrieval-Augmented Generation for accurate, source-backed responses
-- **Vector Search**: Semantic search capabilities for finding relevant document sections
-- **Streaming Interface**: Real-time response streaming for better user experience
-
-### User Experience Features
-- **Responsive Design**: Mobile-first approach for Gen Z users
-- **Interactive Chat**: Conversational interface for asking policy questions
-- **Document Navigation**: Easy switching between different political documents
-- **Citation System**: Transparent sourcing for all AI-generated responses
-
-## Learn More
-
-- [Anthropic Claude API Documentation](https://docs.anthropic.com/)
-- [Claude's PDF Support Documentation](https://docs.anthropic.com/claude/docs/pdf-support)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
+   
