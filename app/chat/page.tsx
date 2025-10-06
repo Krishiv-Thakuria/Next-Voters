@@ -11,60 +11,7 @@ import supportedRegions from "@/data/supported-regions";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, SendHorizonal } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-const messages: Message[] = [
-  {
-    type: "me",
-    text: "Welcome to group everyone !"
-  },
-  {
-    type: "agent",
-    parties: [
-      {
-        partyName: "Democratic Party",
-        text: "Thank you! Excited to be here and looking forward to working with all of you."
-      },
-      {
-        partyName: "Republican Party",
-        text: "Thanks for the warm welcome! We're eager to contribute and collaborate on this project."
-      }
-    ]
-  },
-  {
-    type: "me",
-    text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam, repudiandae.",
-  },
-  {
-    type: "agent",
-    parties: [
-      {
-        partyName: "Democratic Party",
-        text: "Looking forward to our collaboration on this project and achieving great results together."
-      },
-      {
-        partyName: "Republican Party",
-        text: "We're excited about the opportunities ahead and are committed to making this a success for everyone involved."
-      }
-    ]
-  },
-  {
-    type: "me",
-    text: "Absolutely! This is going to be great",
-  },
-  {
-    type: "agent",
-    parties: [
-      {
-        partyName: "Democratic Party",
-        text: "Happy holidays everyone! 🎉",
-      },
-      {
-        partyName: "Republican Party",
-        text: "Wishing everyone a joyful holiday season and a prosperous new year! The church should be honoured! 🎄✨",
-      }
-    ]
-  }
-];
+import { useMutation } from "@tanstack/react-query";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -85,39 +32,41 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const {mutate, data, isError, error} = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: message,
+          region: preference?.region,
+          electionType: preference?.election
+        })
+      })
+      const data = await response.json();
+      return data.responses;
+    }
+  })
+
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      mutate();
     }
   };
 
-  const handleSendMessage = async () => {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: message,
-        region: preference?.region,
-        electionType: preference?.election
-      })
-    })
-    const data = await response.json();
+  useEffect(() => {
+    if (data && !error) {
+      chatHistory.push({ type: 'me', text: message });
+      chatHistory.push({ type: 'agent', parties: data });
 
-    chatHistory.push({ type: 'me', text: message });
-    chatHistory.push({ type: 'agent', parties: [{
-        partyName: data.responses[0]?.partyName,
-        text: data.responses[0]?.response || "I'm sorry, I don't have an answer for that."
-      }, {
-        partyName: data.responses[1]?.partyName,
-        text: data.responses[1]?.response || "I'm sorry, I don't have an answer for that."
-    }]});
-
-    setChatHistory([...chatHistory]);
-    setMessage('');
-  }
+      setChatHistory([...chatHistory]);
+      setMessage('');
+    }
+  }, [error, data]);
 
   if (!isMounted) {
     return (
@@ -195,7 +144,7 @@ const Chat = () => {
                 }}
               />
               <Button
-                onClick={handleSendMessage}
+                onClick={() => mutate()}
                 disabled={!message.trim()}
                 size="sm"
                 className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
