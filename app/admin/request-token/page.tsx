@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const requestToken = async (email: string) => {
-  const response = await fetch("/api/admin/request-token", {
+  const response = await fetch("/api/request-admin-token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
