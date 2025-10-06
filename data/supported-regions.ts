@@ -1,28 +1,8 @@
-import { SupportedRegionDetails } from "@/types/supported-regions";
+import { SupportedRegionDetails } from "@/types/supported-regions"
 
-// Shared election types
-const usStateElections = [
-  "State Legislative Election",
-  "State Executive Election",
-];
+const supportedRegionDetails: SupportedRegionDetails[] = [
 
-const canadaProvincialElections = [
-  "Provincial Election",
-];
-
-const supportedRegions: SupportedRegionDetails[] = [
-  // Countries
-  {
-    code: "US",
-    name: "United States",
-    politicalParties: ["Democratic Party", "Republican Party"],
-    elections: [
-      "Presidential Election",
-      "Congressional Election",
-      "Midterm Election",
-      "Gubernatorial Election",
-    ],
-  },
+  // Countries 
   {
     code: "CA",
     name: "Canada",
@@ -31,21 +11,33 @@ const supportedRegions: SupportedRegionDetails[] = [
       "Conservative Party",
       "New Democratic Party (NDP)",
     ],
-    elections: ["Federal Election"],
+  },
+
+  {
+    code: "US",
+    name: "United States",
+    politicalParties: [
+      "Democratic Party",
+      "Republican Party"
+    ]
   },
 
   // U.S. States
   {
     code: "CA-US",
     name: "California",
-    politicalParties: ["California Democratic Party", "California Republican Party"],
-    elections: usStateElections,
+    politicalParties: [
+      "California Democractic Party", 
+      "California Republican Party"
+    ]
   },
   {
     code: "TX-US",
     name: "Texas",
-    politicalParties: ["Texas Democratic Party", "Texas Republican Party"],
-    elections: usStateElections,
+    politicalParties: [
+      "Texas Democratic Party", 
+      "Texas Republican Party"
+    ],
   },
 
   // Canadian Provinces
@@ -57,19 +49,15 @@ const supportedRegions: SupportedRegionDetails[] = [
       "Progressive Conservative Party of Ontario",
       "Ontario New Democratic Party (NDP)",
     ],
-    elections: canadaProvincialElections,
   },
   {
     code: "QC-CA",
     name: "Quebec",
     politicalParties: [
       "Quebec Liberal Party",
-      "Coalition Avenir Québec (CAQ)",
       "Parti Québécois",
-      "Québec Solidaire",
     ],
-    elections: canadaProvincialElections,
-  },
-];
+  }
+]
 
-export default supportedRegions;
+export default supportedRegionDetails;
