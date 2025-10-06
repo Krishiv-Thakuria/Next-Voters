@@ -97,7 +97,7 @@ export const addEmbeddings = async (
   ) => {
     const collectionExists = await client.collectionExists(collectionName);
 
-    if (!collectionExists) {
+    if (!collectionExists.exists) {
       await client.createCollection(collectionName, {
         vectors: { size: 1024, distance: "Cosine" },
         optimizers_config: { default_segment_number: 2 },
