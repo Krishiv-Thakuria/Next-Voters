@@ -42,7 +42,6 @@ const Chat = () => {
         body: JSON.stringify({
           query: message,
           region: preference?.region,
-          electionType: preference?.election
         })
       })
       const data = await response.json();
@@ -140,7 +139,7 @@ const Chat = () => {
               <div className="flex space-x-2 mt-3">
                 <Select 
                   value={preference?.region || ""} 
-                  onValueChange={(value) => handleSetPreference(null, value)}
+                  onValueChange={(value) => handleSetPreference(value)}
                 >
                   <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
                     <SelectValue placeholder="Country" />
@@ -153,27 +152,6 @@ const Chat = () => {
                         className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
                       >
                         {region.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select 
-                  value={preference?.election || ""} 
-                  onValueChange={(value) => handleSetPreference(value, null)}
-                  disabled={!selectedRegion}
-                >
-                  <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
-                    <SelectValue placeholder="Election" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
-                    {selectedRegion?.elections?.map(election => (
-                      <SelectItem 
-                        key={election} 
-                        value={election} 
-                        className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
-                      >
-                        {election}
                       </SelectItem>
                     ))}
                   </SelectContent>
