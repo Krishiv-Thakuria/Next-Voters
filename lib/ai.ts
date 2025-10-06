@@ -105,26 +105,34 @@ export const addEmbeddings = async (
       });
     }
 
-    await Promise.all(
-      textChunks.map(async text => {
-        const { embedding } = await embed({
-          model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-          value: text,
-        });
+    // Process sequentially to respect Cohere trial key rate limit (100 req/min)
+    const DELAY_MS = 650; // ~92 requests per minute (safely under 100/min)
+    
+    for (let i = 0; i < textChunks.length; i++) {
+      const text = textChunks[i];
+      
+      const { embedding } = await embed({
+        model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+        value: text,
+      });
 
-        await client.upsert(collectionName, {
-          wait: true,
-          points: [{
-            id: randomUUID(),
-            vector: embedding,
-            payload: {
-              text,
-              citation: { author, url, document_name },
-              region,
-              politicalAffiliation
-            },
-          }],
-        });
-      })
-    );
+      await client.upsert(collectionName, {
+        wait: true,
+        points: [{
+          id: randomUUID(),
+          vector: embedding,
+          payload: {
+            text,
+            citation: { author, url, document_name },
+            region,
+            politicalAffiliation
+          },
+        }],
+      });
+      
+      // Add delay between requests (except for the last one)
+      if (i < textChunks.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+      }
+    }
   };
