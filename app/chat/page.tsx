@@ -78,22 +78,6 @@ const Chat = () => {
 
   return (
     <div className="h-screen bg-slate-50 flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
-        <div className="max-w-4xl mx-auto flex items-center space-x-3">
-          <div className="mr-2.5">
-            <span className="text-blue-800 font-semibold text-xl">N</span>
-            <span className="text-red-700 font-semibold text-xl">V</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-semibold text-slate-900">Chat Platform</h1>
-            <p className="text-sm text-slate-500">
-              {preference ? `${preference.region} | ${preference.election}` : 'No preferences set'}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
