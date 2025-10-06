@@ -105,8 +105,7 @@ export const addEmbeddings = async (
       });
     }
 
-    // Process sequentially to respect Cohere trial key rate limit (100 req/min)
-    const DELAY_MS = 650; // ~92 requests per minute (safely under 100/min)
+    const DELAY_MS = 650; 
     
     for (let i = 0; i < textChunks.length; i++) {
       const text = textChunks[i];
