@@ -23,6 +23,21 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
+  const requestChat = async () => {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: message,
+        region: preference?.region,
+      })
+    })
+    const data = await response.json();
+    return data.responses;
+  }
+
   const { handleSetPreference, handleGetPreference } = usePreference();
   const preference = handleGetPreference();
 
@@ -32,19 +47,9 @@ const Chat = () => {
   }, []);
 
   const {mutate, data, isError, error} = useMutation({
-    mutationFn: async () => {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: message,
-          region: preference?.region,
-        })
-      })
-      const data = await response.json();
-      return data.responses;
+    mutationFn: requestChat,
+    onSuccess: () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   })
 
