@@ -59,7 +59,7 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    if (data && !error) {
+    if (data && !isError) {
       chatHistory.push({ type: 'me', text: message });
       chatHistory.push({ type: 'agent', parties: data });
 
