@@ -25,7 +25,6 @@ const Chat = () => {
 
   const { handleSetPreference, handleGetPreference } = usePreference();
   const preference = handleGetPreference();
-  const selectedRegion = supportedRegions.find(region => region.name === preference?.region);
 
   useEffect(() => {
     setIsMounted(true);
