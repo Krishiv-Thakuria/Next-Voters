@@ -21,7 +21,7 @@ import {
   SelectContent, 
   SelectItem 
 } from "@/components/ui/select";
-import { embedPdfAction } from "@/lib/embed-actions";
+import { embedPdfAction } from "@/server-actions/embed";
 
 const initialForm = {
   documentLink: "",
