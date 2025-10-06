@@ -59,7 +59,7 @@ To combat political misinformation and empower Gen Z with the tools they need to
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+- NextJS LTS (14+)
 - npm or pnpm package manager
 - get all creditionals specified in .env.example file
 
