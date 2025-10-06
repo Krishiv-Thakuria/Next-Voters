@@ -146,7 +146,7 @@ const EmbedPdfForm = () => {
               </Select>
 
               <Select
-                value={form.politicalAffiliation || "Democratic Party"}
+                value={form.politicalAffiliation}
                 disabled={!form.region}
                 onValueChange={(value) => 
                   setForm((prev) => ({ ...prev, politicalAffiliation: value }))
