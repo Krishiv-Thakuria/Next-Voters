@@ -21,7 +21,6 @@ export const POST = async (request: NextRequest) => {
   }
 
   regionDetail.politicalParties.map(async (partyName) => {
-    // Filter based on qdrant payload values (country + political affiliation/partyName)
     const filterObject = {
       must: [
         {
@@ -35,7 +34,6 @@ export const POST = async (request: NextRequest) => {
       ],
     };
 
-    // Store contexts and citations separately which is given by embeddings
     const contexts = [];
     const citations = [];
 
