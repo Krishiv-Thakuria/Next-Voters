@@ -15,13 +15,17 @@ import { useMutation } from "@tanstack/react-query";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
-
   const searchParams = useSearchParams();
+
   const initialMessage = searchParams.get('message');
-  const [message, setMessage] = useState(initialMessage || '');
+  const [message, setMessage] = useState(initialMessage|| '');
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  
+  const { handleSetPreference, handleGetPreference } = usePreference();
+  const preference = handleGetPreference();
 
   const requestChat = async () => {
     const response = await fetch('/api/chat', {
@@ -35,18 +39,33 @@ const Chat = () => {
       })
     })
     const data = await response.json();
+    const responses = data.responses.map();
+    setChatHistory((prev) => [...prev, { type: 'agent', parties: responses.partyName, response: responses.response, citations: responses.citations }]);
+    setMessage('');
+
     return data.responses;
   }
 
-  const { handleSetPreference, handleGetPreference } = usePreference();
-  const preference = handleGetPreference();
+  const handleSendMessage = () => {
+    try {
+      mutate();
+      setChatHistory((prev) => [...prev, { type: 'me', text: message }]);
+      setMessage('');
+    } catch (error) {
+      alert("Something went wrong. Try again later or contact NextVoter's support team.")
+    }
+  }
 
   useEffect(() => {
     setIsMounted(true);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    if (initialMessage) {
+      handleSendMessage();
+    }
   }, []);
 
-  const {mutate, data, isError, error} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: requestChat,
     onSuccess: () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,19 +76,9 @@ const Chat = () => {
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      mutate();
+      handleSendMessage();
     }
   };
-
-  useEffect(() => {
-    if (data && !isError) {
-      chatHistory.push({ type: 'me', text: message });
-      chatHistory.push({ type: 'agent', parties: data });
-
-      setChatHistory([...chatHistory]);
-      setMessage('');
-    }
-  }, [error, data]);
 
   if (!isMounted) {
     return (
@@ -131,7 +140,7 @@ const Chat = () => {
                 }}
               />
               <Button
-                onClick={() => mutate()}
+                onClick={() => handleSendMessage()}
                 disabled={!message.trim()}
                 size="sm"
                 className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"

@@ -12,7 +12,6 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
   const AIMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
   if (message.type === "me") {
-    // TypeScript now knows message is MeMessage
     return (
       <div className="flex justify-end mb-4">
         <div className={myMessage}>
@@ -21,23 +20,19 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
       </div>
     );
   } else {
-    // TypeScript now knows message is AgentMessage
     return (
       <div className="flex justify-start mb-4">
         <div className={AIMessage}>
           <div className="w-screen flex space-x-3">
-            <PoliticalPerspective
-              title={message.parties[0].partyName}
-              content={message.parties[0].text}
-              loading={false}
-              color="blue"
-            />
-            <PoliticalPerspective
-              title={message.parties[1].partyName}
-              content={message.parties[1].text}
-              loading={false}
-              color="red"
-            />
+            {message.parties.map((party, index) => (
+              <PoliticalPerspective
+                key={index}
+                title={party.partyName}
+                content={party.text}
+                loading={false}
+                color={index % 2 === 0 ? "blue" : "red"} 
+              />
+            ))}
           </div>
         </div>
       </div>
