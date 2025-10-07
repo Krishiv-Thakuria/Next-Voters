@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { handleCreateToken } from "@/lib/jwt"; 
+import { handleCreateToken } from "@/server-actions/jwt"; 
 import { transporter } from "@/lib/nodemailer";
 import { handleGetUser } from "@/lib/admin-user";
 
