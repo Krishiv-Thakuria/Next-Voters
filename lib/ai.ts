@@ -61,21 +61,15 @@ export const searchEmbeddings = async (
     return response;
 };
 
-  // Function to split PDF text into chunks
 export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
-    // Extract text from PDF using unpdf
-    const { text } = await extractText(new Uint8Array(pdfBuffer));
-    
-    // Join all pages into a single text string
+    const { text } = await extractText(new Uint8Array(pdfBuffer));    
     const fullText = Array.isArray(text) ? text.join(' ') : text;
     
-    // Split text into sentences
     const sentences = fullText
       .split(/(?<=[.!?])\s+/)
       .map(sentence => sentence.trim())
       .filter(Boolean);
 
-    // Create overlapping chunks of 3 sentences each
     const chunks: string[] = [];
     for (let i = 0; i < sentences.length; i += 1) {
       const chunk = sentences.slice(i, i + 3).join(" ");
@@ -85,7 +79,6 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
     return chunks;
   };
 
-  // Function to add text chunks as embeddings to the RAG system
 export const addEmbeddings = async (
     textChunks: string[],
     author: string,
@@ -129,7 +122,6 @@ export const addEmbeddings = async (
         }],
       });
       
-      // Add delay between requests (except for the last one)
       if (i < textChunks.length - 1) {
         await new Promise(resolve => setTimeout(resolve, DELAY_MS));
       }
