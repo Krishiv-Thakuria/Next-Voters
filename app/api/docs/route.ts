@@ -1,6 +1,6 @@
-import { generateResponses, searchEmbeddings } from "@/lib/ai";
 import { NextRequest } from "next/server"
 
+/*
 export const POST = async (request: NextRequest) => {
   const { userQuery, country } = await request.json();
   const embeddings = await searchEmbeddings(userQuery, "legislative_documents");
@@ -20,4 +20,11 @@ export const POST = async (request: NextRequest) => {
     response,
     citations
   });
+}
+*/
+
+export const GET = async (request: NextRequest) => {
+  return Response.json({
+    message: "Coming soon!"
+  })
 }
