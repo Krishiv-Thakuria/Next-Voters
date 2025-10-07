@@ -1,9 +1,7 @@
-import React from 'react'
-
 const Dropdown = ({
   label,
   value,
-  options,
+  options = [], // Default to an empty array if options is undefined
   onChange,
 }: {
   label: string;
@@ -38,5 +36,4 @@ const Dropdown = ({
   </div>
 );
 
-
-export default Dropdown
+export default Dropdown;
