@@ -6,12 +6,11 @@ import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "../../components/message-bubble";
 import { Message } from "@/types/message";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import supportedRegions from "@/data/supported-regions";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, SendHorizonal } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
+import PreferenceSelector from "@/components/preference-selector";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,9 +22,7 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  
-  const { handleSetPreference, handleGetPreference } = usePreference();
-  const preference = handleGetPreference();
+  const { preference } = usePreference();
 
   const requestChat = async () => {
     const response = await fetch('/api/chat', {
@@ -39,31 +36,23 @@ const Chat = () => {
       })
     })
     const data = await response.json();
-    const responses = data.responses.map();
-    setChatHistory((prev) => [...prev, { type: 'agent', parties: responses.partyName, response: responses.response, citations: responses.citations }]);
-    setMessage('');
 
+    const responses = data.responses.map((response: any) => ({
+      partyName: response.partyName,
+      response: response.response,
+      citations: response.citations
+    }));
+    
+    setChatHistory((prev) => [...prev, { 
+      type: 'agent', 
+      parties: responses.partyName, 
+      response: responses.response, 
+      citations: responses.citations 
+    }]);
+    
+    setMessage('');
     return data.responses;
   }
-
-  const handleSendMessage = () => {
-    try {
-      mutate();
-      setChatHistory((prev) => [...prev, { type: 'me', text: message }]);
-      setMessage('');
-    } catch (error) {
-      alert("Something went wrong. Try again later or contact NextVoter's support team.")
-    }
-  }
-
-  useEffect(() => {
-    setIsMounted(true);
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-
-    if (initialMessage) {
-      handleSendMessage();
-    }
-  }, []);
 
   const { mutate } = useMutation({
     mutationFn: requestChat,
@@ -72,13 +61,14 @@ const Chat = () => {
     }
   })
 
+  useEffect(() => {
+    setIsMounted(true);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      handleSendMessage();
+    if (initialMessage) {
+      mutate();
     }
-  };
+  }, []);
 
   if (!isMounted) {
     return (
@@ -131,7 +121,6 @@ const Chat = () => {
                 value={message}
                 placeholder="Type your message..."
                 onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
                 rows={1}
                 style={{ 
                   minHeight: '44px', 
@@ -140,7 +129,7 @@ const Chat = () => {
                 }}
               />
               <Button
-                onClick={() => handleSendMessage()}
+                onClick={() => mutate()}
                 disabled={!message.trim()}
                 size="sm"
                 className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
@@ -148,28 +137,7 @@ const Chat = () => {
                 <SendHorizonal size={14} className="ml-0.5" />
               </Button>
 
-              {/* Selection Controls */}
-              <div className="flex space-x-2 mt-3">
-                <Select 
-                  value={preference?.region || ""} 
-                  onValueChange={(value) => handleSetPreference(value)}
-                >
-                  <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
-                    <SelectValue placeholder="Country" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
-                    {supportedRegions.map(region => (
-                      <SelectItem 
-                        key={region.code} 
-                        value={region.name} 
-                        className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
-                      >
-                        {region.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <PreferenceSelector />  
             </div>
           </div>
           
