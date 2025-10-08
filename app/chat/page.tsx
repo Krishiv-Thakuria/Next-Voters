@@ -31,7 +31,7 @@ const Chat = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: message,
+        prompt: message,
         region: preference?.region,
       })
     })
