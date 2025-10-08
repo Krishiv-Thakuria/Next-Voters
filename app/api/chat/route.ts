@@ -7,18 +7,25 @@ import supportedCountriesDetails from "@/data/supported-regions";
 import { SupportedCountry } from "@/types/supported-regions";
 
 export const POST = async (request: NextRequest) => {
-  const { query, region,  } = await request.json();
-  const collectionName = "political_documents";
-  const responses = [];
+  try {
+    const { query, region,  } = await request.json();
+    const collectionName = "political_documents";
+    const responses = [];
 
+    if (!query) {
+    throw new Error("Query is required")
+  }
+
+  if (!region) {
+    throw new Error("Region is required")
+  }
+  
   const regionDetail = supportedCountriesDetails.find(
     regionItem => regionItem.name === region 
   );
 
   if (!regionDetail) {
-    return Response.json({
-      error: "Region or election type are not supported"
-    }, { status: 400 });
+    throw new Error("Region or election type are not supported")
   }
 
   regionDetail.politicalParties.map(async (partyName) => {
@@ -54,4 +61,7 @@ export const POST = async (request: NextRequest) => {
     responses,
     countryCode: regionDetail.code
   });
+} catch (error) {
+    return Response.json({ error: `Internal server error: ${error.message}` }, { status: 500 });
+  }
 }
