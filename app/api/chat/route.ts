@@ -8,6 +8,7 @@ import { SupportedCountry } from "@/types/supported-regions";
 
 export const POST = async (request: NextRequest) => {
   const { query, region,  } = await request.json();
+  const collectionName = "political_documents";
   const responses = [];
 
   const regionDetail = supportedCountriesDetails.find(
@@ -26,7 +27,7 @@ export const POST = async (request: NextRequest) => {
 
     const embeddings = await searchEmbeddings(
       query, 
-      "political_documents", 
+      collectionName, 
       region,
       partyName
     );
