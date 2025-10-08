@@ -1,6 +1,6 @@
 import { SupportedRegionDetails } from "@/types/supported-regions"
 
-const supportedRegionDetails: SupportedRegionDetails[] = [
+export const supportedRegionDetails: SupportedRegionDetails[] = [
 
   // Countries 
   {

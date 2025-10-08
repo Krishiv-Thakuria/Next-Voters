@@ -1,7 +1,11 @@
 import { generateResponseForParty, searchEmbeddings } from "@/lib/ai";
 import { NextRequest, NextResponse } from "next/server";
-import supportedRegionDetails from "@/data/supported-regions";
+import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedCountry } from "@/types/supported-regions";
+
+console.log('Imported supportedRegionDetails:', supportedRegionDetails);
+console.log('Type:', typeof supportedRegionDetails);
+console.log('Is Array:', Array.isArray(supportedRegionDetails));
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -16,12 +20,16 @@ export const POST = async (request: NextRequest) => {
       throw new Error("Region is required");
     }
 
+    if (!supportedRegionDetails) {
+      throw new Error("Supported regions data is not available");
+    }
+
     const regionDetail = supportedRegionDetails.find(
-      regionItem => regionItem.name === region
+      (regionItem) => regionItem.name === region
     );
 
     if (!regionDetail) {
-      throw new Error("Region or election type are not supported");
+      throw new Error("Region not found in supported regions");
     }
 
     const responsePromises = regionDetail.politicalParties.map(async (partyName) => {
