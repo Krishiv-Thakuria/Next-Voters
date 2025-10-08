@@ -37,8 +37,6 @@ const Chat = () => {
     })
     const data = await response.json();
 
-    console.log('API Response:', data);
-
     const responses = data.responses.map((response: any) => ({
       partyName: response.partyName,
       response: response.response,
