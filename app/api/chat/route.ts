@@ -21,31 +21,19 @@ export const POST = async (request: NextRequest) => {
   }
 
   regionDetail.politicalParties.map(async (partyName) => {
-    const filterObject = {
-      must: [
-        {
-          key: "country",
-          match: { value: region },
-        },
-        {
-          key: "political_affiliation",
-          match: { value: partyName}, 
-        }
-      ],
-    };
-
     const contexts = [];
     const citations = [];
 
     const embeddings = await searchEmbeddings(
       query, 
       "political_documents", 
-      filterObject
+      region,
+      partyName
     );
 
-    embeddings.map(embedding => {
-      contexts.push(embedding.payload.text);
-      citations.push(embedding.payload.citation);
+    embeddings.points.map(point => {
+      contexts.push(point.payload.text);
+      citations.push(point.payload.citation);
     }) ;
 
     const response = await generateResponses(

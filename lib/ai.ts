@@ -43,7 +43,8 @@ export const generateResponses = async (
 export const searchEmbeddings = async (
     userQuery: string, 
     collectionName: string, 
-    filterCriteria: any = null
+    region: string,
+    partyName: string 
 ) => {
     const { embedding: vectorEmbeddings } = await embed({
         model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
@@ -51,11 +52,26 @@ export const searchEmbeddings = async (
     });
 
 
-    const response = await client.search(collectionName, {
-        vector: vectorEmbeddings,
-        limit: 5,
+    const response = await client.query(collectionName, {
+        query: vectorEmbeddings,
         with_payload: true,
-        filter: filterCriteria ? filterCriteria : []
+        filter: {
+          must: [
+            {
+              key: "region",
+              match: { value: region },
+            },
+            {
+              key: "politicalAffiliation",
+              match: { value: partyName}, 
+            }
+          ],
+        },
+        params: {
+          hnsw_ef: 128,
+          exact: false
+        },
+        limit: 2
     })
 
     return response;
