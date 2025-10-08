@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest) => {
     const collectionName = "political_documents";
 
     if (!prompt) {
-      throw new Error("Query is required");
+      throw new Error("Prompt is required");
     }
 
     if (!region) {
