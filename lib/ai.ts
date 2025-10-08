@@ -13,31 +13,33 @@ const cohere = createCohere({
     apiKey: process.env.COHERE_API_KEY
 })
 
-export const generateResponses = async (
-    prompt: string, 
-    country: SupportedCountry, 
-    contexts: string[]
+export const generateResponseForParty = async (
+  prompt: string,
+  country: SupportedCountry,
+  partyName: string,
+  contexts: string[]
 ) => {
-    const parties = politicalPartiesMap[country];
+  const parties = politicalPartiesMap[country];
+  const partyInfo = parties.find(p => p.party === partyName);
+  
+  if (!partyInfo) {
+    throw new Error(`Party ${partyName} not found in politicalPartiesMap for ${country}`);
+  }
 
-    const responses = await Promise.all(
-        parties.map((partyInfo) => {
-            const { party, partyPrompt } = partyInfo;
-
-            return generateObject({
-                model: cohere(MODEL_NAME),
-                schema: z.object({
-                    message: z.object({
-                        answer: z.string()
-                    }),
-                }),
-                system: handleSystemPrompt(party, partyPrompt, contexts),
-                prompt,
-            }).then(result => result.object);
-        })
-    );
-
-    return responses;
+  const { party, partyPrompt } = partyInfo;
+  
+  const result = await generateObject({
+    model: cohere(MODEL_NAME),
+    schema: z.object({
+      message: z.object({
+        answer: z.string()
+      }),
+    }),
+    system: handleSystemPrompt(party, partyPrompt, contexts),
+    prompt,
+  });
+  
+  return result.object;
 };
 
 export const searchEmbeddings = async (

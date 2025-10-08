@@ -1,67 +1,70 @@
-import { generateResponses, searchEmbeddings } from "@/lib/ai";
-import { NextRequest } from "next/server"
-
-// This includes the list of supported countries and their political parties (switch to db later on)
-import supportedCountriesDetails from "@/data/supported-regions";
-
+import { generateResponseForParty, searchEmbeddings } from "@/lib/ai";
+import { NextRequest, NextResponse } from "next/server";
+import supportedRegionDetails from "@/data/supported-regions";
 import { SupportedCountry } from "@/types/supported-regions";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { query, region,  } = await request.json();
+    const { prompt, region } = await request.json();
     const collectionName = "political_documents";
-    const responses = [];
 
-    if (!query) {
-    throw new Error("Query is required")
-  }
+    if (!prompt) {
+      throw new Error("Query is required");
+    }
 
-  if (!region) {
-    throw new Error("Region is required")
-  }
-  
-  const regionDetail = supportedCountriesDetails.find(
-    regionItem => regionItem.name === region 
-  );
+    if (!region) {
+      throw new Error("Region is required");
+    }
 
-  if (!regionDetail) {
-    throw new Error("Region or election type are not supported")
-  }
-
-  regionDetail.politicalParties.map(async (partyName) => {
-    const contexts = [];
-    const citations = [];
-
-    const embeddings = await searchEmbeddings(
-      query, 
-      collectionName, 
-      region,
-      partyName
+    const regionDetail = supportedRegionDetails.find(
+      regionItem => regionItem.name === region
     );
 
-    embeddings.points.map(point => {
-      contexts.push(point.payload.text);
-      citations.push(point.payload.citation);
-    }) ;
+    if (!regionDetail) {
+      throw new Error("Region or election type are not supported");
+    }
 
-    const response = await generateResponses(
-      query,
-      regionDetail.name as SupportedCountry, 
-      contexts,
-    );
+    const responsePromises = regionDetail.politicalParties.map(async (partyName) => {
+      const contexts = [];
+      const citations = [];
 
-    responses.push({
-      partyName,
-      response,
-      citations
+      const embeddings = await searchEmbeddings(
+        prompt,
+        collectionName,
+        region,
+        partyName
+      );
+
+      if (!embeddings || !embeddings.points) {
+        throw new Error("Embeddings data is missing or malformed");
+      }
+
+      embeddings.points.forEach(point => {
+        contexts.push(point.payload.text);
+        citations.push(point.payload.citation);
+      });
+
+      const response = await generateResponseForParty(
+        prompt,
+        regionDetail.name as SupportedCountry,
+        partyName,
+        contexts,
+      );
+
+      return {
+        partyName,
+        response,
+        citations
+      };
     });
-  })
 
-  return Response.json({
-    responses,
-    countryCode: regionDetail.code
-  });
-} catch (error) {
-    return Response.json({ error: `Internal server error: ${error.message}` }, { status: 500 });
+    const responses = await Promise.all(responsePromises);
+
+    return NextResponse.json({
+      responses,
+      countryCode: regionDetail.code
+    });
+  } catch (error) {
+    return NextResponse.json({ error: `Internal server error: ${error.message}` }, { status: 500 });
   }
-}
+};
