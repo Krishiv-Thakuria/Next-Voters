@@ -44,13 +44,17 @@ const Chat = () => {
       citations: response.citations
     }));
     
-    setChatHistory((prev) => [...prev, { 
-      type: 'agent', 
-      parties: parties
-    }, {
-      type: 'me',
-      message
-    }]);
+    setChatHistory((prev) => [
+      ...prev, 
+      {
+          type: 'me',
+          message
+      },
+      { 
+        type: 'agent', 
+        parties: parties
+      }
+    ]);
     
     setMessage('');
     return data.responses;
