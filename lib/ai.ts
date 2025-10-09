@@ -4,7 +4,7 @@ import { createCohere } from '@ai-sdk/cohere';
 import { z } from 'zod';
 import { handleSystemPrompt } from '@/data/prompts';
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
-import { SupportedCountry } from '@/types/supported-regions';
+import { SupportedRegions } from '@/types/supported-regions';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { supportedRegionDetails } from '@/data/supported-regions';
@@ -15,12 +15,12 @@ const cohere = createCohere({
 
 export const generateResponseForParty = async (
   prompt: string,
-  country: SupportedCountry,
+  country: SupportedRegions,
   partyName: string,
   contexts: string[]
 ) => {
   const parties = supportedRegionDetails.find(region => region.name === country)?.politicalParties;
-  
+    
   if (!parties) {
     throw new Error(`Party ${partyName} not found in politicalPartiesMap for ${country}`);
   }

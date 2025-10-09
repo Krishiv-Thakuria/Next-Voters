@@ -1,4 +1,4 @@
-export type SupportedCountry = "United States" | "Canada" | "California" | "Texas" | "Ontario" | "Quebec"
+export type SupportedRegions = "United States" | "Canada" | "California" | "Texas" | "Ontario" | "Quebec"
 
 export interface SupportedRegionDetails {
     code: string;

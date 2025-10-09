@@ -1,7 +1,7 @@
 import { generateResponseForParty, searchEmbeddings } from "@/lib/ai";
 import { NextRequest, NextResponse } from "next/server";
 import { supportedRegionDetails } from "@/data/supported-regions";
-import { SupportedCountry } from "@/types/supported-regions";
+import { SupportedRegions } from "@/types/supported-regions";
 
 console.log('Imported supportedRegionDetails:', supportedRegionDetails);
 console.log('Type:', typeof supportedRegionDetails);
@@ -54,7 +54,7 @@ export const POST = async (request: NextRequest) => {
 
       const response = await generateResponseForParty(
         prompt,
-        regionDetail.name as SupportedCountry,
+        regionDetail.name as SupportedRegions,
         partyName,
         contexts,
       );
