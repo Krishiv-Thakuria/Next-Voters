@@ -11,13 +11,11 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
   const myMessage = "py-3 px-4 rounded-2xl shadow-sm max-w-md bg-red-500 text-white rounded-br-md ml-auto";
   const AIMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
-  console.log(message); 
-
   if (message.type === "me") {
     return (
       <div className="flex justify-end mb-4">
         <div className={myMessage}>
-          <p className="text-sm">{message.text}</p>
+          <p className="text-sm">{message.message}</p>
         </div>
       </div>
     );

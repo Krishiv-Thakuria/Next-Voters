@@ -1,17 +1,17 @@
 type Party = {
   partyName: string;
   text: string;
-  citations?: any; // Optional citations array
+  citations?: any; 
 };
 
 type MeMessage = {
   type: "me";
-  text: string; // always required
+  message: string; 
 };
 
 type AgentMessage = {
   type: "agent";
-  parties: Party[]; // array of parties (2 or more)
+  parties: Party[]; 
 };
 
 export type Message = MeMessage | AgentMessage;

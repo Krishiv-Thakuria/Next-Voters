@@ -25,6 +25,7 @@ const Chat = () => {
   const { preference } = usePreference();
 
   const requestChat = async () => {
+    
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
@@ -46,6 +47,9 @@ const Chat = () => {
     setChatHistory((prev) => [...prev, { 
       type: 'agent', 
       parties: parties
+    }, {
+      type: 'me',
+      message
     }]);
     
     setMessage('');
