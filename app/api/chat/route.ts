@@ -3,10 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
 
-console.log('Imported supportedRegionDetails:', supportedRegionDetails);
-console.log('Type:', typeof supportedRegionDetails);
-console.log('Is Array:', Array.isArray(supportedRegionDetails));
-
 export const POST = async (request: NextRequest) => {
   try {
     const { prompt, region } = await request.json();
