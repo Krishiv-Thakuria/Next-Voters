@@ -99,7 +99,7 @@ const Chat = () => {
             ))
           ) : (
             <div className="flex items-center justify-center h-full p-8">
-              <Card className="bg-slate-50 w-full max-w-md">
+              <Card className="w-full max-w-md">
                 <CardContent className="flex flex-col items-center justify-center p-8 text-center">
                   <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
                     <MessageCircle className="w-6 h-6 text-muted-foreground" />
