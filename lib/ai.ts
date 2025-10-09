@@ -2,12 +2,12 @@ import { generateObject, embed } from 'ai';
 import { client } from "./qdrant";
 import { createCohere } from '@ai-sdk/cohere';
 import { z } from 'zod';
-import { politicalPartiesMap } from '@/data/political-prompts';
 import { handleSystemPrompt } from '@/data/prompts';
 import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
 import { SupportedCountry } from '@/types/supported-regions';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
+import { supportedRegionDetails } from '@/data/supported-regions';
 
 const cohere = createCohere({
     apiKey: process.env.COHERE_API_KEY
@@ -19,14 +19,13 @@ export const generateResponseForParty = async (
   partyName: string,
   contexts: string[]
 ) => {
-  const parties = politicalPartiesMap[country];
-  const partyInfo = parties.find(p => p.party === partyName);
+  const parties = supportedRegionDetails.find(region => region.name === country)?.politicalParties;
   
-  if (!partyInfo) {
+  if (!parties) {
     throw new Error(`Party ${partyName} not found in politicalPartiesMap for ${country}`);
   }
 
-  const { party, partyPrompt } = partyInfo;
+  const party = parties.find(p => p === partyName);
   
   const result = await generateObject({
     model: cohere(MODEL_NAME),
@@ -35,7 +34,7 @@ export const generateResponseForParty = async (
         answer: z.string()
       }),
     }),
-    system: handleSystemPrompt(party, partyPrompt, contexts),
+    system: handleSystemPrompt(party, contexts),
     prompt,
   });
   
