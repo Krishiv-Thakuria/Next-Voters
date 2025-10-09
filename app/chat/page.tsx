@@ -37,19 +37,15 @@ const Chat = () => {
     })
     const data = await response.json();
 
-    const responses = data.responses.map((response: any) => ({
+    const parties = data.responses.map((response: any) => ({
       partyName: response.partyName,
-      response: response.response,
+      text: response.response.message.answer,
       citations: response.citations
     }));
-
-    console.log(responses); 
     
     setChatHistory((prev) => [...prev, { 
       type: 'agent', 
-      parties: responses.partyName, 
-      response: responses.response, 
-      citations: responses.citations 
+      parties: parties
     }]);
     
     setMessage('');

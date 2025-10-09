@@ -1,6 +1,7 @@
 type Party = {
   partyName: string;
   text: string;
+  citations?: any; // Optional citations array
 };
 
 type MeMessage = {
@@ -10,7 +11,7 @@ type MeMessage = {
 
 type AgentMessage = {
   type: "agent";
-  parties: [Party, Party]; // always exactly 2
+  parties: Party[]; // array of parties (2 or more)
 };
 
 export type Message = MeMessage | AgentMessage;
