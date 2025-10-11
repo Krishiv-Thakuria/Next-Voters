@@ -1,6 +1,7 @@
 "use server";
 
 import { chunkDocument, addEmbeddings } from "@/lib/ai";
+import { Citation } from "@/types/citations";
 
 export async function embedPdfAction(formData: {
   documentLink: string;
@@ -64,11 +65,15 @@ export async function embedPdfAction(formData: {
     const chunks = await chunkDocument(pdfBuffer);
 
     // Store embeddings
+    const citation: Citation = {
+      author,
+      url: documentLink,
+      document_name: documentName
+    };
+    
     await addEmbeddings(
       chunks, 
-      author, 
-      documentLink, 
-      documentName, 
+      citation,
       collectionName,
       region, 
       politicalAffiliation

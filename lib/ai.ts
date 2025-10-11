@@ -8,6 +8,7 @@ import { SupportedRegions } from '@/types/supported-regions';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { supportedRegionDetails } from '@/data/supported-regions';
+import { Citation } from '@/types/citations';
 
 const cohere = createCohere({
     apiKey: process.env.COHERE_API_KEY
@@ -98,9 +99,7 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
 
 export const addEmbeddings = async (
     textChunks: string[],
-    author: string,
-    url: string,
-    document_name: string,
+    citation: Citation,
     collectionName: string,
     region: string,
     politicalAffiliation: string
@@ -132,7 +131,7 @@ export const addEmbeddings = async (
           vector: embedding,
           payload: {
             text,
-            citation: { author, url, document_name },
+            citation,
             region,
             politicalAffiliation
           },
