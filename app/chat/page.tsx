@@ -132,11 +132,6 @@ const Chat = () => {
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyDown={handleKeyDown}
                 rows={1}
-                style={{ 
-                  minHeight: '44px', 
-                  height: 'auto',
-                  lineHeight: '1.5'
-                }}
               />
               <Button
                 onClick={() => mutate()}
