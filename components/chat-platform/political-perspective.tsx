@@ -38,7 +38,8 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
           {content || `The ${title} perspective will appear here...`}
         </div>
       </CardContent>
-
+      
+      {/* This is a citation section */}
       <CardContent className="p-4">
         <div className="whitespace-pre-line min-h-[100px] font-poppins relative">
           {citations?.map((citation, index) => (
