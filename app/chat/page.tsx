@@ -26,8 +26,7 @@ const Chat = () => {
   const [message, setMessage] = useState(initialMessage|| '');
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [messageLoading, setMessageLoading] = useState<boolean | null>(null);
-  const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
+  
   
   const hasAutoSent = useRef(false);
 
@@ -76,9 +75,6 @@ const Chat = () => {
 
   const { mutate } = useMutation({
     mutationFn: requestChat,
-    onSuccess: () => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
   })
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -130,7 +126,6 @@ const Chat = () => {
           ) : (
             <NoChatScreen />
           )}
-          <div ref={messagesEndRef} />
         </div>
       </div>
 
@@ -140,7 +135,6 @@ const Chat = () => {
           <div className="flex items-end space-x-3">
             <div className="flex-1 relative">
               <textarea
-                ref={inputRef}
                 className="w-full bg-slate-50 py-3 px-4 pr-14 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
                 value={message}
                 placeholder="Type your message..."
