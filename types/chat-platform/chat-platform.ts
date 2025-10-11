@@ -1,4 +1,4 @@
-import { Citation } from "./citations";
+import { Citation } from "../citations";
 
 export interface AIAgentResponse {
     partyName: string;

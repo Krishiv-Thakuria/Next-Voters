@@ -9,13 +9,14 @@ import { useSearchParams } from 'next/navigation';
 import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "@/components/chat-platform/message-bubble";
-import { Message } from "@/types/message";
+import { Message } from "@/types/chat-platform/message";
 import { Button } from "@/components/ui/button";
 import { SendHorizonal } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import PreferenceSelector from "@/components/preference-selector";
 import NoChatScreen from "@/components/chat-platform/no-chat-screen";
-import { AIAgentResponse } from "@/types/chat";
+import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
+import LoadingMessageBubble from "@/components/chat-platform/loading-message-bubble";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -24,6 +25,7 @@ const Chat = () => {
   const initialMessage = searchParams.get('message');
   const [message, setMessage] = useState(initialMessage|| '');
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [messageLoading, setMessageLoading] = useState<boolean | null>(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   
@@ -31,11 +33,12 @@ const Chat = () => {
 
   const { preference } = usePreference();
 
-  const requestChat = async () => {    
+  const requestChat = async () => {  
+    setMessageLoading(true);  
     setChatHistory((prev) => [
       ...prev, 
       {
-          type: 'me',
+          type: 'reg',
           message
       },
     ]);
@@ -65,7 +68,7 @@ const Chat = () => {
         parties: parties
       }
     ]);
-
+    setMessageLoading(false);
     setMessage('');
     
     return data.responses;
@@ -111,11 +114,15 @@ const Chat = () => {
         <div className="max-w-4xl mx-auto">
           {chatHistory.length > 0 ? (
             chatHistory.map((msg, index) => (
-              <MessageBubble
-                key={index}
-                message={msg}
-                isFromMe={msg.type === "me"}
-              />
+              messageLoading ? (
+                <LoadingMessageBubble key={index} />
+              ) : (
+                <MessageBubble
+                  key={index}
+                  message={msg}
+                  isFromMe={msg.type === "reg"}
+                />
+              )
             ))
           ) : (
             <NoChatScreen />

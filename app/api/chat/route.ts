@@ -4,7 +4,7 @@ import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
 import { Citation } from "@/types/citations";
 import { removeDuplicateCitations } from "@/lib/citations";
-import { AIAgentResponse } from "@/types/chat";
+import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
 
 export const POST = async (request: NextRequest) => {
   try {

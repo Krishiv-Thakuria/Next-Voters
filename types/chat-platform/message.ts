@@ -1,4 +1,4 @@
-import { Citation } from "./citations";
+import { Citation } from "../citations";
 
 type Party = {
   partyName: string;
@@ -6,14 +6,16 @@ type Party = {
   citations?: Citation[]; 
 };
 
-type MeMessage = {
-  type: "me";
+type RegMessage = {
+  type: "reg";
   message: string; 
 };
+
+
 
 type AgentMessage = {
   type: "agent";
   parties: Party[]; 
 };
 
-export type Message = MeMessage | AgentMessage;
+export type Message = RegMessage | AgentMessage;
