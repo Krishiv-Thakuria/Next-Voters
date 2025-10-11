@@ -21,6 +21,7 @@ const Chat = () => {
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  
   const hasAutoSent = useRef(false);
 
   const { preference } = usePreference();
