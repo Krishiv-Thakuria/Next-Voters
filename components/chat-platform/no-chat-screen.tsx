@@ -15,7 +15,7 @@ const NoChatScreen = () => {
             </div>
             <h3 className="font-semibold text-lg mb-2">No messages yet</h3>
             <p className="text-sm text-muted-foreground mb-4">
-            Start a conversation by typing a message below. Your chat history will appear here.
+              Start a conversation by typing a message below. Your chat history will appear here.
             </p>
         </CardContent>
         </Card>
