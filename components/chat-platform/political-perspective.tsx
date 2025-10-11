@@ -19,8 +19,6 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
 }) => {
   const colorClass = color === "blue" ? "blue-600" : "red-600";
   
-  console.log(citations)
-
   return (
     <Card className="bg-white border border-gray-200 rounded-lg shadow-sm w-full md:w-[30%]">
       <CardHeader className="border-b border-gray-200 p-4">
