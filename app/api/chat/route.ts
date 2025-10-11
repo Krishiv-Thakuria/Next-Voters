@@ -2,6 +2,7 @@ import { generateResponseForParty, searchEmbeddings } from "@/lib/ai";
 import { NextRequest, NextResponse } from "next/server";
 import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
+import { Citation } from "@/types/citations";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -29,8 +30,8 @@ export const POST = async (request: NextRequest) => {
     }
 
     const responsePromises = regionDetail.politicalParties.map(async (partyName) => {
-      const contexts = [];
-      const citations = [];
+      const contexts: string[] = [];
+      const citations: Citation[] = [];
 
       const embeddings = await searchEmbeddings(
         prompt,
@@ -44,8 +45,8 @@ export const POST = async (request: NextRequest) => {
       }
 
       embeddings.points.forEach(point => {
-        contexts.push(point.payload.text);
-        citations.push(point.payload.citation);
+        contexts.push(point.payload.text as string);
+        citations.push(point.payload.citation as Citation);
       });
 
       const response = await generateResponseForParty(

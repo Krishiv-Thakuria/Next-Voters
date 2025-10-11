@@ -1,7 +1,9 @@
+import { Citation } from "./citations";
+
 type Party = {
   partyName: string;
   text: string;
-  citations?: any; 
+  citations?: Citation[]; 
 };
 
 type MeMessage = {

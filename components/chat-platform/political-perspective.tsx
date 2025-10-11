@@ -1,18 +1,21 @@
 import React, { FC } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Citation } from "@/types/citations";
 
 interface PartyCardProps {
   title: string;
   content?: string;
   loading?: boolean;
   color: "blue" | "red";
+  citations?: Citation[];
 }
 
 const PoliticalPerspective: FC<PartyCardProps> = ({ 
     title, 
     content, 
     loading, 
-    color 
+    color,
+    citations
 }) => {
   const colorClass = color === "blue" ? "blue-600" : "red-600";
   
@@ -31,6 +34,18 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
             </div>
           )}
           {content || `The ${title} perspective will appear here...`}
+        </div>
+      </CardContent>
+
+      <CardContent className="p-4">
+        <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins relative">
+          {citations?.map((citation, index) => (
+            <div key={index}>
+              <p>{citation.author}</p>
+              <p>{citation.url}</p>
+              <p>{citation.document_name}</p>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>
