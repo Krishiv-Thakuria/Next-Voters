@@ -1,16 +1,14 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
-import usePreference from "@/hooks/preferences";
-import { Preference } from "@/types/preferences";
 import supportedRegions from "@/data/supported-regions";
 import Dropdown from "@/components/ui/dropdown";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from 'next/navigation';
+import PreferenceSelector from "@/components/preference-selector";
 
 const Home = () => {
  const router = useRouter();
- const { preference, handleSetPreference} = usePreference();
  const [isMounted, setIsMounted] = useState(false);
  const [message, setMessage] = useState("");  
 
@@ -18,25 +16,8 @@ const Home = () => {
     setIsMounted(true);
  })
 
-  const updatePreference = (field: keyof Preference, value: string) => {
-    const newPref = { ...preference, [field]: value };
-    handleSetPreference(newPref.election, newPref.region);
-  };
-
   const handleFindRegions = () => {
     return supportedRegions.map((region) => region.name);
-  }
-
-  const handleFindParties = () => {
-    const region =
-      supportedRegions.find((region) => region.name === preference?.region)
-    return region ? region.politicalParties : [];
-  };
-
-  const handleFindElections = () => {
-    const region =
-      supportedRegions.find((region) => region.name === preference?.region)
-    return region ? region.elections : [];
   }
 
   const handleRedirectToChat = () => {
@@ -95,24 +76,7 @@ const Home = () => {
                 </button>
               </div>
 
-              {/* Dropdowns */}
-              <div className="flex items-center md:flex-nowrap flex-wrap gap-x-12 gap-y-3 mt-6 pt-5 border-t border-gray-200">
-                <Dropdown
-                  label="Select Region"
-                  value={preference?.region || ""}
-                  options={handleFindRegions()}
-                  onChange={(val) => {
-                    updatePreference("region", val)
-                    handleFindParties() 
-                  }}
-                />
-                <Dropdown
-                  label="Select Election"
-                  value={preference?.election || ""}
-                  options={handleFindElections()}
-                  onChange={(val) => updatePreference("election", val)}
-                />
-              </div>
+              <PreferenceSelector />
             </div>
           </div>
         </section>
