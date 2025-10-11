@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import PoliticalPerspective from './political-perspective';
+import PoliticalPerspective from '@/components/chat-platform/political-perspective';
 import { Message } from '@/types/message';
 
 interface MessageBubbleProps {

@@ -8,13 +8,13 @@ import React, {
 import { useSearchParams } from 'next/navigation';
 import usePreference from "@/hooks/preferences";
 import { Spinner } from "@/components/ui/spinner";
-import MessageBubble from "../../components/message-bubble";
+import MessageBubble from "@/components/chat-platform/message-bubble";
 import { Message } from "@/types/message";
 import { Button } from "@/components/ui/button";
 import { SendHorizonal } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import PreferenceSelector from "@/components/preference-selector";
-import NoChatScreen from "@/components/no-chat-screen";
+import NoChatScreen from "@/components/chat-platform/no-chat-screen";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
