@@ -21,6 +21,7 @@ const Chat = () => {
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const hasAutoSent = useRef(false);
 
   const { preference } = usePreference();
 
@@ -69,12 +70,14 @@ const Chat = () => {
 
   useEffect(() => {
     setIsMounted(true);
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
-    if (initialMessage) {
+  useEffect(() => {
+    if (initialMessage && !hasAutoSent.current && isMounted) {
+      hasAutoSent.current = true;
       mutate();
     }
-  }, []);
+  }, [initialMessage, isMounted, mutate]);
 
   if (!isMounted) {
     return (
