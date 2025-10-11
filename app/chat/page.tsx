@@ -15,6 +15,7 @@ import { SendHorizonal } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import PreferenceSelector from "@/components/preference-selector";
 import NoChatScreen from "@/components/chat-platform/no-chat-screen";
+import { AIAgentResponse } from "@/types/chat";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -30,7 +31,14 @@ const Chat = () => {
 
   const { preference } = usePreference();
 
-  const requestChat = async () => {
+  const requestChat = async () => {    
+    setChatHistory((prev) => [
+      ...prev, 
+      {
+          type: 'me',
+          message
+      },
+    ]);
     
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -42,27 +50,24 @@ const Chat = () => {
         region: preference?.region,
       })
     })
-    const data = await response.json();
 
-    const parties = data.responses.map((response: any) => ({
+    const data = await response.json();
+    const parties = data.responses.map((response: AIAgentResponse) => ({
       partyName: response.partyName,
-      text: response.response.message.answer,
+      answer: response.answer,  
       citations: response.citations
     }));
     
     setChatHistory((prev) => [
       ...prev, 
-      {
-          type: 'me',
-          message
-      },
       { 
         type: 'agent', 
         parties: parties
       }
     ]);
-    
+
     setMessage('');
+    
     return data.responses;
   }
 

@@ -4,6 +4,7 @@ import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
 import { Citation } from "@/types/citations";
 import { removeDuplicateCitations } from "@/lib/citations";
+import { AIAgentResponse } from "@/types/chat";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -59,7 +60,7 @@ export const POST = async (request: NextRequest) => {
 
       return {
         partyName,
-        response,
+        answer: response.message.answer,
         citations: removeDuplicateCitations(citations)  
       };
     });
@@ -67,7 +68,7 @@ export const POST = async (request: NextRequest) => {
     const responses = await Promise.all(responsePromises);
 
     return NextResponse.json({
-      responses,
+      responses: responses as AIAgentResponse[],
       countryCode: regionDetail.code
     });
   } catch (error) {
