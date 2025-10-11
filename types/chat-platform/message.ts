@@ -11,8 +11,6 @@ type RegMessage = {
   message: string; 
 };
 
-
-
 type AgentMessage = {
   type: "agent";
   parties: Party[]; 
