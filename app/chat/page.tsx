@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { useSearchParams } from 'next/navigation';
 import usePreference from "@/hooks/preferences";
-import { Spinner } from "@/components/ui/spinner";
 import MessageBubble from "@/components/chat-platform/message-bubble";
 import { Message } from "@/types/chat-platform/message";
 import { Button } from "@/components/ui/button";
@@ -17,23 +16,23 @@ import PreferenceSelector from "@/components/preference-selector";
 import NoChatScreen from "@/components/chat-platform/no-chat-screen";
 import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
 import LoadingMessageBubble from "@/components/chat-platform/loading-message-bubble";
+import ClientMountWrapper from "@/components/client-mount-wrapper";
 
 const Chat = () => {
-  const [isMounted, setIsMounted] = useState(false);
   const searchParams = useSearchParams();
-
   const initialMessage = searchParams.get('message');
   const [message, setMessage] = useState(initialMessage|| '');
+
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
-  const [messageLoading, setMessageLoading] = useState<boolean | null>(null);
   
-  
+  // boolean tags
   const hasAutoSent = useRef(false);
+  const messageLoading = useRef(false);
 
   const { preference } = usePreference();
 
   const requestChat = async () => {  
-    setMessageLoading(true);  
+    messageLoading.current = true;  
     setChatHistory((prev) => [
       ...prev, 
       {
@@ -67,7 +66,7 @@ const Chat = () => {
         parties: parties
       }
     ]);
-    setMessageLoading(false);
+    messageLoading.current = false; 
     setMessage('');
     
     return data.responses;
@@ -85,26 +84,14 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (initialMessage && !hasAutoSent.current && isMounted) {
+    if (initialMessage && !hasAutoSent.current) {
       hasAutoSent.current = true;
       mutate();
     }
-  }, [initialMessage, isMounted, mutate]);
-
-  if (!isMounted) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Spinner size="lg" className="bg-black" />
-      </div>
-    );
-  }
+  }, [initialMessage, mutate]);
 
   return (
-    <div className="h-screen bg-slate-50 flex flex-col">
+    <ClientMountWrapper className="h-screen bg-slate-50 flex flex-col">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
@@ -119,7 +106,7 @@ const Chat = () => {
                 />
               
             ))}
-            {messageLoading && (
+            {messageLoading.current && (
               <LoadingMessageBubble />
             )}
             </>
@@ -160,8 +147,8 @@ const Chat = () => {
           </p>
         </div>
       </div>
-    </div>
+    </ClientMountWrapper>
   );
 };
 
-export default Chat;
+export default Chat

@@ -1,40 +1,23 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
-import supportedRegions from "@/data/supported-regions";
-import Dropdown from "@/components/ui/dropdown";
-import { Spinner } from "@/components/ui/spinner";
+import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import PreferenceSelector from "@/components/preference-selector";
+import ClientMountWrapper from "@/components/client-mount-wrapper";
 
 const Home = () => {
  const router = useRouter();
- const [isMounted, setIsMounted] = useState(false);
  const [message, setMessage] = useState("");  
 
- useEffect(() => {
-    setIsMounted(true);
- })
-
-  const handleFindRegions = () => {
-    return supportedRegions.map((region) => region.name);
-  }
-
-  const handleRedirectToChat = () => {
+ const handleRedirectToChat = () => {
     router.push(
       `/chat?message=${message}`
     );
   }
 
-  if (!isMounted) return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <Spinner size="lg" className="bg-black" />
-    </div>
-  );
-
   return (
-    <div className="min-h-screen bg-white">
-      <main className="w-full">
+    <ClientMountWrapper className="min-h-screen bg-white">
+      <div className="w-full">
         {/* Hero Section */}
         <section className="relative pt-20 pb-8">
           <div className="relative max-w-[1000px] mx-auto px-6 text-center">
@@ -191,8 +174,8 @@ const Home = () => {
             </a>
           </div>
         </section>
-      </main>
-    </div>
+      </div>
+    </ClientMountWrapper>
   );
 }
 
