@@ -113,17 +113,20 @@ const Chat = () => {
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
           {chatHistory.length > 0 ? (
-            chatHistory.map((msg, index) => (
-              messageLoading ? (
-                <LoadingMessageBubble key={index} />
-              ) : (
+            <>
+            {chatHistory.map((msg, index) => (
+              
                 <MessageBubble
                   key={index}
                   message={msg}
                   isFromMe={msg.type === "reg"}
                 />
-              )
-            ))
+              
+            ))}
+            {messageLoading && (
+              <LoadingMessageBubble />
+            )}
+            </>
           ) : (
             <NoChatScreen />
           )}

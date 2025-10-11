@@ -7,11 +7,11 @@ interface MessageBubbleProps {
     isFromMe: boolean;
 }
 
-const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
+const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
   const myMessage = "py-3 px-4 rounded-2xl shadow-sm max-w-md bg-red-500 text-white rounded-br-md ml-auto";
   const otherMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
-  if (message.type === "reg") {
+  if (isFromMe && message.type === "reg") {
     return (
       <div className="flex justify-end mb-4">
         <div className={myMessage}>
@@ -19,7 +19,7 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
         </div>
       </div>
     );
-  } else {
+  } else if (message.type === "agent") {
     return (
       <div className="flex justify-start mb-4">
         <div className={otherMessage}>
