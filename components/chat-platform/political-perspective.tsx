@@ -41,13 +41,13 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
       
       {/* This is a citation section */}
       <CardContent className="p-4">
-        <p className="text-sm text-black font-poppins">Citations:</p>
+        <p className="text-sm text-black font-poppins mb-3">Citations:</p>
         <div className="whitespace-pre-line min-h-[100px] font-poppins relative space-y-2">
           {citations?.map((citation, index) => (
             <div key={index}>
-              <p className="text-xs text-gray-500 font-poppins">{citation.author}</p>
-              <a href={citation.url} target="_blank" className="text-xs text-gray-500 font-poppins underline">{citation.url}</a>
-              <p className="text-xs text-gray-500 font-poppins">{citation.document_name}</p>
+              <p className="text-xs text-gray-500 font-poppins">Author: {citation.author}</p>
+              <p className="text-xs text-gray-500 font-poppins">Document Name: {citation.document_name}</p>
+              <a href={citation.url} target="_blank" className="text-xs text-gray-500 font-poppins underline">Access here</a>
             </div>
           ))}
         </div>
