@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
 import { Citation } from "@/types/citations";
+import { removeDuplicateCitations } from "@/lib/citations";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -59,7 +60,7 @@ export const POST = async (request: NextRequest) => {
       return {
         partyName,
         response,
-        citations
+        citations: removeDuplicateCitations(citations)  
       };
     });
 

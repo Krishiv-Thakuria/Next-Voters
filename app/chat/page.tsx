@@ -15,7 +15,6 @@ import { SendHorizonal } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import PreferenceSelector from "@/components/preference-selector";
 import NoChatScreen from "@/components/chat-platform/no-chat-screen";
-import { removeDuplicateCitations } from "@/lib/citations";
 
 const Chat = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -48,7 +47,7 @@ const Chat = () => {
     const parties = data.responses.map((response: any) => ({
       partyName: response.partyName,
       text: response.response.message.answer,
-      citations: removeDuplicateCitations(response.citations)
+      citations: response.citations
     }));
     
     setChatHistory((prev) => [
