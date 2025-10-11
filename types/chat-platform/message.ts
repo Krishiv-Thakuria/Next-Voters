@@ -2,7 +2,7 @@ import { Citation } from "../citations";
 
 type Party = {
   partyName: string;
-  text: string;
+  answer: string;
   citations?: Citation[]; 
 };
 

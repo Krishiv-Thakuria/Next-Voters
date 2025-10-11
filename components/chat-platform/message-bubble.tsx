@@ -28,7 +28,7 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
               <PoliticalPerspective
                 key={index}
                 title={party.partyName}
-                content={party.text}
+                content={party.answer}
                 loading={false}
                 color={index % 2 === 0 ? "blue" : "red"} 
                 citations={party.citations}
