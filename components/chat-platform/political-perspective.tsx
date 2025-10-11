@@ -46,7 +46,7 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
           {citations?.map((citation, index) => (
             <div key={index}>
               <p className="text-xs text-gray-500 font-poppins">{citation.author}</p>
-              <p className="text-xs text-gray-500 font-poppins">{citation.url}</p>
+              <a href={citation.url} target="_blank" className="text-xs text-gray-500 font-poppins underline">{citation.url}</a>
               <p className="text-xs text-gray-500 font-poppins">{citation.document_name}</p>
             </div>
           ))}
