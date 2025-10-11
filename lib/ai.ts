@@ -43,14 +43,14 @@ export const generateResponseForParty = async (
 };
 
 export const searchEmbeddings = async (
-    userQuery: string, 
+    prompt: string, 
     collectionName: string, 
     region: string,
     partyName: string 
 ) => {
     const { embedding: vectorEmbeddings } = await embed({
         model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-        value: userQuery
+        value: prompt
     });
 
 
