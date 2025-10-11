@@ -7,7 +7,7 @@ interface PartyCardProps {
   content?: string;
   loading?: boolean;
   color: "blue" | "red";
-  citations?: Citation[];
+  citations: Citation[];
 }
 
 const PoliticalPerspective: FC<PartyCardProps> = ({ 
@@ -19,6 +19,8 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
 }) => {
   const colorClass = color === "blue" ? "blue-600" : "red-600";
   
+  console.log(citations)
+
   return (
     <Card className="bg-white border border-gray-200 rounded-lg shadow-sm w-full md:w-[30%]">
       <CardHeader className="border-b border-gray-200 p-4">
@@ -38,12 +40,12 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
       </CardContent>
 
       <CardContent className="p-4">
-        <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins relative">
+        <div className="whitespace-pre-line min-h-[100px] font-poppins relative">
           {citations?.map((citation, index) => (
             <div key={index}>
-              <p>{citation.author}</p>
-              <p>{citation.url}</p>
-              <p>{citation.document_name}</p>
+              <p className="text-xs text-gray-500">{citation.author}</p>
+              <p className="text-xs text-gray-500">{citation.url}</p>
+              <p className="text-xs text-gray-500">{citation.document_name}</p>
             </div>
           ))}
         </div>

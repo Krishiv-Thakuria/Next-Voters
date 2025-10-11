@@ -31,6 +31,7 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message }) => {
                 content={party.text}
                 loading={false}
                 color={index % 2 === 0 ? "blue" : "red"} 
+                citations={party.citations}
               />
             ))}
           </div>
