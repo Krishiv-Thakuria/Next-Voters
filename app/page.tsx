@@ -41,13 +41,13 @@ const Home = () => {
                 <input
                   type="text"
                   placeholder="Ask any question about policy"
-                  className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-400 bg-gray-50 font-poppins"
+                  className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-red-300 focus:outline-none focus:border-red-400 bg-gray-50 font-poppins"
                   onChange={(event) => setMessage(event.target.value)}
                   onKeyDown={handleKeyDown}
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
                   onClick={handleRedirectToChat}
                 >
                   <svg
