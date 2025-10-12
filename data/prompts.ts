@@ -4,7 +4,8 @@ export const handleSystemPrompt = (party, contexts) => {
       .map((context, index) => `${index + 1}. ${sanitize(context)}`)
       .join('\n');
   
-    return `You are an unbiased political analyst providing objective information about ${sanitize(party)}'s position.
+    return `
+  You are an unbiased political analyst providing objective information about ${sanitize(party)}'s position.
   
   CRITICAL FORMATTING RULES (MUST FOLLOW):
   - Use ONLY plain text with line breaks
