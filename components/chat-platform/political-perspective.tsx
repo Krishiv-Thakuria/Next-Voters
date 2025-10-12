@@ -28,7 +28,7 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
       </CardHeader>
       <CardContent className="p-4">
         <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins relative">
-        <h2 className="font-semibold font-poppins mb-2">Party Stance:</h2>
+        <h2 className="font-semibold font-poppins mt-2">Party Stance:</h2>
         {partyStance && (
           <ul className="list-disc pl-4 space-y-2">
             {partyStance.map((stance, index) => (
@@ -38,7 +38,7 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
             ))}
           </ul>
         )}
-        <h2 className="font-semibold font-poppins mb-2">Supporting Details:</h2>
+        <h2 className="font-semibold font-poppins mt-10">Supporting Details:</h2>
         {supportingDetails && (
           <ul className="list-disc pl-4 space-y-2">
             {supportingDetails.map((detail, index) => (
