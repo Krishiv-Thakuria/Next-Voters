@@ -21,7 +21,7 @@ import ClientMountWrapper from "@/components/client-mount-wrapper";
 const Chat = () => {
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get('message');
-  const [message, setMessage] = useState(initialMessage|| '');
+  const [message, setMessage] = useState('');
 
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   
