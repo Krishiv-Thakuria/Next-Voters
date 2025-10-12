@@ -18,7 +18,7 @@ CRITICAL FORMATTING RULES (MUST FOLLOW):
 - Complete all sentences - never stop mid-sentence
 
 MANDATORY RESPONSE STRUCTURE:
-You MUST provide your response in EXACTLY this format. Do not add any other sentence.:
+You MUST provide your response in EXACTLY this format. Nothing else should be added to the response:
 
 Party Stance:
 - [First key position point]
