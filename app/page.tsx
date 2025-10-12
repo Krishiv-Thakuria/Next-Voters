@@ -15,6 +15,12 @@ const Home = () => {
     );
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleRedirectToChat();
+    }
+  };
+
   return (
     <ClientMountWrapper className="min-h-screen bg-white">
       <div className="w-full">
@@ -37,6 +43,7 @@ const Home = () => {
                   placeholder="Ask any question about policy"
                   className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-400 bg-gray-50 font-poppins"
                   onChange={(event) => setMessage(event.target.value)}
+                  onKeyDown={handleKeyDown}
                 />
                 <button
                   type="button"
