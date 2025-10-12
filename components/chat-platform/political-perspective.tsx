@@ -6,7 +6,6 @@ interface PartyCardProps {
   title: string;
   partyStance?: string[];
   supportingDetails?: string[];
-  loading?: boolean;
   color: "blue" | "red";
   citations: Citation[];
 }
@@ -15,7 +14,6 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
     title, 
     partyStance, 
     supportingDetails, 
-    loading, 
     color,
     citations
 }) => {

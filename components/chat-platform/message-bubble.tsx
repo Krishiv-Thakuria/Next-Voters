@@ -30,7 +30,6 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
                 title={party.partyName}
                 partyStance={party.partyStance}
                 supportingDetails={party.supportingDetails}
-                loading={false}
                 color={index % 2 === 0 ? "blue" : "red"} 
                 citations={party.citations}
               />
