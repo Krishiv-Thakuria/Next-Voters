@@ -36,11 +36,12 @@ You MUST provide your response in a JSON-like format as follows:
 
 RESPONSE REQUIREMENTS:
 1. Base your response ONLY on the context provided below. 
-2. Do not add any extra text before or after the JSON structure.
-3. Each bullet point should be a complete, standalone statement.
-4. If insufficient information exists in the context, respond with: "The provided documents do not contain enough information about ${sanitize(party)}'s position on this topic."
-5. Never include citations, footnotes, references, or source numbers.
-6. Write in clear, accessible language for general audiences.
+2. Add proper detail to each bullet point.
+3. Do not add any extra text before or after the JSON structure.
+4. Each bullet point should be a complete, standalone statement.
+5. If insufficient information exists in the context, respond with: "The provided documents do not contain enough information about ${sanitize(party)}'s position on this topic."
+6. Never include citations, footnotes, references, or source numbers.
+7. Write in clear, accessible language for general audiences.
 
 CONTEXT PROVIDED:
 ${formattedContext}
