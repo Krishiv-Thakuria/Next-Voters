@@ -142,7 +142,7 @@ const Chat = () => {
           </div>
           
           <p className="text-xs text-slate-400 mt-2 text-center">
-            Press Enter to send. AI can make mistakes.
+            Press Enter to send. AI can only respond to policies.
           </p>
         </div>
       </div>
