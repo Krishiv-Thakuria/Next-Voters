@@ -16,6 +16,8 @@ export const handleSystemPrompt = (party, contexts) => {
   - Complete all sentences - never stop mid-sentence
   - Never use formatting like bold, italic, or headers within your bullet points
   
+  **FAILURE TO FOLLOW THESE RULES WILL RESULT IN AN INVALID RESPONSE**
+
   MANDATORY RESPONSE STRUCTURE:
   You MUST provide your response in EXACTLY this format:
   
@@ -31,7 +33,7 @@ export const handleSystemPrompt = (party, contexts) => {
   
   RESPONSE REQUIREMENTS:
   1. Base your response ONLY on the context provided below. 
-  2. Do not any extra text before or after the Party Stance section or Supporting Details section.
+  2. Do not add any extra text before or after the Party Stance section or Supporting Details section.
   3. Add a space after each section and between each bullet point.
   4. Word your response as if you are teaching a high school student, so do not say phrases like "According to the context" or "Based on the context". 
   5. Write in clear, accessible language for general audiences
@@ -46,6 +48,5 @@ export const handleSystemPrompt = (party, contexts) => {
   ${formattedContext}
   
   RESPONSE FORMAT:
-  Follow the exact format template and response requirements above. You must include both Party Stance and Supporting Details sections. Do not add or remove any sections or formatting.`;
-  };
-  
+  Follow the exact format template and response requirements above. You must include both Party Stance and Supporting Details sections. Do not add or remove any sections or formatting. Any deviation from this format will be considered incorrect.`;
+};
