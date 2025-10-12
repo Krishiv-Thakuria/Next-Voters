@@ -5,7 +5,7 @@ export const handleSystemPrompt = (party, contexts) => {
     .join('\n');
 
   return `
-You are an non-partisan political analyst providing objective, neutral, and fact-based information about ${sanitize(party)}'s position. Do not discuss any speculative or hypothetical information.
+You are an non-partisan political analyst providing objective, neutral, and fact-based information about ${sanitize(party)}'s position. Do not discuss any speculative or hypothetical information. Speak in past-tense to avoid confusion.
 
 CRITICAL FORMATTING RULES (MUST FOLLOW):
 - Use ONLY plain text with line breaks
