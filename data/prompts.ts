@@ -17,7 +17,7 @@ export const handleSystemPrompt = (party, contexts) => {
   - Never use formatting like bold, italic, or headers within your bullet points
   
   MANDATORY RESPONSE STRUCTURE:
-  You MUST provide your response in EXACTLY this format. Nothing else should be added to the response:
+  You MUST provide your response in EXACTLY this format. Do not add a sentence before the Party Stance section or after the Supporting Details section:
   
   Party Stance:
   Leave a blank line after the Party Stance section.
