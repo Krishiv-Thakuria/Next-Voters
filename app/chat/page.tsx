@@ -92,7 +92,7 @@ const Chat = () => {
   return (
     <ClientMountWrapper className="h-screen bg-slate-50 flex flex-col">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div className="flex-1 overflow-y-auto px-4 py-10 mb-28">
         <div className="max-w-4xl mx-auto">
           {chatHistory.length > 0 ? (
             <>
@@ -142,7 +142,7 @@ const Chat = () => {
           </div>
           
           <p className="text-xs text-slate-400 mt-2 text-center">
-            Press Enter to send, Shift+Enter for new line
+            Press Enter to send. AI can make mistakes.
           </p>
         </div>
       </div>
