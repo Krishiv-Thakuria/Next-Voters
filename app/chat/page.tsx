@@ -116,7 +116,7 @@ const Chat = () => {
       </div>
 
       {/* Input */}
-      <div className="bg-white border-t border-slate-200 px-4 py-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end space-x-3">
             <div className="flex-1 relative">
