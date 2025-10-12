@@ -32,7 +32,8 @@ export const generateResponseForParty = async (
     model: cohere(MODEL_NAME),
     schema: z.object({
       message: z.object({
-        answer: z.string()
+        partyStance: z.array(z.string()),
+        supportingDetails: z.array(z.string())
       }),
     }),
     system: handleSystemPrompt(party, contexts),

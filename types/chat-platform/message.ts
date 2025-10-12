@@ -1,10 +1,4 @@
-import { Citation } from "../citations";
-
-type Party = {
-  partyName: string;
-  answer: string;
-  citations?: Citation[]; 
-};
+import { AIAgentResponse } from "./chat-platform";
 
 type RegMessage = {
   type: "reg";
@@ -13,7 +7,7 @@ type RegMessage = {
 
 type AgentMessage = {
   type: "agent";
-  parties: Party[]; 
+  parties: AIAgentResponse[]; 
 };
 
 export type Message = RegMessage | AgentMessage;

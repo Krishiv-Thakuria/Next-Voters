@@ -60,7 +60,8 @@ export const POST = async (request: NextRequest) => {
 
       return {
         partyName,
-        answer: response.message.answer,
+        partyStance: response.message.partyStance,
+        supportingDetails: response.message.supportingDetails,
         citations: removeDuplicateCitations(citations)  
       };
     });

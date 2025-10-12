@@ -55,7 +55,8 @@ const Chat = () => {
     const data = await response.json();
     const parties = data.responses.map((response: AIAgentResponse) => ({
       partyName: response.partyName,
-      answer: response.answer,  
+      partyStance: response.partyStance,  
+      supportingDetails: response.supportingDetails,
       citations: response.citations
     }));
     
