@@ -17,16 +17,14 @@ export const handleSystemPrompt = (party, contexts) => {
   - Never use formatting like bold, italic, or headers within your bullet points
   
   MANDATORY RESPONSE STRUCTURE:
-  You MUST provide your response in EXACTLY this format. Do not add a sentence before the Party Stance section or after the Supporting Details section:
+  You MUST provide your response in EXACTLY this format. Do not add a sentence before the Party Stance section or after the Supporting Details section. Add space between the two sections and between each bullet point:
   
   Party Stance:
-  Leave a blank line after the Party Stance section.
   - [First key position point]
   - [Second key position point]
   - [Third key position point if available]
   
   Supporting Details:
-  Leave a blank line after the Supporting Details section.
   - [First supporting detail with specific context]
   - [Second supporting detail with specific context]
   - [Third supporting detail if available]
