@@ -12,9 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { SendHorizonal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { 
-  Button,
-} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 const Chat = () => {
   const searchParams = useSearchParams();
