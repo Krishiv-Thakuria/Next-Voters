@@ -1,20 +1,38 @@
-/** @type {import('next').NextConfig} */
+import { NextConfig } from 'next';
+
+/** @type {NextConfig} */
 const nextConfig = {
+  reactStrictMode: true, // Enable React Strict Mode for better error detection
+  swcMinify: true, // Use SWC for faster builds and minification
+
+  // Custom Webpack configuration
   webpack: (config, { isServer }) => {
-    // Add fallback for Node.js modules
+    // Add fallbacks for Node.js modules if needed
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
-      path: false
+      path: false,
     };
-    
-    // Externalize canvas for server-side builds (used by some PDF libraries)
+
+    // Externalize large modules for server-side builds
     if (isServer) {
       config.externals = [...(config.externals || []), 'canvas'];
     }
-    
+
     return config;
-  }
+  },
+
+  // Enable experimental features
+  experimental: {
+    modern: true, // Enable modern JavaScript output
+    scrollRestoration: true, // Enable scroll restoration between pages
+  },
+
+  // Optimize images
+  images: {
+    domains: ['example.com'], // Add domains for optimized images
+    formats: ['image/avif', 'image/webp'], // Use modern image formats
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
