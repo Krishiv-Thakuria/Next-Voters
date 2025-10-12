@@ -1,22 +1,20 @@
-"use client";
+"use client"
 
-import React, { 
-  useState, 
-  useRef, 
-  useEffect 
-} from "react";
-import { useSearchParams } from 'next/navigation';
-import usePreference from "@/hooks/preferences";
-import MessageBubble from "@/components/chat-platform/message-bubble";
-import { Message } from "@/types/chat-platform/message";
-import { Button } from "@/components/ui/button";
-import { SendHorizonal } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
-import PreferenceSelector from "@/components/preference-selector";
-import NoChatScreen from "@/components/chat-platform/no-chat-screen";
-import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
 import LoadingMessageBubble from "@/components/chat-platform/loading-message-bubble";
+import MessageBubble from "@/components/chat-platform/message-bubble";
+import NoChatScreen from "@/components/chat-platform/no-chat-screen";
 import ClientMountWrapper from "@/components/client-mount-wrapper";
+import PreferenceSelector from "@/components/preference-selector";
+import usePreference from "@/hooks/preferences";
+import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
+import { Message } from "@/types/chat-platform/message";
+import { useMutation } from "@tanstack/react-query";
+import { SendHorizonal } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { 
+  Button,
+} from "@/components/ui/button";
 
 const Chat = () => {
   const searchParams = useSearchParams();
@@ -31,7 +29,7 @@ const Chat = () => {
 
   const { preference } = usePreference();
 
-  const requestChat = async () => {  
+  const requestChat = async (message: string) => {  
     messageLoading.current = true;  
     setChatHistory((prev) => [
       ...prev, 
@@ -80,16 +78,16 @@ const Chat = () => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      mutate();
+      mutate(message);
     }
   };
 
   useEffect(() => {
     if (initialMessage && !hasAutoSent.current) {
       hasAutoSent.current = true;
-      mutate();
+      requestChat(initialMessage); // Pass the initialMessage here
     }
-  }, [initialMessage, mutate]);
+  }, [initialMessage]);
 
   return (
     <ClientMountWrapper className="h-screen bg-slate-50 flex flex-col">
@@ -131,7 +129,7 @@ const Chat = () => {
                 rows={1}
               />
               <Button
-                onClick={() => mutate()}
+                onClick={() => mutate(message)}
                 disabled={!message.trim()}
                 size="sm"
                 className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
@@ -152,4 +150,4 @@ const Chat = () => {
   );
 };
 
-export default Chat
+export default Chat;
