@@ -85,7 +85,7 @@ const Chat = () => {
   useEffect(() => {
     if (initialMessage && !hasAutoSent.current) {
       hasAutoSent.current = true;
-      requestChat(initialMessage); // Pass the initialMessage here
+      requestChat(initialMessage); 
     }
   }, [initialMessage]);
 
