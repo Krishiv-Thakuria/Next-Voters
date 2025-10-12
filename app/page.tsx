@@ -34,7 +34,7 @@ const Home = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Ask any question about policy or legislation"
+                  placeholder="Ask any question about policy"
                   className="w-full pl-6 pr-16 py-4 text-[16px] text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-400 bg-gray-50 font-poppins"
                   onChange={(event) => setMessage(event.target.value)}
                 />
