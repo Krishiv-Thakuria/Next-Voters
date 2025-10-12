@@ -44,6 +44,6 @@ export const handleSystemPrompt = (party, contexts) => {
   ${formattedContext}
   
   RESPONSE FORMAT:
-  Follow the exact format template and response requirements above. Do not add or remove any sections or formatting.`;
+  Follow the exact format template and response requirements above. You must include both Party Stance and Supporting Details sections.Do not add or remove any sections or formatting.`;
   };
   
