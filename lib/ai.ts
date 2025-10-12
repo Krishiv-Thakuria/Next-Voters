@@ -37,6 +37,7 @@ export const generateResponseForParty = async (
     }),
     system: handleSystemPrompt(party, contexts),
     prompt,
+    temperature: 0.2
   });
   
   return result.object;
