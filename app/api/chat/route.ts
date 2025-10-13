@@ -1,9 +1,10 @@
-import { generateResponseForParty, searchEmbeddings } from "@/lib/ai";
+import { searchEmbeddings } from "@/lib/ai";
+import { generateResponseForParty } from "@/lib/chat-platform/chat-response"
 import { NextRequest, NextResponse } from "next/server";
 import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
 import { Citation } from "@/types/citations";
-import { removeDuplicateCitations } from "@/lib/citations";
+import { removeDuplicateCitations } from "@/lib/chat-platform/citations";
 import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
 import returnErrorResponse from "@/lib/error";
 

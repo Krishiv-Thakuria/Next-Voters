@@ -1,50 +1,14 @@
-import { generateObject, embed } from 'ai';
+import { embed } from 'ai';
 import { client } from "./qdrant";
 import { createCohere } from '@ai-sdk/cohere';
-import { z } from 'zod';
-import { handleSystemPrompt } from '@/data/prompts';
-import { EMBEDDING_MODEL_NAME, MODEL_NAME } from '@/data/ai-config';
-import { SupportedRegions } from '@/types/supported-regions';
+import { EMBEDDING_MODEL_NAME } from '@/data/ai-config';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
-import { supportedRegionDetails } from '@/data/supported-regions';
 import { Citation } from '@/types/citations';
 
 const cohere = createCohere({
     apiKey: process.env.COHERE_API_KEY
 })
-
-export const generateResponseForParty = async (
-  prompt: string,
-  country: SupportedRegions,
-  partyName: string,
-  contexts: string[]
-) => {
-  const parties = supportedRegionDetails.find(region => region.name === country)?.politicalParties;
-    
-  if (!parties) {
-    throw new Error(`Party ${partyName} not found in politicalPartiesMap for ${country}`);
-  }
-
-  const party = parties.find(p => p === partyName);
-  
-  const result = await generateObject({
-    model: cohere(MODEL_NAME),
-    schema: z.object({
-      message: z.object({
-        partyStance: z.array(z.string()),
-        supportingDetails: z.array(z.string())
-      }),
-    }),
-    system: handleSystemPrompt(party, contexts),
-    prompt,
-    temperature: 0.2,
-    frequencyPenalty: 0,
-    presencePenalty: 0
-  });
-  
-  return result.object;
-};
 
 export const searchEmbeddings = async (
     prompt: string, 
