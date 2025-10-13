@@ -23,7 +23,7 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
     return (
       <div className="flex justify-start mb-4">
         <div className={otherMessage}>
-          <div className="w-screen flex space-x-3">
+          <div className="w-screen flex flex-col lg:flex-row lg:space-x-3">
             {message.parties.map((party, index) => (
               <PoliticalPerspective
                 key={index}
