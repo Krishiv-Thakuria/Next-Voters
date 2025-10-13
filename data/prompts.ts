@@ -22,16 +22,8 @@ MANDATORY RESPONSE STRUCTURE:
 You MUST provide your response in a JSON-like format as follows:
 
 {
-  "partyStance": [
-    "- First key position point",
-    "- Second key position point",
-    "- Third key position point if available"
-  ],
-  "supportingDetails": [
-    "- First supporting detail with specific context",
-    "- Second supporting detail with specific context",
-    "- Third supporting detail if available"
-  ]
+  "partyStance": [BULLET POINTS IN THE STRING LIST],
+  "supportingDetails": [BULLET POINTS IN THE STRING LIST]
 }
 
 RESPONSE REQUIREMENTS:
