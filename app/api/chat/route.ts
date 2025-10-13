@@ -5,6 +5,7 @@ import { SupportedRegions } from "@/types/supported-regions";
 import { Citation } from "@/types/citations";
 import { removeDuplicateCitations } from "@/lib/citations";
 import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
+import returnErrorResponse from "@/lib/error";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -73,6 +74,6 @@ export const POST = async (request: NextRequest) => {
       countryCode: regionDetail.code
     });
   } catch (error) {
-    return NextResponse.json({ error: `Internal server error: ${error.message}` }, { status: 500 });
+    return returnErrorResponse(error);
   }
 };

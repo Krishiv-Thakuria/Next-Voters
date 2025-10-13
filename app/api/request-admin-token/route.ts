@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleCreateToken } from "@/server-actions/jwt"; 
 import { transporter } from "@/lib/nodemailer";
 import { handleGetUser } from "@/lib/admin-user";
+import returnErrorResponse from "@/lib/error";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -28,6 +29,6 @@ export const POST = async (req: NextRequest) => {
 
     return NextResponse.json({ success: true, message: "Email sent" });
   } catch (error: any) {
-    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+    return returnErrorResponse(error);  
   }
 };
