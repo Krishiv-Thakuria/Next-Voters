@@ -22,8 +22,8 @@ MANDATORY RESPONSE STRUCTURE:
 You MUST provide your response in a JSON-like format as follows:
 
 {
-  "partyStance": [BULLET POINTS IN THE STRING LIST],
-  "supportingDetails": [BULLET POINTS IN THE STRING LIST]
+  "partyStance": [INSIGHTFUL BULLET POINTS IN THE STRING LIST],
+  "supportingDetails": [INSIGHTFUL BULLET POINTS IN THE STRING LIST]
 }
 
 RESPONSE REQUIREMENTS:
