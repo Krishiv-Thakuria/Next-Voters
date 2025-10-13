@@ -95,7 +95,6 @@ const Chat = () => {
           {chatHistory.length > 0 ? (
             <>
             {chatHistory.map((msg, index) => (
-              
                 <MessageBubble
                   key={index}
                   message={msg}
