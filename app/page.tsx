@@ -71,37 +71,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* New Feature Promo */}
-        <section className="bg-white py-12">
-          <div className="max-w-[1200px] mx-auto px-4 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 border border-gray-200">
-              <span className="text-[12px] font-semibold tracking-wide text-gray-700 uppercase font-poppins">
-                New feature
-              </span>
-            </div>
-            <div className="mt-4">
-              <a
-                href="/docs"
-                className="inline-flex items-center gap-2 text-[14px] text-gray-900 font-poppins font-medium border border-gray-300 rounded-full px-4 py-2 hover:bg-gray-50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16l4-4h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" />
-                </svg>
-                Chat with a bill (analyze legislation)
-              </a>
-            </div>
-          </div>
-        </section>
-
         {/* 87% Statistics Section */}
         <section className="py-24 bg-white -mt-4">
           <div className="max-w-[1200px] mx-auto px-4">
