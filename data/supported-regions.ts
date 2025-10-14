@@ -11,6 +11,7 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Conservative Party",
       "New Democratic Party (NDP)",
     ],
+    collectionName: "collection-ca"
   },
 
   {
@@ -19,7 +20,8 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
     politicalParties: [
       "Democratic Party",
       "Republican Party"
-    ]
+    ],
+    collectionName: "collection-us"
   },
 
   // U.S. States
@@ -29,7 +31,8 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
     politicalParties: [
       "California Democractic Party", 
       "California Republican Party"
-    ]
+    ],
+    collectionName: "collection-us-california"  
   },
   {
     code: "TX-US",
@@ -38,6 +41,7 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Texas Democratic Party", 
       "Texas Republican Party"
     ],
+    collectionName: "collection-us-texas"
   },
 
   // Canadian Provinces
@@ -49,6 +53,7 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Progressive Conservative Party of Ontario",
       "Ontario New Democratic Party (NDP)",
     ],
+    collectionName: "collection-ca-ontario"
   },
   {
     code: "QC-CA",
@@ -57,6 +62,7 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Quebec Liberal Party",
       "Parti Québécois",
     ],
+    collectionName: "collection-ca-quebec"
   }
 ]
 

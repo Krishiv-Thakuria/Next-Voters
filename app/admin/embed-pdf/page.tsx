@@ -8,20 +8,11 @@ import {
   CardContent 
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { 
-  CheckCircle2, 
-  AlertCircle 
-} from "lucide-react";
 import AdminAuth from "@/wrappers/AdminAuth";
 import supportedRegions from "@/data/supported-regions";
-import { 
-  Select, 
-  SelectTrigger, 
-  SelectValue, 
-  SelectContent, 
-  SelectItem 
-} from "@/components/ui/select";
 import { embedPdfAction } from "@/server-actions/embed";
+import { StatusMessage } from "@/components/status-message";
+import ReusableSelect from "@/components/reusable-select";
 
 const initialForm = {
   documentLink: "",
@@ -47,6 +38,13 @@ const EmbedPdfForm = () => {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const handleSelectChange = (value: string, valueType: string) => {
+    setForm((prev) => ({
+      ...prev,
+      [valueType]: value,
+    }));
+  }
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -85,88 +83,38 @@ const EmbedPdfForm = () => {
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Embed PDF</h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <input
-              name="documentLink"
-              type="url"
-              placeholder="Document Link"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={form.documentLink}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="author"
-              type="text"
-              placeholder="Author"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={form.author}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="documentName"
-              type="text"
-              placeholder="Document Name"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={form.documentName}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="collectionName"
-              type="text"
-              placeholder="Collection Name"
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={form.collectionName}
-              onChange={handleChange}
-              required
-            />
+            {["documentLink", "author", "documentName", "collectionName", "region", "politicalAffiliation"].map((fieldName) => (
+              fieldName !== "region" && (
+                <input
+                  key={fieldName}
+                  name={fieldName}
+                  type={fieldName === "documentLink" ? "url" : "text"}
+                  placeholder={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
+                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
+                  value={form[fieldName]}
+                  onChange={handleChange}
+                  required
+                />
+              )
+            ))}
 
             <div className="flex space-x-2">
-              <Select
+              <ReusableSelect
                 value={form.region}
                 onValueChange={(value) => 
                   setForm((prev) => ({ ...prev, region: value }))
                 }
-              >
-                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
-                  <SelectValue placeholder="Region" />
-                </SelectTrigger>
-                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50] cursor-pointer">
-                  {supportedRegions?.map(region => (
-                    <SelectItem 
-                      key={region.code} 
-                      value={region.name}
-                      className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
-                    >
-                      {region.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Region"
+                items={supportedRegions?.map(region => region.name)}
+              />
 
-              <Select
+              <ReusableSelect
                 value={form.politicalAffiliation}
                 disabled={!form.region}
-                onValueChange={(value) => 
-                  setForm((prev) => ({ ...prev, politicalAffiliation: value }))
-                }
-              >
-                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
-                  <SelectValue placeholder="Political Party" />
-                </SelectTrigger>
-                <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50] cursor-pointer">
-                  {politicalParties.map(party => (
-                    <SelectItem 
-                      key={party} 
-                      value={party}
-                      className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
-                    >
-                      {party}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onValueChange={(value) => handleSelectChange(value, "politicalAffiliation")}
+                placeholder="Political Party"
+                items={politicalParties}
+              />  
             </div>
 
             <Button
@@ -178,18 +126,7 @@ const EmbedPdfForm = () => {
             </Button>
           </form>
 
-          {status && (
-            <div
-              className={`mt-4 flex items-center space-x-2 text-sm px-3 py-2 rounded-lg ${
-                status.type === "success"
-                  ? "bg-green-50 text-green-700 border border-green-200"
-                  : "bg-red-50 text-red-700 border border-red-200"
-              }`}
-            >
-              {status.type === "success" ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-              <span>{status.message}</span>
-            </div>
-          )}
+          <StatusMessage status={status} />
         </CardContent>
       </Card>
     </AdminAuth>
