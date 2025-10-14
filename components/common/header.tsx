@@ -35,9 +35,7 @@ const Header = () => {
             <UserButton />
             <SignOutButton />
           </SignedIn>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
+          <SignedOut><SignInButton /></SignedOut>
         </div>
       </div>
     </header>
