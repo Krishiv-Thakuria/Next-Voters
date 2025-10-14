@@ -2,7 +2,13 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { 
+  SignedIn, 
+  SignedOut, 
+  SignOutButton, 
+  UserButton, 
+  SignInButton 
+} from "@clerk/nextjs";
 
 const Header = () => {
   const pathname = usePathname();
@@ -25,8 +31,13 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <UserButton />
-          <SignOutButton />
+          <SignedIn>
+            <UserButton />
+            <SignOutButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
         </div>
       </div>
     </header>
