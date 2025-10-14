@@ -101,9 +101,7 @@ const EmbedPdfForm = () => {
             <div className="flex space-x-2">
               <ReusableSelect
                 value={form.region}
-                onValueChange={(value) => 
-                  setForm((prev) => ({ ...prev, region: value }))
-                }
+                onValueChange={(value) => handleSelectChange(value, "region")}
                 placeholder="Region"
                 items={supportedRegions?.map(region => region.name)}
               />
