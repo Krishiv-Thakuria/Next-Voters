@@ -19,7 +19,6 @@ const initialForm = {
   documentLink: "",
   author: "",
   documentName: "",
-  collectionName: "",
   region: "",
   politicalAffiliation: "",
 };
