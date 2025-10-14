@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { 
@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import AdminAuth from "@/wrappers/AdminAuth";
-import supportedRegions from "@/data/supported-regions";
 import { embedPdfAction } from "@/server-actions/embed";
 import { StatusMessage } from "@/components/status-message";
 import ReusableSelect from "@/components/reusable-select";
+import { inputFields, selectFields } from "@/data/embed-pdf-fields";
+import {handleFindOptions, handleFindCollection} from "@/lib/chat-platform/find-options";
 
 const initialForm = {
   documentLink: "",
@@ -26,11 +27,6 @@ const initialForm = {
 const EmbedPdfForm = () => {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<null | { type: "success" | "error"; message: string }>(null);
-
-  const politicalParties = useMemo(() => {
-    const found = supportedRegions.find((r) => r.name === form.region);
-    return found?.politicalParties ?? [];
-  }, [form.region]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
@@ -53,7 +49,7 @@ const EmbedPdfForm = () => {
         documentLink: form.documentLink,
         author: form.author,
         documentName: form.documentName,
-        collectionName: form.collectionName,
+        collectionName: handleFindCollection(form.region),
         region: form.region,
         politicalAffiliation: form.politicalAffiliation
       });
@@ -83,36 +79,29 @@ const EmbedPdfForm = () => {
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Embed PDF</h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
-            {["documentLink", "author", "documentName", "collectionName", "region", "politicalAffiliation"].map((fieldName) => (
-              fieldName !== "region" && (
-                <input
-                  key={fieldName}
-                  name={fieldName}
-                  type={fieldName === "documentLink" ? "url" : "text"}
-                  placeholder={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-                  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-                  value={form[fieldName]}
-                  onChange={handleChange}
-                  required
-                />
-              )
+            {inputFields.map((field) => (
+              <input
+                key={field.name}
+                name={field.name}
+                placeholder={field.value}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
+                value={form[field.name]}
+                onChange={handleChange}
+                required
+              />
             ))}
 
             <div className="flex space-x-2">
-              <ReusableSelect
-                value={form.region}
-                onValueChange={(value) => handleSelectChange(value, "region")}
-                placeholder="Region"
-                items={supportedRegions?.map(region => region.name)}
-              />
-
-              <ReusableSelect
-                value={form.politicalAffiliation}
-                disabled={!form.region}
-                onValueChange={(value) => handleSelectChange(value, "politicalAffiliation")}
-                placeholder="Political Party"
-                items={politicalParties}
-              />  
+              {selectFields.map((field) => (    
+                <ReusableSelect
+                  key={field.name}
+                  value={form[field.name]}
+                  disabled={field.name === "politicalAffiliation" && !form.region}
+                  onValueChange={(value) => handleSelectChange(value, field.name)}
+                  placeholder={field.value}
+                  items={handleFindOptions(field.name, form.region)}
+                />
+              ))}
             </div>
 
             <Button
