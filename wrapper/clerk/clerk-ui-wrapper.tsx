@@ -7,7 +7,7 @@ import {
   SignInButton,
 } from '@clerk/nextjs'
 
-export default async function ClerkUIWrapper() {
+export default function ClerkUIWrapper() {
   return (
     <div className="flex items-center gap-2">
       <SignedIn>
