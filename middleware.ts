@@ -3,8 +3,8 @@ import protectedRoutes from './data/protected-routes'
 
 const isProtectedRoute = createRouteMatcher(protectedRoutes)
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) await auth.protect()
+export default clerkMiddleware((auth, req) => {
+  if (isProtectedRoute(req)) auth().protect()
 })
 
 export const config = {
