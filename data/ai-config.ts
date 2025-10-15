@@ -1,2 +1,2 @@
-export const MODEL_NAME = "command-r7b-12-2024"
-export const EMBEDDING_MODEL_NAME = "embed-english-v3.0"
+export const MODEL_NAME = "gpt-4o-mini"
+export const EMBEDDING_MODEL_NAME = "text-embedding-3-small"
