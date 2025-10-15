@@ -6,5 +6,5 @@ export default function ClerkProviderWrapper({
 }: {
   children: React.ReactNode
 }) {
-  return <ClerkProvider>{children}</ClerkProvider>
+  return <ClerkProvider dynamic>{children}</ClerkProvider>
 }
