@@ -14,7 +14,7 @@
     "cli": "pnpm run build:cli && npx ts-node ./cli/index.ts"
   },
   "dependencies": {
-    "@ai-sdk/cohere": "^2.0.12",
+    "@ai-sdk/openai": "^2.0.52",
     "@neondatabase/serverless": "^1.0.1",
     "@qdrant/qdrant-js": "^1.15.1",
     "@radix-ui/react-accordion": "^1.2.11",

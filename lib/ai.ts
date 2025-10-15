@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 import { Citation } from '@/types/citations';
 
 const cohere = createCohere({
+    baseUrl: "https://api.cohere.com",
     apiKey: process.env.COHERE_API_KEY
 })
 
