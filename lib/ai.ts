@@ -1,14 +1,14 @@
 import { embed } from 'ai';
 import { client } from "./qdrant";
-import { createCohere } from '@ai-sdk/cohere';
+import { createOpenAI } from '@ai-sdk/openai';
 import { EMBEDDING_MODEL_NAME } from '@/data/ai-config';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { Citation } from '@/types/citations';
 
-const cohere = createCohere({
-    baseUrl: "https://api.cohere.com",
-    apiKey: process.env.COHERE_API_KEY
+const openai = createOpenAI({
+    baseUrl: process.env.OPENAI_API_BASE_URL,
+    apiKey: process.env.OPENAI_API_KEY
 })
 
 export const searchEmbeddings = async (
@@ -18,7 +18,7 @@ export const searchEmbeddings = async (
     partyName: string 
 ) => {
     const { embedding: vectorEmbeddings } = await embed({
-        model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+        model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
         value: prompt
     });
 
@@ -89,7 +89,7 @@ export const addEmbeddings = async (
       const text = textChunks[i];
       
       const { embedding } = await embed({
-        model: cohere.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+        model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
         value: text,
       });
 
