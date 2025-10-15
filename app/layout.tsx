@@ -1,7 +1,7 @@
 import { type Metadata } from 'next'
 import './globals.css'
 import Root from '@/components/root'
-import ClerkProviderWrapper from '@/wrapper/clerk/clerk-provider-wrapper'
+import { ClerkProvider } from '@clerk/nextjs'
 
 export const metadata: Metadata = {
   title: 'Clerk Next.js Quickstart',
@@ -14,12 +14,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProviderWrapper>
+    <ClerkProvider>
       <html lang="en">
         <body className={`antialiased`}>
           <Root>{children}</Root>
         </body>
       </html>
-    </ClerkProviderWrapper>
+    </ClerkProvider>
   )
 }
