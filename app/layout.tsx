@@ -1,7 +1,7 @@
 import { type Metadata } from 'next'
 import './globals.css'
 import Root from '@/components/root'
-import ClerkProviderWrapper from '@/wrapper/clerk-provider-wrapper'
+import ClerkProviderWrapper from '@/wrapper/clerk/clerk-provider-wrapper'
 
 export const metadata: Metadata = {
   title: 'Clerk Next.js Quickstart',

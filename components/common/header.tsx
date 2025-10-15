@@ -2,13 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import { 
-  SignedIn, 
-  SignedOut, 
-  SignOutButton, 
-  UserButton, 
-  SignInButton 
-} from "@clerk/nextjs";
+import ClerkUIWrapper from "@/wrapper/clerk/clerk-ui-wrapper";
 
 const Header = () => {
   const pathname = usePathname();
@@ -31,11 +25,7 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <SignedIn>
-            <UserButton />
-            <SignOutButton />
-          </SignedIn>
-          <SignedOut><SignInButton /></SignedOut>
+          <ClerkUIWrapper />
         </div>
       </div>
     </header>
