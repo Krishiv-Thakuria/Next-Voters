@@ -3,6 +3,7 @@
 import React, { FC } from "react";
 import { usePathname } from "next/navigation";
 import ClerkUIWrapper from "@/wrapper/clerk/clerk-ui-wrapper";
+import headerItems from "@/data/header";
 
 const Header: FC = () => {
   const pathname = usePathname();
@@ -16,12 +17,15 @@ const Header: FC = () => {
               NV
             </span>
           </div>
-          <a
-            href={pathname === "/fellowship" ? "/" : "/fellowship"}
-            className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
-          >
-            {pathname === "/fellowship" ? "HOME" : "BECOME A FELLOW"}
-          </a>
+          {headerItems.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
+            >
+              {item.name}
+            </a>
+          ))}
         </div>
 
         <div className="flex items-center gap-2">
