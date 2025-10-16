@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { FC } from "react";
 import { usePathname } from "next/navigation";
 import ClerkUIWrapper from "@/wrapper/clerk/clerk-ui-wrapper";
 
-const Header = () => {
+const Header: FC = () => {
   const pathname = usePathname();
 
   return (

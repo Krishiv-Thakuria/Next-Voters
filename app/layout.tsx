@@ -1,6 +1,6 @@
 import { type Metadata } from 'next'
 import './globals.css'
-import Root from '@/components/root'
+import Root from '@/components/common/root'
 import { ClerkProvider } from '@clerk/nextjs'
 
 export const metadata: Metadata = {
