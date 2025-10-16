@@ -1,10 +1,10 @@
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
 /*
 export const POST = async (request: NextRequest) => {
   const { userQuery, country } = await request.json();
   const embeddings = await searchEmbeddings(userQuery, "legislative_documents");
-
+  
   const contexts = [];
   const citations = [];
 
@@ -16,7 +16,7 @@ export const POST = async (request: NextRequest) => {
   // DO SOME COOL UNIQUE STUFF HERE WHICH WILL HELP USERS WITH UNDERSTANDING LEGISLATIVE DOCUMENTS
   const response = await generateResponses(userQuery, country, contexts);
 
-  return Response.json({
+  return NextResponse.json({
     response,
     citations
   });
@@ -24,7 +24,7 @@ export const POST = async (request: NextRequest) => {
 */
 
 export const GET = async (request: NextRequest) => {
-  return Response.json({
+  return NextResponse.json({
     message: "Coming soon!"
   })
 }
