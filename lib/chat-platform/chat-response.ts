@@ -2,7 +2,7 @@ import { MODEL_NAME } from "@/data/ai-config";
 import { handleSystemPrompt } from "@/data/prompts";
 import supportedRegionDetails from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
-import { cohere } from "@ai-sdk/cohere";
+import { openai } from "@/lib/ai";
 import { generateObject } from "ai";
 import z from "zod";
 
@@ -21,7 +21,7 @@ export const generateResponseForParty = async (
   const party = parties.find(p => p === partyName);
   
   const result = await generateObject({
-    model: cohere(MODEL_NAME),
+    model: openai(MODEL_NAME),
     schema: z.object({
       message: z.object({
         partyStance: z.array(z.string()),

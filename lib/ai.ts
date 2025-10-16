@@ -6,7 +6,7 @@ import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { Citation } from '@/types/citations';
 
-const openai = createOpenAI({
+export const openai = createOpenAI({
     baseURL: process.env.OPENAI_API_BASE_URL,
     apiKey: process.env.OPENAI_API_KEY
 })
