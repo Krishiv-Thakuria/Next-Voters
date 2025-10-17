@@ -12,10 +12,6 @@ export const inputFields: Field[] = [
   { 
     name: "documentName", 
     value: "Document Name" 
-  },
-  { 
-    name: "region", 
-    value: "Region" 
   }
 ]
 export const selectFields: Field[] = [
