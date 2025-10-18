@@ -48,8 +48,8 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 - **Framework**: [Next.js 13+](https://nextjs.org/) - Modern React framework
 - **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs) - Streaming AI responses
-- **AI Model**: [command-r7b-12-2024](https://docs.cohere.com/) - Advanced document analysis
-- **Embedding Model**: [embed-english-v3.0](https://docs.cohere.com/) - Proper vector embedding generation
+- **AI Model**: [gpt-4o-mini](https://docs.openai.com/) - Advanced document analysis at an economical cost
+- **Embedding Model**: [text-embedding-3-small](https://docs.openai.com/) - Proper vector embedding generation
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Responsive design system
 - **UI Components**: [Shadcn](https://www.shadcn.com/) - Accessible component library
 - **Database**: [Neon with Vercel Storage](https://neon.tech/) - Serverless PostgreSQL
@@ -62,6 +62,11 @@ To combat political misinformation and empower Gen Z with the tools they need to
 - NextJS LTS (14+)
 - npm or pnpm package manager
 - get all creditionals specified in .env.example file
+- For the OpenAI key, there is a method of getting them for free for developement purposes. Follow the guide below:
 
+### Get FREE OpenAI Key
+OpenAI itself does not offer a free tier for thier services, making it harder for developers to access the service, so we will use a reverse proxy which is an external API that offers the exact services as the OpenAI API. It is called **Pawan.krd** and you have to follow these exact steps to attain it:
+
+- ADD STEPS!!!
 
 # Happy hacking 🚀
