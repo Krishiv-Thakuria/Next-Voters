@@ -8,7 +8,6 @@ import {
   CardContent 
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import AdminAuth from "@/wrappers/AdminAuth";
 import { embedPdfAction } from "@/server-actions/embed";
 import { StatusMessage } from "@/components/status-message";
 import ReusableSelect from "@/components/reusable-select";
@@ -73,7 +72,7 @@ const EmbedPdfForm = () => {
   };
 
   return (
-    <AdminAuth className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-lg bg-white shadow-md border border-slate-200">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Embed PDF</h2>
@@ -115,7 +114,7 @@ const EmbedPdfForm = () => {
           <StatusMessage status={status} />
         </CardContent>
       </Card>
-    </AdminAuth>
+    </div>
   );
 };
 
