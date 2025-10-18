@@ -3,6 +3,7 @@
 import { chunkDocument, addEmbeddings } from "@/lib/ai";
 import { Citation } from "@/types/citations";
 
+// only can be called if invoked by app, so very secure
 export async function embedPdfAction(formData: {
   documentLink: string;
   author: string;
