@@ -1,19 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { protectedRegularRoutes, protectedAdminRoutes } from "./data/protected-routes";
 import { auth0 } from "./lib/auth0";
+import { isAdmin } from "./lib/getRole";
 
 export async function middleware(request: NextRequest) {
   const session = await auth0.getSession(request);
+  const currentPath = request.nextUrl.pathname;
 
-  if (!session && protectedRegularRoutes.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+  if (!session) {
+    if (protectedRegularRoutes.includes(currentPath) || protectedAdminRoutes.includes(currentPath)) {
+      const loginUrl = new URL('/auth/login', request.url);
+      loginUrl.searchParams.set('returnTo', currentPath);
+      return NextResponse.redirect(loginUrl);
+    }
+    return auth0.middleware(request);
   }
 
-  if (session && protectedAdminRoutes.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+  if (protectedAdminRoutes.some(route => currentPath.startsWith(route))) {
+    try {
+      const isUserAdmin = await isAdmin();
+      if (!isUserAdmin) {
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+    } catch (error) {
+      return NextResponse.redirect(new URL('/error', request.url));
+    }
   }
 
-  return await auth0.middleware(request);
+  return auth0.middleware(request);
 }
 
 export const config = {
