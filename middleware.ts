@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { protectedRegularRoutes, protectedAdminRoutes } from "./data/protected-routes";
 import { auth0 } from "./lib/auth0";
-import { isAdmin } from "./lib/getRole";
+import { isAdmin } from "./lib/get-role";
 
 export async function middleware(request: NextRequest) {
   const session = await auth0.getSession(request);
@@ -23,6 +23,7 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
     } catch (error) {
+      console.error('Error checking admin status:', error);
       return NextResponse.redirect(new URL('/error', request.url));
     }
   }
