@@ -16,7 +16,6 @@
   "dependencies": {
     "@ai-sdk/openai": "^2.0.52",
     "@anthropic-ai/sdk": "^0.40.0",
-    "@clerk/nextjs": "5.7.1",
     "@hookform/resolvers": "^5.1.0",
     "@neondatabase/serverless": "^1.0.1",
     "@qdrant/qdrant-js": "^1.15.1",
