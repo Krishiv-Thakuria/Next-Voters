@@ -4,10 +4,11 @@ import { NextRequest } from "next/server";
 export const isUserAuthenticatedAndHasAdminRole = async (req: NextRequest) => {
     const {isAuthenticated, getRoles} = getKindeServerSession();
     const isUserAuthenticated = isAuthenticated();
-    const userRoles = await getRoles();
-    
+    const roles = await getRoles();
+    const isAdmin = roles?.some((role) => role.key === "admin") || false
+
     return (
         isUserAuthenticated &&
-        Array.from(userRoles.values()).some((userRole) => userRole.key === "admin")
+        isAdmin
     );
 }

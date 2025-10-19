@@ -18,6 +18,7 @@
     "@anthropic-ai/sdk": "^0.40.0",
     "@hookform/resolvers": "^5.1.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.9.2",
+    "@kinde/management-api-js": "^0.14.0",
     "@neondatabase/serverless": "^1.0.1",
     "@qdrant/qdrant-js": "^1.15.1",
     "@radix-ui/react-accordion": "^1.2.11",
