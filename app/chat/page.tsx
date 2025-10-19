@@ -11,7 +11,7 @@ import { Message } from "@/types/chat-platform/message";
 import { useMutation } from "@tanstack/react-query";
 import { SendHorizonal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 
 const Chat = () => {
@@ -147,4 +147,12 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+const ChatPage = () => {
+  return (
+    <Suspense fallback={<div className="p-6 text-center text-slate-500">Loading chat...</div>}>
+      <Chat />
+    </Suspense>
+  )
+}
+
+export default ChatPage;
