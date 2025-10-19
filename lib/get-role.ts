@@ -3,10 +3,11 @@ const auth0Domain = 'https://dev-trnr2qjum5chbkue.us.auth0.com';
 
 const handleGetAccessToken = async () => {
     const response = await fetch("/auth/access-token")
+
     if (!response.ok) {
-        const errorMessage = await response.text()
-        throw new Error(`Failed to fetch access token: ${errorMessage}`)
+        throw new Error("Failed to fetch access token")
     }
+
     const data = await response.json()
     return data.token
 }
@@ -20,7 +21,6 @@ export const handleGetRole = async () => {
     }
 
     const token = await handleGetAccessToken()
-    console.log(token)
 
     const response = await fetch(`${auth0Domain}/api/v2/users/${user.sub}/roles`, {
         headers: {
@@ -30,12 +30,10 @@ export const handleGetRole = async () => {
     })
 
     if (!response.ok) {
-        const errorMessage = await response.text()
-        throw new Error(`Failed to fetch roles: ${errorMessage}`)
+        throw new Error("Failed to fetch roles")
     }
 
     const data = await response.json()
-
     return data
 }
 
