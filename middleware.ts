@@ -1,5 +1,5 @@
 import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
-import { protectedRegularRoutes } from "./data/protected-routes";
+import { protectedRegularRoutes, protectedAdminRoutes } from "./data/protected-routes";
 import { NextResponse, NextRequest } from "next/server";
 import { isUserAuthenticatedAndHasAdminRole } from "./lib/auth";
 
@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
   }
 
 
-  if (await isUserAuthenticatedAndHasAdminRole(req)) {
+  if (protectedAdminRoutes.includes(req.nextUrl.pathname) && await isUserAuthenticatedAndHasAdminRole(req)) {
     return withAuth(req);
   }
 
