@@ -1,7 +1,18 @@
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { protectedRegularRoutes, protectedAdminRoutes } from "./data/protected-routes";
 import { auth0 } from "./lib/auth0";
 
 export async function middleware(request: NextRequest) {
+  const session = await auth0.getSession(request);
+
+  if (!session && protectedRegularRoutes.includes(request.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
+
+  if (session && protectedAdminRoutes.includes(request.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
+
   return await auth0.middleware(request);
 }
 
