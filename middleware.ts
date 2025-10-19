@@ -6,14 +6,14 @@ const isProtectedRoute = createRouteMatcher(protectedRegularRoutes)
 const isProtectedAdminRoute = createRouteMatcher(protectedAdminRoutes)
 
 export default clerkMiddleware((auth, req) => {
+  // regular protected routes
   if (isProtectedRoute(req)) {
     auth().protect()
-    return NextResponse.next()
   }
 
+  // admin protected routes
   if (isProtectedAdminRoute(req)) {
     if (auth().sessionClaims?.metadata?.role === 'admin') {
-      auth().protect()
       return NextResponse.next()
     } else {
       return NextResponse.redirect(new URL('/', req.url))
