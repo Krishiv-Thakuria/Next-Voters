@@ -8,7 +8,6 @@ export default async function middleware(req: NextRequest) {
     return withAuth(req);
   }
 
-
   if (protectedAdminRoutes.includes(req.nextUrl.pathname) && !await isUserAuthenticatedAndHasAdminRole(req)) {
     const homeURL = new URL("/", req.url);
     return NextResponse.redirect(homeURL);
