@@ -1,44 +1,24 @@
-import { NextRequest, NextResponse } from "next/server";
-import { protectedRegularRoutes, protectedAdminRoutes } from "./data/protected-routes";
-import { auth0 } from "./lib/auth0";
-import { isAdmin } from "./lib/get-role";
+import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
+import { protectedRegularRoutes } from "./data/protected-routes";
+import { NextResponse, NextRequest } from "next/server";
+import { isUserAuthenticatedAndHasAdminRole } from "./lib/auth";
 
-export async function middleware(request: NextRequest) {
-  const session = await auth0.getSession(request);
-  const currentPath = request.nextUrl.pathname;
-
-  if (!session) {
-    if (protectedRegularRoutes.includes(currentPath) || protectedAdminRoutes.includes(currentPath)) {
-      const loginUrl = new URL('/auth/login', request.url);
-      loginUrl.searchParams.set('returnTo', currentPath);
-      return NextResponse.redirect(loginUrl);
-    }
-    return auth0.middleware(request);
+export default async function middleware(req: NextRequest) {
+  if (protectedRegularRoutes.includes(req.nextUrl.pathname)) {
+    return withAuth(req);
   }
 
-  if (protectedAdminRoutes.some(route => currentPath.startsWith(route))) {
-    try {
-      const isUserAdmin = await isAdmin();
-      if (!isUserAdmin) {
-        return NextResponse.redirect(new URL('/unauthorized', request.url));
-      }
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-      return NextResponse.redirect(new URL('/error', request.url));
-    }
+
+  if (await isUserAuthenticatedAndHasAdminRole(req)) {
+    return withAuth(req);
   }
 
-  return auth0.middleware(request);
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-  ],
+    // Run on everything but Next internals and static files
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+  ]
 };

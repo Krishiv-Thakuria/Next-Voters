@@ -2,6 +2,7 @@
 
 import React, { FC } from "react";
 import headerItems from "@/data/header";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 const Header: FC = () => {
   return (
@@ -33,9 +34,9 @@ const Header: FC = () => {
           </div>
         </div>
 
-        <a href="/auth/logout" className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+        <LogoutLink className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
           Sign Out
-        </a>
+        </LogoutLink>
       </div>
     </header>
   );
