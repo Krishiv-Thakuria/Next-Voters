@@ -1,5 +1,16 @@
 import { auth0 } from "./auth0";
+const auth0Domain = 'https://dev-trnr2qjum5chbkue.us.auth0.com';
 
+const handleGetAccessToken = async () => {
+    const response = await fetch("/auth/access-token")
+    if (!response.ok) {
+        const errorMessage = await response.text()
+        throw new Error(`Failed to fetch access token: ${errorMessage}`)
+    }
+    const data = await response.json()
+    return data.token
+}
+    
 export const handleGetRole = async () => {
     const session = await auth0.getSession()
     const user = session?.user
@@ -8,16 +19,19 @@ export const handleGetRole = async () => {
         throw new Error("User not found")
     }
 
-    const token = await auth0.getAccessToken()
+    const token = await handleGetAccessToken()
+    console.log(token)
 
-    const response = await fetch(`${process.env.AUTH0_ISSUER_BASE_URL}/api/v2/users/${user.sub}/roles`, {
+    const response = await fetch(`${auth0Domain}/api/v2/users/${user.sub}/roles`, {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
     })
 
     if (!response.ok) {
-        throw new Error("Failed to fetch roles")
+        const errorMessage = await response.text()
+        throw new Error(`Failed to fetch roles: ${errorMessage}`)
     }
 
     const data = await response.json()
