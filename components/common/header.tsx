@@ -4,8 +4,6 @@ import React, { FC } from "react";
 import headerItems from "@/data/header";
 
 const Header: FC = () => {
-  const isLoggedIn = false; // Replace with your auth state
-
   return (
     <header className="w-full bg-white">
       <div className="max-w-[1200px] mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
@@ -35,22 +33,9 @@ const Header: FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {isLoggedIn ? (
-            <>
-              <button className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <a 
-              href="/auth/login" 
-              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-            >
-              Sign In
-            </a>
-          )}
-      </div>
+        <a href="/auth/logout" className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+          Sign Out
+        </a>
       </div>
     </header>
   );
