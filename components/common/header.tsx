@@ -44,7 +44,7 @@ const Header: FC = () => {
             </>
           ) : (
             <a 
-              href="/login" 
+              href="/auth/login" 
               className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
             >
               Sign In
