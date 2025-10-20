@@ -69,4 +69,23 @@ OpenAI itself does not offer a free tier for thier services, making it harder fo
 
 - ADD STEPS!!!
 
+### Set up autentication 
+To make authentication work, you need to use kinde. Follow the steps below:
+
+- Go to kinde.com and create an account
+
+- Add the following environment variables to your .env file. Kinde should give them to you automatically:
+```
+KINDE_CLIENT_ID=
+KINDE_CLIENT_SECRET=
+KINDE_ISSUER_URL=
+KINDE_SITE_URL=
+KINDE_POST_LOGOUT_REDIRECT_URL=
+KINDE_POST_LOGIN_REDIRECT_URL=
+```
+
+- Our app uses role-based authentication where different roles (like admin) have different permissions. For it to properly work, we need to enable roles to be returned as a claim in the JWT token. To do this, follow this guide: https://docs.kinde.com/manage-users/roles-and-permissions/user-roles/
+
+- If you wish to make a logged in user an admin, follow this guide: https://dev.to/sholajegede/part-1-master-authentication-and-role-based-access-control-rbac-with-kinde-and-convex-in-a-h3c (**NOTE: SKIP ALL CONVEX RELATED STUFF**)
+
 # Happy hacking 🚀
