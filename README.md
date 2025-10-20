@@ -46,7 +46,7 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 ## 🛠 Technology Stack
 
-- **Framework**: [Next.js 13+](https://nextjs.org/) - Modern React framework
+- **Framework**: [Next.js 14+](https://nextjs.org/) - Modern React framework
 - **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs) - Streaming AI responses
 - **AI Model**: [gpt-4o-mini](https://docs.openai.com/) - Advanced document analysis at an economical cost
 - **Embedding Model**: [text-embedding-3-small](https://docs.openai.com/) - Proper vector embedding generation
@@ -60,16 +60,23 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 ### Prerequisites
 - NextJS LTS (14+)
-- npm or pnpm package manager
+- Set up pnpm by installing it from https://pnpm.io/installation
 - get all creditionals specified in .env.example file
-- For the OpenAI key, there is a method of getting them for free for developement purposes. Follow the guide below:
 
 ### Get FREE OpenAI Key
 OpenAI itself does not offer a free tier for thier services, making it harder for developers to access the service, so we will use a reverse proxy which is an external API that offers the exact services as the OpenAI API. It is called **Pawan.krd** and you have to follow these exact steps to attain it:
 
-- ADD STEPS!!!
+- Go to https://pawan.krd/ and join the Discord server through invite link
+- Go to Bots channel within the server, and type in the command /key
+- You will now have a key which you will need to add to your .env file
+- Add the following environment variables to your .env file:
 
-### Set up autentication 
+```
+OPENAI_API_BASE_URL=
+OPENAI_API_KEY=
+```
+
+### Set up authentication 
 To make authentication work, you need to use kinde. Follow the steps below:
 
 - Go to kinde.com and create an account
@@ -84,8 +91,27 @@ KINDE_POST_LOGOUT_REDIRECT_URL=
 KINDE_POST_LOGIN_REDIRECT_URL=
 ```
 
-- Our app uses role-based authentication where different roles (like admin) have different permissions. For it to properly work, we need to enable roles to be returned as a claim in the JWT token. To do this, follow this guide: https://docs.kinde.com/manage-users/roles-and-permissions/user-roles/
+- Our app uses role-based authentication where different roles (like admin) have different permissions. For it to properly work on our app, we need to enable roles to be returned as a claim in the JWT token. Follow this guide to accomplish it: https://docs.kinde.com/manage-users/roles-and-permissions/user-roles/
 
-- If you wish to make a logged in user an admin, follow this guide: https://dev.to/sholajegede/part-1-master-authentication-and-role-based-access-control-rbac-with-kinde-and-convex-in-a-h3c (**NOTE: SKIP ALL CONVEX RELATED STUFF**)
+- If you wish to make a logged in user an admin, you first need to create a role. To do so, go to the Kinde dashboard and navigate to "Settings." Afterwards, scroll a bit down until you see the "Roles" section. Click on "Add Role" and add a **role key** called "admin". What you add to description or name is negligible because the app does not check for it. 
 
-# Happy hacking 🚀
+- To make a user an admin, go to the "Users" section in the Kinde dashboard and find the user you want to make an admin. Click on the user and scroll down until you see the "Roles" section. Then toggle the "admin" role on (it will show the name you have put for said role, **not the key**).
+
+### Set up database
+We use a Postgres database to store analytics information. To set it up, you can create a Neon database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Neon." Follow the prompts to create a new database. Add the following environment variables to your .env file:
+```
+DATABASE_URL=
+```
+
+### Set up vector search
+We use Qdrant to store and search through documents. To set it up, you can create a Qdrant database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Qdrant." Follow the prompts to create a new database. You will get a JWT token which you will only be able to see for one time. **Ensure you have copied it and add that to your QDRANT_API_KEY env variable**. Add the following environment variables to your .env file:
+```
+QDRANT_URL=
+QDRANT_API_KEY=
+```
+
+## How it works ⚙️
+
+We use a technology called RAG or Retrieval Augemented Generation. This means that we use an LLM model (in our case gpt-4o-mini) to generate responses to user queries. However, we increase the quality of these responses by feeding the LLM with extra context which comes through vector search. This extra context is documents that are most similar to the user query which are determined through their meaning, not the actual wording, leading to more accuracy in finding correct context. 
+
+# Happy hacking 👨🏽‍💻
