@@ -14,10 +14,6 @@
 
 Next Vote is an innovative educational platform that LEVERAGES artificial intelligence to help young citizens understand policy, legislation, and political platforms. In an era where 87% of people believe online disinformation has harmed their country's politics, Next Vote provides a trusted, fact-based approach to civic education.
 
-## 🎯 Mission
-
-To combat political misinformation and empower Gen Z with the tools they need to make informed voting decisions based on facts, not social media algorithms.
-
 ## ✨ Key Features
 
 ### 🔍 **Intelligent Policy Analysis**
@@ -46,7 +42,7 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 ## 🛠 Technology Stack
 
-- **Framework**: [Next.js 14+](https://nextjs.org/) - Modern React framework
+- **Framework**: [Next.js 14+](https://nextjs.org/) - Modern React and NodeJS fullstack framework
 - **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs) - Streaming AI responses
 - **AI Model**: [gpt-4o-mini](https://docs.openai.com/) - Advanced document analysis at an economical cost
 - **Embedding Model**: [text-embedding-3-small](https://docs.openai.com/) - Proper vector embedding generation
