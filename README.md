@@ -102,7 +102,7 @@ DATABASE_URL=
 ### Set up vector search
 We use Qdrant to store and search through documents. To set it up, you can create a Qdrant database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Qdrant." Follow the prompts to create a new database. You will get a JWT token which you will only be able to see for one time. **Ensure you have copied it and add that to your QDRANT_API_KEY env variable**. Add the following environment variables to your .env file:
 ```
-QDRANT_URL=
+QDRANT_URL=https://models.github.ai/inference
 QDRANT_API_KEY=
 ```
 
