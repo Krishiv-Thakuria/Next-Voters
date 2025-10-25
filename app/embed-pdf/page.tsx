@@ -11,8 +11,14 @@ import { Spinner } from "@/components/ui/spinner";
 import { embedPdfAction } from "@/server-actions/embed";
 import { StatusMessage } from "@/components/status-message";
 import ReusableSelect from "@/components/reusable-select";
-import { inputFields, selectFields } from "@/data/embed-pdf-fields";
-import {handleFindOptions, handleFindCollection} from "@/lib/chat-platform/find-options";
+import { 
+  inputFields, 
+  selectFields 
+} from "@/data/embed-pdf-fields";
+import {
+  handleFindOptions, 
+  handleFindCollection
+} from "@/lib/chat-platform/find-options";
 
 const initialForm = {
   documentLink: "",
