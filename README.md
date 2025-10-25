@@ -14,10 +14,6 @@
 
 Next Vote is an innovative educational platform that LEVERAGES artificial intelligence to help young citizens understand policy, legislation, and political platforms. In an era where 87% of people believe online disinformation has harmed their country's politics, Next Vote provides a trusted, fact-based approach to civic education.
 
-## 🎯 Mission
-
-To combat political misinformation and empower Gen Z with the tools they need to make informed voting decisions based on facts, not social media algorithms.
-
 ## ✨ Key Features
 
 ### 🔍 **Intelligent Policy Analysis**
@@ -46,7 +42,7 @@ To combat political misinformation and empower Gen Z with the tools they need to
 
 ## 🛠 Technology Stack
 
-- **Framework**: [Next.js 14+](https://nextjs.org/) - Modern React framework
+- **Framework**: [Next.js 14+](https://nextjs.org/) - Modern React and NodeJS fullstack framework
 - **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs) - Streaming AI responses
 - **AI Model**: [gpt-4o-mini](https://docs.openai.com/) - Advanced document analysis at an economical cost
 - **Embedding Model**: [text-embedding-3-small](https://docs.openai.com/) - Proper vector embedding generation
@@ -110,8 +106,12 @@ QDRANT_URL=
 QDRANT_API_KEY=
 ```
 
-## How it works ⚙️
+### How it works ⚙️
 
 We use a technology called RAG or Retrieval Augemented Generation. This means that we use an LLM model (in our case gpt-4o-mini) to generate responses to user queries. However, we increase the quality of these responses by feeding the LLM with extra context which comes through vector search. This extra context is documents that are most similar to the user query which are determined through their meaning, not the actual wording, leading to more accuracy in finding correct context. 
+
+## Video Guide 🎥
+
+ADD YOUTUBE LINKS
 
 # Happy hacking 👨🏽‍💻
