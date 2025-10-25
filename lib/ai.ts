@@ -1,7 +1,7 @@
 import { embed } from 'ai';
 import { client } from "./qdrant";
 import { createOpenAI } from '@ai-sdk/openai';
-import { EMBEDDING_MODEL_NAME } from '@/data/ai-config';
+import { EMBEDDING_MODEL_NAME, EMBEDDING_DIMENSIONS } from '@/data/ai-config';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { Citation } from '@/types/citations';
@@ -84,41 +84,40 @@ export const addEmbeddings = async (
         const collectionExists = await client.collectionExists(collectionName);
 
         if (!collectionExists.exists) {
-          await client.createCollection(collectionName, {
-            vectors: { size: 1024, distance: "Cosine" },
-            optimizers_config: { default_segment_number: 2 },
-            replication_factor: 2,
-          });
+            await client.createCollection(collectionName, {
+                vectors: { 
+                    size: EMBEDDING_DIMENSIONS, 
+                    distance: "Cosine" 
+                },
+                optimizers_config: { default_segment_number: 2 },
+                replication_factor: 2,
+            });
         }
 
-        const DELAY_MS = 650; 
-        
-        for (let i = 0; i < textChunks.length; i++) {
-          const text = textChunks[i];
-          
-          const { embedding } = await embed({
-            model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-            value: text,
-          });
+        const embeddingsPromises = textChunks.map(async (text) => {
+            const { embedding } = await embed({
+                model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+                value: text,
+            });
 
-          await client.upsert(collectionName, {
-            wait: true,
-            points: [{
-              id: randomUUID(),
-              vector: embedding,
-              payload: {
-                text,
-                citation,
-                region,
-                politicalAffiliation
-              },
-            }],
-          });
-          
-          if (i < textChunks.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-          }
-        }
+            return {
+                id: randomUUID(),
+                vector: embedding,
+                payload: {
+                    text,
+                    citation,
+                    region,
+                    politicalAffiliation
+                },
+            };
+        });
+
+        const embeddings = await Promise.all(embeddingsPromises);
+
+        await client.upsert(collectionName, {
+                wait: true,
+                points: embeddings,
+            });
     } catch (error) {
         throw new Error(`Failed to add embeddings: ${error instanceof Error ? error.message : String(error)}`);
     }
