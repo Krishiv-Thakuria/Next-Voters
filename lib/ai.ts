@@ -57,7 +57,6 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
     const { text } = await extractText(new Uint8Array(pdfBuffer));
     const fullText = Array.isArray(text) ? text.join(" ") : text;
 
-    // Split text into individual sentences
     const sentences = fullText
       .split(/(?<=[.!?])\s+/)
       .map(sentence => sentence.trim())
