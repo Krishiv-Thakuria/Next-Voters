@@ -10,14 +10,10 @@ import returnErrorResponse from "@/lib/error";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { prompt, region, collectionName } = await request.json();
+    const { prompt, region } = await request.json();
 
-    if (!prompt) {
-      throw new Error("Prompt is required");
-    }
-
-    if (!region) {
-      throw new Error("Region is required");
+    if (!prompt || !region) {
+      throw new Error("Prompt or region are required");
     }
 
     if (!supportedRegionDetails) {
@@ -38,7 +34,7 @@ export const POST = async (request: NextRequest) => {
 
       const embeddings = await searchEmbeddings(
         prompt,
-        collectionName,
+        regionDetail.collectionName,
         region,
         partyName
       );
@@ -74,6 +70,7 @@ export const POST = async (request: NextRequest) => {
       countryCode: regionDetail.code
     });
   } catch (error) {
+    console.log(error)
     return returnErrorResponse(error);
   }
 };
