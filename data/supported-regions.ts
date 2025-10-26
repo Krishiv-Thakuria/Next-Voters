@@ -7,7 +7,6 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
     politicalParties: [
       "Liberal Party",
       "Conservative Party",
-      "New Democratic Party (NDP)",
     ],
     collectionName: "collection-ca"
   },
