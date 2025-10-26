@@ -70,7 +70,6 @@ export const POST = async (request: NextRequest) => {
       countryCode: regionDetail.code
     });
   } catch (error) {
-    console.log(error)
     return returnErrorResponse(error);
   }
 };
