@@ -30,13 +30,13 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
       currentChunk.push(sentence);
 
       if (currentChunk.length === 4) {
-        chunks.push(currentChunk.join(' ')); // Join sentences with a space
+        chunks.push(currentChunk.join(' '));
         currentChunk = [];
       }
     })
 
     if (currentChunk.length > 0) {
-      chunks.push(currentChunk.join(' ')); // Join any remaining sentences
+      chunks.push(currentChunk.join(' '));
     }
 
     return chunks;
