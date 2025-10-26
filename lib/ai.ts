@@ -47,7 +47,6 @@ export const searchEmbeddings = async (
 
         return response;
     } catch (error) {
-      console.log(error)
         throw new Error(`Failed to search embeddings: ${error instanceof Error ? error.message : String(error)}`);
     }
 };
