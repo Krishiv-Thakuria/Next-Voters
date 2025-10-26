@@ -13,6 +13,7 @@ import { SendHorizonal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
+import handleFindRegion from "@/lib/chat-platform/find-info-region";
 
 const Chat = () => {
   const searchParams = useSearchParams();
@@ -45,6 +46,7 @@ const Chat = () => {
       body: JSON.stringify({
         prompt: message,
         region: preference?.region,
+        collectionName: handleFindRegion("collectionName", preference?.region),
       })
     })
 

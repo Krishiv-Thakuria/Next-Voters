@@ -10,8 +10,7 @@ import returnErrorResponse from "@/lib/error";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { prompt, region } = await request.json();
-    const collectionName = "political_documents";
+    const { prompt, region, collectionName } = await request.json();
 
     if (!prompt) {
       throw new Error("Prompt is required");
