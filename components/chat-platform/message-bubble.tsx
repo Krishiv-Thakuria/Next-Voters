@@ -9,7 +9,6 @@ interface MessageBubbleProps {
 
 const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
   const myMessage = "py-3 px-4 rounded-2xl shadow-sm max-w-md bg-red-500 text-white rounded-br-md ml-auto";
-  const otherMessage = "grid grid-cols-1 md:grid-cols-2 gap-4";
 
   if (isFromMe && message.type === "reg") {
     return (
@@ -21,7 +20,7 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
     );
   } else if (message.type === "agent") {
     return (
-      <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+      <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 mb-4">
         {message.parties.map((party, index) => (
               <PoliticalPerspective
                 key={index}
