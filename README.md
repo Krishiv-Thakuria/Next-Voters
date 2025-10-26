@@ -67,8 +67,8 @@ OpenAI itself does not offer a free tier for thier services, making it harder fo
 - You will now have a key which you will need to add to your .env file
 - Add the following environment variables to your .env file:
 
-```
-OPENAI_API_BASE_URL=https://models.github.ai/inference
+```env
+OPENAI_API_BASE_URL="https://models.github.ai/inference"
 OPENAI_API_KEY=
 ```
 
