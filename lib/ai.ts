@@ -1,7 +1,7 @@
 import { embed, embedMany } from 'ai';
 import { client } from "./qdrant";
 import { createOpenAI } from '@ai-sdk/openai';
-import { EMBEDDING_MODEL_NAME, EMBEDDING_DIMENSIONS } from '@/data/ai-config';
+import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL_NAME } from '@/data/ai-config';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { Citation } from '@/types/citations';
@@ -96,28 +96,31 @@ export const addEmbeddings = async (
             });
         }
         
-        const { embeddings } = await embedMany({
-            model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-            values: textChunks,
-        });
+        for (let i = 0; i < textChunks.length; i += 100) {
+            const chunk = textChunks.slice(i, i + 100);
+            const { embeddings } = await embedMany({
+                model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+                values: chunk,
+            });
 
-        const points = embeddings.map((embedding, index) => ({
-            id: randomUUID(),
-            vector: embedding,
-            payload: {
-                text: textChunks[index],
-                citation,
-                region,
-                politicalAffiliation
-            },
-        }));
+            const points = embeddings.map((embedding, index) => ({
+                id: randomUUID(),
+                vector: embedding,
+                payload: {
+                    text: textChunks[index],
+                    citation,
+                    region,
+                    politicalAffiliation
+                },
+            }));
 
-        await client.upsert(collectionName, {
-            wait: true,
-            points,
-        });
-      
+            await client.upsert(collectionName, {
+                wait: true,
+                points,
+            });
+        }   
     } catch (error) {
+      console.error(error);
         throw new Error(`Failed to add embeddings: ${error instanceof Error ? error.message : String(error)}`);
     }
   };
