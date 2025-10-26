@@ -99,7 +99,7 @@ const EmbedPdfForm = () => {
                   disabled={field.name === "politicalAffiliation" && !form.region}
                   onValueChange={(value) => handleSelectChange(value, field.name)}
                   placeholder={field.value}
-                  items={handleFindRegion("politicalAffiliation", form.region) as string[]}
+                  items={handleFindRegion(field.name, form.region) as string[]}
                 />
               ))}
             </div>
