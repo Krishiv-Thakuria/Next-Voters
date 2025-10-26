@@ -63,8 +63,22 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
       .map(sentence => sentence.trim())
       .filter(Boolean);
 
-    // Each sentence is its own chunk
-    const chunks = sentences.map(sentence => sentence);
+    // Group sentences into 4-sentence chunks
+    const chunks = [];
+    let currentChunk = [];
+
+    for (const sentence of sentences) {
+      currentChunk.push(sentence);
+
+      if (currentChunk.length === 4) {
+        chunks.push([...currentChunk]);
+        currentChunk = [];
+      }
+    }
+
+    if (currentChunk.length > 0) {
+      chunks.push([...currentChunk]);
+    }
 
     return chunks;
   } catch (error) {
