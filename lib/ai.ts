@@ -127,7 +127,7 @@ export const addEmbeddings = async (
         
         const promises = [];
 
-        textChunks.forEach((chunk, index) => {
+        textChunks.forEach(chunk => {
           const promise = new Promise<void>(async (resolve, reject) => {
             try {
               const { embedding } = await embed({
