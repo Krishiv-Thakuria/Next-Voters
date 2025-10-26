@@ -1,4 +1,4 @@
-import { embed, embedMany } from 'ai';
+import { embed } from 'ai';
 import { client } from "./qdrant";
 import { createOpenAI } from '@ai-sdk/openai';
 import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL_NAME } from '@/data/ai-config';
@@ -62,21 +62,21 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
       .map(sentence => sentence.trim())
       .filter(Boolean);
 
-    // Group sentences into 4-sentence chunks
+    // Group sentences into 4-sentence chunks and join them into strings
     const chunks = [];
     let currentChunk = [];
 
-    for (const sentence of sentences) {
+    sentences.forEach(sentence => {
       currentChunk.push(sentence);
 
       if (currentChunk.length === 4) {
-        chunks.push([...currentChunk]);
+        chunks.push(currentChunk.join(' ')); // Join sentences with a space
         currentChunk = [];
       }
-    }
+    })
 
     if (currentChunk.length > 0) {
-      chunks.push([...currentChunk]);
+      chunks.push(currentChunk.join(' ')); // Join any remaining sentences
     }
 
     return chunks;
@@ -111,41 +111,38 @@ export const addEmbeddings = async (
         }
         
         const promises = [];
-        for (let i = 0; i < textChunks.length; i += 100) {
-            const chunk = textChunks.slice(i, i + 100);
-            const promise = new Promise<void>(async (resolve, reject) => {
-                try {
-                    const { embeddings } = await embedMany({
-                        model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-                        values: chunk,
-                    });
 
-                    const points = embeddings.map((embedding, index) => ({
-                        id: randomUUID(),
-                        vector: embedding,
-                        payload: {
-                            text: textChunks[index],
-                            citation,
-                            region,
-                            politicalAffiliation
-                        },
-                }));
-
-                await client.upsert(collectionName, {
-                    wait: true,
-                    points,
-                });
-                resolve();
+        textChunks.forEach((chunk, index) => {
+          const promise = new Promise<void>(async (resolve, reject) => {
+            try {
+              const { embedding } = await embed({
+                model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+                value: chunk,
+              });
+              const point = {
+                id: randomUUID(),
+                vector: embedding,
+                payload: {
+                  text: chunk,
+                  citation,
+                  region,
+                  politicalAffiliation,
+                },
+              };
+              await client.upsert(collectionName, {
+                wait: true,
+                points: [point], // Wrap the single point in an array
+              });
+              resolve();
             } catch (error) {
-                reject(error);
+              reject(error);
             }
+          });
+          promises.push(promise);
         });
-        promises.push(promise);
-    }
-
-    await Promise.all(promises);
+        
+        await Promise.all(promises);
     } catch (error) {
-      console.error(error);
         throw new Error(`Failed to add embeddings: ${error instanceof Error ? error.message : String(error)}`);
     }
-  };
+};
