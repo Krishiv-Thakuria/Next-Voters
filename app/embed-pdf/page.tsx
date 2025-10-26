@@ -45,7 +45,6 @@ const EmbedPdfForm = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      console.log(form);
       return await embedPdfAction({
         documentLink: form.documentLink,
         author: form.author,
