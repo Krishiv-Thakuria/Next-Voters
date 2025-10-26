@@ -101,37 +101,6 @@ We use a Postgres database to store analytics information. To set it up, you can
 DATABASE_URL=
 ```
 
-### Add index key to vector database:
-To search through the embeddings, you must add an index key to your vector database for all fields that will be used as a search operation. You can use curl to do this through the terminal environment.
-
-Make 3 seperate requests to add index keys for the following fields of **politicalAffiliation**, **region**, and **collectionName**:
-
-```bash
-curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
-  -H "Authorization: Bearer <your-api-key>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "field_name": "politicalAffiliation",
-    "field_schema": "keyword"
-  }'
-
-curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
-  -H "Authorization: Bearer <your-api-key>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "field_name": "region",
-    "field_schema": "keyword"
-  }'
-
-curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
-  -H "Authorization: Bearer <your-api-key>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "field_name": "collectionName",
-    "field_schema": "keyword"
-  }'
-```
-
 ### Set up vector search
 We use Qdrant to store and search through documents. To set it up, you can create a Qdrant database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Qdrant." Follow the prompts to create a new database. You will get a JWT token which you will only be able to see for one time. **Ensure you have copied it and add that to your QDRANT_API_KEY env variable**. Add the following environment variables to your .env file:
 
