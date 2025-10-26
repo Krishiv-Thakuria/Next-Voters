@@ -2,9 +2,9 @@ import { MODEL_NAME } from "@/data/ai-config";
 import { handleSystemPrompt } from "@/data/prompts";
 import supportedRegionDetails from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
-import { openai } from "@/lib/ai";
 import { generateObject } from "ai";
 import z from "zod";
+import { openai } from "@/lib/ai";
 
 export const generateResponseForParty = async (
   prompt: string,
@@ -21,12 +21,10 @@ export const generateResponseForParty = async (
   const party = parties.find(p => p === partyName);
   
   const result = await generateObject({
-    model: openai(MODEL_NAME),
+    model: openai.chat(MODEL_NAME),
     schema: z.object({
-      message: z.object({
-        partyStance: z.array(z.string()),
-        supportingDetails: z.array(z.string())
-      }),
+      partyStance: z.array(z.string()),
+      supportingDetails: z.array(z.string())
     }),
     system: handleSystemPrompt(party, contexts),
     prompt,
@@ -34,6 +32,9 @@ export const generateResponseForParty = async (
     frequencyPenalty: 0,
     presencePenalty: 0
   });
-  
+
+  if (!result.object) {
+    throw new Error("Failed to generate response for party");
+  }  
   return result.object;
 };

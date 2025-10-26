@@ -57,8 +57,8 @@ export const POST = async (request: NextRequest) => {
 
       return {
         partyName,
-        partyStance: response.message.partyStance,
-        supportingDetails: response.message.supportingDetails,
+        partyStance: response.partyStance,
+        supportingDetails: response.supportingDetails,
         citations: removeDuplicateCitations(citations)  
       };
     });
