@@ -5,7 +5,7 @@ import MessageBubble from "@/components/chat-platform/message-bubble";
 import NoChatScreen from "@/components/chat-platform/no-chat-screen";
 import ClientMountWrapper from "@/components/client-mount-wrapper";
 import PreferenceSelector from "@/components/preference-selector";
-import usePreference from "@/hooks/preferences";
+import { getPreference } from "@/lib/preferences";
 import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
 import { Message } from "@/types/chat-platform/message";
 import { useMutation } from "@tanstack/react-query";
@@ -26,7 +26,7 @@ const Chat = () => {
   const hasAutoSent = useRef(false);
   const messageLoading = useRef(false);
 
-  const { preference } = usePreference();
+  const region = getPreference();
 
   const requestChat = async (message: string) => {  
     messageLoading.current = true;  
@@ -45,8 +45,8 @@ const Chat = () => {
       },
       body: JSON.stringify({
         prompt: message,
-        region: preference?.region,
-        collectionName: handleFindRegionDetails("collectionName", preference?.region),
+        region: region,
+        collectionName: handleFindRegionDetails("collectionName", region),
       })
     })
 
