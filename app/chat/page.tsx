@@ -1,219 +1,160 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import { useChat } from 'ai/react';
-import MarkdownRenderer from '../../components/MarkdownRenderer';
+"use client"
 
-export default function Chat() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+import LoadingMessageBubble from "@/components/chat-platform/loading-message-bubble";
+import MessageBubble from "@/components/chat-platform/message-bubble";
+import NoChatScreen from "@/components/chat-platform/no-chat-screen";
+import ClientMountWrapper from "@/components/client-mount-wrapper";
+import PreferenceSelector from "@/components/preference-selector";
+import { getPreference } from "@/lib/preferences";
+import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
+import { Message } from "@/types/chat-platform/message";
+import { useMutation } from "@tanstack/react-query";
+import { SendHorizonal } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect, Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import handleFindRegionDetails from "@/lib/chat-platform/find-info-region";
 
-  // Function to check if error is rate limit related
-  const isRateLimitError = (errorMsg: string) => {
-    return (
-      errorMsg.toLowerCase().includes('rate limit') ||
-      errorMsg.toLowerCase().includes('too many requests') ||
-      errorMsg.toLowerCase().includes('tokens per minute')
-    );
-  };
+const Chat = () => {
+  const searchParams = useSearchParams();
+  const initialMessage = searchParams.get('message');
+  const [message, setMessage] = useState('');
 
-  const {
-    messages: conservativeMessages,
-    input: conservativeInput,
-    handleInputChange: handleConservativeInputChange,
-    handleSubmit: handleConservativeSubmit,
-    isLoading: conservativeLoading,
-    error: conservativeError
-  } = useChat({ 
-    api: 'api/conservative',
-    onError: (error) => {
-      console.error('Conservative API error:', error);
-      const errorMsg = error.message || 'Error fetching Conservative response';
-      
-      if (isRateLimitError(errorMsg)) {
-        setError("Sorry, we're getting a ton of traffic right now - check back in a minute to try again!");
-      } else {
-        setError(errorMsg);
-      }
-    }
-  });
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  
+  // boolean tags
+  const hasAutoSent = useRef(false);
+  const messageLoading = useRef(false);
 
-  const {
-    messages: liberalMessages,
-    input: liberalInput,
-    handleInputChange: handleLiberalInputChange,
-    handleSubmit: handleLiberalSubmit,
-    isLoading: liberalLoading,
-    error: liberalError
-  } = useChat({ 
-    api: 'api/liberal',
-    onError: (error) => {
-      console.error('Liberal API error:', error);
-      const errorMsg = error.message || 'Error fetching Liberal response';
-      
-      if (isRateLimitError(errorMsg)) {
-        setError("Sorry, we're getting a ton of traffic right now - check back in a minute to try again!");
-      } else {
-        setError(errorMsg);
-      }
-    }
-  });
+  const region = getPreference();
 
-  // Extract last assistant responses
-  const lastConservative = [...conservativeMessages].reverse().find(m => m.role === 'assistant')?.content;
-  const lastLiberal = [...liberalMessages].reverse().find(m => m.role === 'assistant')?.content;
-
-  const askTheAlmighty = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Clear any previous errors
-    setError(null);
+  const requestChat = async (message: string) => {  
+    messageLoading.current = true;  
+    setChatHistory((prev) => [
+      ...prev, 
+      {
+          type: 'reg',
+          message
+      },
+    ]);
     
-    // Only submit if there's input and not already loading
-    if (!conservativeInput.trim() || isLoading) return;
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: message,
+        region: region,
+        collectionName: handleFindRegionDetails("collectionName", region),
+      })
+    })
 
-    try {
-      setIsLoading(true);
-      
-      // Trigger both chat submissions
-      // Ensure input is set in hooks first
-      handleConservativeInputChange({ target: { value: conservativeInput } } as React.ChangeEvent<HTMLInputElement>);
-      handleLiberalInputChange({ target: { value: conservativeInput } } as React.ChangeEvent<HTMLInputElement>);
-      
-      // Submit both requests
-      await Promise.all([
-        handleConservativeSubmit(event),
-        handleLiberalSubmit(event)
-      ]);
-
-      // Clear inputs after submitting
-      handleConservativeInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
-      handleLiberalInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
-    } catch (err) {
-      console.error('Error submitting chats:', err);
-      setError(err instanceof Error ? err.message : 'Failed to get responses');
-    } finally {
-      setIsLoading(false);
-    }
+    const data = await response.json();
+    const parties = data.responses.map((response: AIAgentResponse) => ({
+      partyName: response.partyName,
+      partyStance: response.partyStance,  
+      supportingDetails: response.supportingDetails,
+      citations: response.citations
+    }));
+    
+    setChatHistory((prev) => [
+      ...prev, 
+      { 
+        type: 'agent', 
+        parties: parties
+      }
+    ]);
+    messageLoading.current = false; 
+    setMessage('');
+    
+    return data.responses;
   }
 
+  const { mutate } = useMutation({
+    mutationFn: requestChat,
+  })
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      mutate(message);
+    }
+  };
+
+  useEffect(() => {
+    if (initialMessage && !hasAutoSent.current) {
+      hasAutoSent.current = true;
+      requestChat(initialMessage); 
+    }
+  }, [initialMessage]);
+
   return (
-    <div className="min-h-screen bg-white flex flex-col p-4 md:p-8">
-      <header className="mb-8 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight mb-2">Next Voters</h1>
-        <p className="text-gray-600">Compare policy viewpoints across Canada's major political parties</p>
-      </header>
-      
-      {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-300 text-red-700 rounded-lg mx-auto max-w-xl text-center">
-          <p>{error}</p>
-          <button 
-            onClick={() => setError(null)}
-            className="mt-2 text-sm underline"
-          >
-            Dismiss
-          </button>
-        </div>
-      )}
-      
-      <div className="flex flex-wrap gap-6 justify-center mb-8">
-        <div className="w-full md:w-[30%] flex flex-col">
-          <div className="border-b-2 border-blue-600 pb-2 mb-4">
-            <h2 className="text-xl font-bold uppercase tracking-wider text-blue-600">Conservative Party</h2>
-            <p className="text-xs text-blue-600 opacity-75">Based on official 2025 party platform</p>
-          </div>
-          <div className="flex-1 bg-blue-50 p-5 rounded-lg shadow-md overflow-y-auto h-64 md:h-96 border-2 border-blue-200 relative">
-            {conservativeLoading && (
-              <div className="absolute inset-0 bg-blue-50 bg-opacity-50 flex items-center justify-center">
-                <div className="animate-pulse text-blue-600">Loading...</div>
-              </div>
+    <ClientMountWrapper className="h-screen bg-slate-50 flex flex-col">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-10 mb-28">
+        <div className="max-w-4xl mx-auto">
+          {chatHistory.length > 0 ? (
+            <>
+            {chatHistory.map((msg, index) => (
+                <MessageBubble
+                  key={index}
+                  message={msg}
+                  isFromMe={msg.type === "reg"}
+                />
+              
+            ))}
+            {messageLoading.current && (
+              <LoadingMessageBubble />
             )}
-            <div className="text-blue-800">
-              {lastConservative ? (
-                <MarkdownRenderer content={lastConservative} />
-              ) : (
-                "The Conservative perspective will appear here..."
-              )}
+            </>
+          ) : (
+            <NoChatScreen />
+          )}
+        </div>
+      </div>
+
+      {/* Input */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-4">
+        <div className="max-w-4xl mx-auto lg:mb-0 mb-4">
+          <div className="flex items-end space-x-3">
+            <div className="flex-1 relative">
+              <textarea
+                className="w-full bg-slate-50 py-3 px-4 pr-14 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
+                value={message}
+                placeholder="Type your message..."
+                onChange={(event) => setMessage(event.target.value)}
+                onKeyDown={handleKeyDown}
+                rows={1}
+              />
+              <Button
+                onClick={() => mutate(message)}
+                disabled={!message.trim()}
+                size="sm"
+                className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
+              >
+                <SendHorizonal size={14} className="ml-0.5" />
+              </Button>
+
+              <PreferenceSelector />  
             </div>
           </div>
-        </div>
-        
-        <div className="hidden md:flex flex-col items-center justify-center">
-                      <p className="text-gray-700 font-medium">Next Voters.com</p>
-          <p className="text-gray-600 text-sm">See the true policies</p>
-        </div>
-        
-        <div className="w-full md:w-[30%] flex flex-col">
-          <div className="border-b-2 border-red-600 pb-2 mb-4">
-            <h2 className="text-xl font-bold uppercase tracking-wider text-red-600">Liberal Party</h2>
-            <p className="text-xs text-red-600 opacity-75">Based on official 2025 party platform</p>
-          </div>
-          <div className="flex-1 bg-red-50 p-5 rounded-lg shadow-md overflow-y-auto h-64 md:h-96 border-2 border-red-200 relative">
-            {liberalLoading && (
-              <div className="absolute inset-0 bg-red-50 bg-opacity-50 flex items-center justify-center">
-                <div className="animate-pulse text-red-600">Loading...</div>
-              </div>
-            )}
-            <div className="text-red-800">
-              {lastLiberal ? (
-                <MarkdownRenderer content={lastLiberal} />
-              ) : (
-                "The Liberal perspective will appear here..."
-              )}
-            </div>
-          </div>
+          
+          <p className="text-xs text-slate-400 mt-2 text-center">
+            Press Enter to send. AI can only discuss policies.
+          </p>
         </div>
       </div>
-      
-      <div className="mt-8 mb-6 text-center">
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-            // Create temporary notification
-            const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded';
-            notification.style.zIndex = '50';
-            notification.textContent = 'Link copied to clipboard!';
-            document.body.appendChild(notification);
-            // Remove notification after 3 seconds
-            setTimeout(() => {
-              notification.remove();
-            }, 3000);
-          }}
-          className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg shadow-md transition-all hover:shadow-lg transform hover:-translate-y-1 flex items-center justify-center mx-auto"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-          </svg>
-          Share with friends to help them vote
-        </button>
-      </div>
-      
-      <div className="max-w-xl mx-auto w-full mt-auto">
-        <form onSubmit={askTheAlmighty} className="relative">
-          <input
-            className="w-full px-5 py-4 text-lg border-2 border-gray-300 rounded-full bg-white focus:outline-none focus:border-black transition-colors"
-            placeholder="Ask about Canadian political issues..."
-            value={conservativeInput}
-            onChange={(e) => { 
-              handleConservativeInputChange(e); 
-              handleLiberalInputChange(e); 
-            }}
-            disabled={isLoading || conservativeLoading || liberalLoading}
-          />
-          <button
-            type="submit"
-            disabled={isLoading || conservativeLoading || liberalLoading}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black text-white p-3 rounded-full hover:bg-gray-800 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-        </form>
-        
-        <div className="mt-4 text-center text-sm text-gray-500">
-          <p>Click to compare party positions on issues that matter to you</p>
-        </div>
-      </div>
-    </div>
+    </ClientMountWrapper>
   );
-} 
+};
+
+const ChatPage = () => {
+  return (
+    <Suspense fallback={<div className="p-6 text-center text-slate-500">Loading chat...</div>}>
+      <Chat />
+    </Suspense>
+  )
+}
+
+export default ChatPage;

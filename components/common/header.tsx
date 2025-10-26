@@ -1,15 +1,13 @@
 "use client";
 
-import React from "react";
-import { usePathname } from "next/navigation";
-import ClerkUIWrapper from "@/wrapper/clerk/clerk-ui-wrapper";
+import React, { FC } from "react";
+import headerItems from "@/data/header";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
-const Header = () => {
-  const pathname = usePathname();
-
+const Header: FC = () => {
   return (
     <header className="w-full bg-white">
-      <div className="max-w-[1200px] mx-auto px-6 py-4 flex justify-between items-center">
+      <div className="max-w-[1200px] mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center gap-4">
           <div className="flex items-center">
             <span className="text-[18px] font-bold text-gray-900 font-poppins mr-4">
@@ -17,16 +15,30 @@ const Header = () => {
             </span>
           </div>
           <a
-            href={pathname === "/fellowship" ? "/" : "/fellowship"}
+            href={"/fellowship"}
             className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
           >
-            {pathname === "/fellowship" ? "HOME" : "BECOME A FELLOW"}
+            BECOME A FELLOW
           </a>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <ClerkUIWrapper />
+          <div className="flex flex-col md:flex-row gap-2">
+            {headerItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="text-md text-gray-900 px-4 py-2 rounded font-medium font-poppins"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
         </div>
+        
+
+
+        <LogoutLink className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+          Sign Out
+        </LogoutLink>
       </div>
     </header>
   );

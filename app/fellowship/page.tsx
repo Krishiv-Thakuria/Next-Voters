@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function FellowshipPage() {
+const FellowshipPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Main Content */}
@@ -158,3 +158,5 @@ export default function FellowshipPage() {
     </div>
   );
 }
+
+export default FellowshipPage;

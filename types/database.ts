@@ -1,19 +1,22 @@
-import { Generated, ColumnType, Selectable, Insertable, Updateable } from 'kysely'
+import { Generated, Selectable, Insertable, Updateable } from 'kysely'
 
 export interface Database {
-  chat_count: ChatCountTable
+  chat_count: ChatCountTable,
+  admin_table: UserAdminTable
 }
 
 export interface ChatCountTable {
   id: Generated<number>
-
-  // Global count of all responses
   responses: number
-
-  // Global counts of all requests 
   requests: number
 }
 
+export interface UserAdminTable {
+  email: string
+  name: string
+}
 export type ChatCount = Selectable<ChatCountTable>
 export type NewChatCount = Insertable<ChatCountTable>
 export type ChatCountUpdate = Updateable<ChatCountTable>
+
+export type UserAdmin = Selectable<UserAdminTable>
