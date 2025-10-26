@@ -95,8 +95,35 @@ KINDE_POST_LOGIN_REDIRECT_URL=
 
 ### Set up database
 We use a Postgres database to store analytics information. To set it up, you can create a Neon database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Neon." Follow the prompts to create a new database. Add the following environment variables to your .env file:
+
+### Add index key to vector database:
+To search through the embeddings, you must add an index key to your vector database for all fields that will be used as a search operation. You can use curl to do this through the terminal environment.
+
+Make 3 seperate requests to add index keys for the following fields of **politicalAffiliation**, **region**, and **collectionName**:
 ```
-DATABASE_URL=
+curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "field_name": "politicalAffiliation",
+    "field_schema": "keyword"
+  }'
+
+curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "field_name": "region",
+    "field_schema": "keyword"
+  }'
+
+curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "field_name": "collectionName",
+    "field_schema": "keyword"
+  }'
 ```
 
 ### Set up vector search
