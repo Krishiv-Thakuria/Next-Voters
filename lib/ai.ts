@@ -96,29 +96,40 @@ export const addEmbeddings = async (
             });
         }
         
+        const promises = [];
         for (let i = 0; i < textChunks.length; i += 100) {
             const chunk = textChunks.slice(i, i + 100);
-            const { embeddings } = await embedMany({
-                model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
-                values: chunk,
-            });
+            const promise = new Promise<void>(async (resolve, reject) => {
+                try {
+                    const { embeddings } = await embedMany({
+                        model: openai.textEmbeddingModel(EMBEDDING_MODEL_NAME),
+                        values: chunk,
+                    });
 
-            const points = embeddings.map((embedding, index) => ({
-                id: randomUUID(),
-                vector: embedding,
-                payload: {
-                    text: textChunks[index],
-                    citation,
-                    region,
-                    politicalAffiliation
-                },
-            }));
+                    const points = embeddings.map((embedding, index) => ({
+                        id: randomUUID(),
+                        vector: embedding,
+                        payload: {
+                            text: textChunks[index],
+                            citation,
+                            region,
+                            politicalAffiliation
+                        },
+                }));
 
-            await client.upsert(collectionName, {
-                wait: true,
-                points,
-            });
-        }   
+                await client.upsert(collectionName, {
+                    wait: true,
+                    points,
+                });
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
+        });
+        promises.push(promise);
+    }
+
+    await Promise.all(promises);
     } catch (error) {
       console.error(error);
         throw new Error(`Failed to add embeddings: ${error instanceof Error ? error.message : String(error)}`);
