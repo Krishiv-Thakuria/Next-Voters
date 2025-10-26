@@ -50,8 +50,6 @@ const Chat = () => {
       })
     })
 
-    console.log(handleFindRegion("collectionName", preference?.region));
-
     const data = await response.json();
     const parties = data.responses.map((response: AIAgentResponse) => ({
       partyName: response.partyName,
