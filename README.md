@@ -78,7 +78,8 @@ To make authentication work, you need to use kinde. Follow the steps below:
 - Go to kinde.com and create an account
 
 - Add the following environment variables to your .env file. Kinde should give them to you automatically:
-```
+
+```env
 KINDE_CLIENT_ID=
 KINDE_CLIENT_SECRET=
 KINDE_ISSUER_URL=
@@ -96,11 +97,15 @@ KINDE_POST_LOGIN_REDIRECT_URL=
 ### Set up database
 We use a Postgres database to store analytics information. To set it up, you can create a Neon database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Neon." Follow the prompts to create a new database. Add the following environment variables to your .env file:
 
+```env
+DATABASE_URL=
+```
+
 ### Add index key to vector database:
 To search through the embeddings, you must add an index key to your vector database for all fields that will be used as a search operation. You can use curl to do this through the terminal environment.
 
 Make 3 seperate requests to add index keys for the following fields of **politicalAffiliation**, **region**, and **collectionName**:
-```
+```bash
 curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
   -H "Authorization: Bearer <your-api-key>" \
   -H "Content-Type: application/json" \
@@ -128,7 +133,8 @@ curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collect
 
 ### Set up vector search
 We use Qdrant to store and search through documents. To set it up, you can create a Qdrant database through Vercel Storage. Go to the Vercel dashboard and navigate to "Storage." Click on "Create Storage" and select "Qdrant." Follow the prompts to create a new database. You will get a JWT token which you will only be able to see for one time. **Ensure you have copied it and add that to your QDRANT_API_KEY env variable**. Add the following environment variables to your .env file:
-```
+
+```env
 QDRANT_URL=
 QDRANT_API_KEY=
 ```
