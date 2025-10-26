@@ -21,10 +21,8 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
     );
   } else if (message.type === "agent") {
     return (
-      <div className="flex justify-start mb-4">
-        <div className={otherMessage}>
-          <div className="w-screen flex flex-col lg:flex-row lg:space-x-3">
-            {message.parties.map((party, index) => (
+      <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+        {message.parties.map((party, index) => (
               <PoliticalPerspective
                 key={index}
                 title={party.partyName}
@@ -33,9 +31,7 @@ const MessageBubble: FC<MessageBubbleProps> = ({ message, isFromMe }) => {
                 color={index % 2 === 0 ? "blue" : "red"} 
                 citations={party.citations}
               />
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
     );
   }
