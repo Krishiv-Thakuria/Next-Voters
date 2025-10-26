@@ -1,8 +1,6 @@
 import { SupportedRegionDetails } from "@/types/supported-regions"
 
 export const supportedRegionDetails: SupportedRegionDetails[] = [
-
-  // Countries 
   {
     code: "CA",
     name: "Canada",
