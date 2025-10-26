@@ -15,7 +15,7 @@ import {
   inputFields, 
   selectFields 
 } from "@/data/embed-pdf-fields";
-import handleFindRegion from "@/lib/chat-platform/find-info-region";
+import handleFindRegionDetails from "@/lib/chat-platform/find-info-region";
 
 const initialForm = {
   documentLink: "",
@@ -49,7 +49,7 @@ const EmbedPdfForm = () => {
         documentLink: form.documentLink,
         author: form.author,
         documentName: form.documentName,
-        collectionName: handleFindRegion("collectionName", form.region) as string,
+        collectionName: handleFindRegionDetails("collectionName", form.region) as string,
         region: form.region,
         politicalAffiliation: form.politicalAffiliation
       });
@@ -99,7 +99,7 @@ const EmbedPdfForm = () => {
                   disabled={field.name === "politicalAffiliation" && !form.region}
                   onValueChange={(value) => handleSelectChange(value, field.name)}
                   placeholder={field.value}
-                  items={handleFindRegion(field.name, form.region) as string[]}
+                  items={handleFindRegionDetails(field.name, form.region) as string[]}
                 />
               ))}
             </div>

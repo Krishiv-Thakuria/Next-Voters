@@ -1,6 +1,6 @@
 import supportedRegions, { supportedRegionDetails } from "@/data/supported-regions";
 
-const handleFindRegion = (type: string, region?: string) => {
+const handleFindRegionDetails = (type: string, region?: string) => {
     switch (type) {
         case "region":
             return supportedRegions.map((r) => r.name);
@@ -15,4 +15,4 @@ const handleFindRegion = (type: string, region?: string) => {
     }
 }
 
-export default handleFindRegion;
+export default handleFindRegionDetails;
