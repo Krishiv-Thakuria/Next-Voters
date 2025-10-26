@@ -105,6 +105,7 @@ DATABASE_URL=
 To search through the embeddings, you must add an index key to your vector database for all fields that will be used as a search operation. You can use curl to do this through the terminal environment.
 
 Make 3 seperate requests to add index keys for the following fields of **politicalAffiliation**, **region**, and **collectionName**:
+
 ```bash
 curl -X POST "https://<your-cluster-name>.qdrant.io/v1/collections/<your-collection-name>/index" \
   -H "Authorization: Bearer <your-api-key>" \
