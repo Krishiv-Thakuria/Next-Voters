@@ -5,11 +5,71 @@ import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL_NAME } from '@/data/ai-config';
 import { extractText } from 'unpdf';
 import { randomUUID } from 'crypto';
 import { Citation } from '@/types/citations';
+import { indexedFields } from '@/data/indexed-fields';
 
 export const openai = createOpenAI({
     baseURL: process.env.OPENAI_API_BASE_URL,
     apiKey: process.env.OPENAI_API_KEY
 })
+
+export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
+  try {
+    const { text } = await extractText(new Uint8Array(pdfBuffer));
+    const fullText = Array.isArray(text) ? text.join(" ") : text;
+
+    const sentences = fullText
+      .split(/(?<=[.!?])\s+/)
+      .map(sentence => sentence.trim())
+      .filter(Boolean);
+
+    // Group sentences into 4-sentence chunks and join them into strings
+    const chunks = [];
+    let currentChunk = [];
+
+    sentences.forEach(sentence => {
+      currentChunk.push(sentence);
+
+      if (currentChunk.length === 4) {
+        chunks.push(currentChunk.join(' ')); // Join sentences with a space
+        currentChunk = [];
+      }
+    })
+
+    if (currentChunk.length > 0) {
+      chunks.push(currentChunk.join(' ')); // Join any remaining sentences
+    }
+
+    return chunks;
+  } catch (error) {
+    throw new Error(
+      `Failed to chunk document: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+};
+
+const createCollection = async (collectionName: string) => {
+  try {
+    await client.createCollection(collectionName, {
+      vectors: { 
+          size: EMBEDDING_DIMENSIONS, 
+          distance: "Cosine" 
+      },
+      optimizers_config: { default_segment_number: 2 },
+      replication_factor: 2,
+    });
+
+    indexedFields.forEach(async field => {  
+      await client.createPayloadIndex(collectionName, {
+        field_name: field,
+        field_schema: "keyword",
+      });
+    });
+  } catch (error) {
+    throw new Error(`Failed to create collection: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
 
 export const searchEmbeddings = async (
     prompt: string, 
@@ -51,43 +111,6 @@ export const searchEmbeddings = async (
     }
 };
 
-export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
-  try {
-    const { text } = await extractText(new Uint8Array(pdfBuffer));
-    const fullText = Array.isArray(text) ? text.join(" ") : text;
-
-    const sentences = fullText
-      .split(/(?<=[.!?])\s+/)
-      .map(sentence => sentence.trim())
-      .filter(Boolean);
-
-    // Group sentences into 4-sentence chunks and join them into strings
-    const chunks = [];
-    let currentChunk = [];
-
-    sentences.forEach(sentence => {
-      currentChunk.push(sentence);
-
-      if (currentChunk.length === 4) {
-        chunks.push(currentChunk.join(' ')); // Join sentences with a space
-        currentChunk = [];
-      }
-    })
-
-    if (currentChunk.length > 0) {
-      chunks.push(currentChunk.join(' ')); // Join any remaining sentences
-    }
-
-    return chunks;
-  } catch (error) {
-    throw new Error(
-      `Failed to chunk document: ${
-        error instanceof Error ? error.message : String(error)
-      }`
-    );
-  }
-};
-
 export const addEmbeddings = async (
     textChunks: string[],
     citation: Citation,
@@ -99,14 +122,7 @@ export const addEmbeddings = async (
         const collectionExists = await client.collectionExists(collectionName);
 
         if (!collectionExists.exists) {
-            await client.createCollection(collectionName, {
-                vectors: { 
-                    size: EMBEDDING_DIMENSIONS, 
-                    distance: "Cosine" 
-                },
-                optimizers_config: { default_segment_number: 2 },
-                replication_factor: 2,
-            });
+            await createCollection(collectionName);
         }
         
         const promises = [];
