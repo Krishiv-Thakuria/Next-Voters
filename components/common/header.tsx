@@ -43,7 +43,7 @@ const Header: FC = () => {
         </div>
 
         {isOpen && (
-          <div className="md:hidden flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             {headerItems.map((item) => (
               <a
                 key={item.name}
