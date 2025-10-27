@@ -1,10 +1,12 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import headerItems from "@/data/header";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 const Header: FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <header className="w-full bg-white">
       <div className="max-w-[1200px] mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
@@ -21,22 +23,40 @@ const Header: FC = () => {
             BECOME A FELLOW
           </a>
 
-          <div className="flex flex-col md:flex-row gap-2">
+          <button
+            className="md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Open menu"
+          >
+            <svg
+              className="w-6 h-6 fill-current"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d={`${
+                  isOpen ? "M18 6L6 18" : "M3 6H21V8H3V6M3 12H21V14H3V12M3 18H21V20H3V18Z"
+                }`}
+              />
+            </svg>
+          </button>
+        </div>
+
+        {isOpen && (
+          <div className="md:hidden flex flex-col gap-2">
             {headerItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-md text-gray-900 px-4 py-2 rounded font-medium font-poppins"
+                className="text-md text-gray-900 px-4 py-2 rounded font-medium font-poppins block"
               >
                 {item.name}
               </a>
             ))}
           </div>
-        </div>
-        
+        )}
 
-
-        <LogoutLink className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+        <LogoutLink className="md:block hidden px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
           Sign Out
         </LogoutLink>
       </div>
