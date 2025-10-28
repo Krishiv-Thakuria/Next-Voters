@@ -1,34 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
+import { teamMembers } from '@/data/team-members';
 
 const Team = () => {
-  const teamMembers = [
-    {
-      name: 'Bonnie Green',
-      role: 'CEO & Web Developer',
-      image: '/profile-pics/placeholder.png',
-      description: 'Bonnie drives the technical strategy of the flowbite platform and brand.'
-    },
-    {
-      name: 'Jese Leos',
-      role: 'CTO',
-      image: '/profile-pics/placeholder.png',
-      description: 'Jese drives the technical strategy of the flowbite platform and brand.'
-    },
-    {
-      name: 'Michael Gough',
-      role: 'Senior Front-end Developer',
-      image: '/profile-pics/placeholder.png',
-      description: 'Michael drives the technical strategy of the flowbite platform and brand.'
-    },
-    {
-      name: 'Lana Byrd',
-      role: 'Marketing & Sale',
-      image: '/profile-pics/placeholder.png',
-      description: 'Lana drives the technical strategy of the flowbite platform and brand.'
-    }
-  ];
-
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
