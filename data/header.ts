@@ -7,6 +7,9 @@ const headerItems: HeaderItem[] = [{
     name: "Chat",
     href: "/chat"
 }, {
+    name: "Team",
+    href: "/team"
+}, {
     name: "Docs",
     href: "/docs"
 }, {
