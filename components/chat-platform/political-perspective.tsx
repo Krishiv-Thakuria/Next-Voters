@@ -17,12 +17,18 @@ const PoliticalPerspective: FC<PartyCardProps> = ({
     color,
     citations
 }) => {
-  const colorClass = color === "blue" ? "blue-600" : "red-600";
+
+  const colorClasses = {
+    blue: "text-blue-600",
+    red: "text-red-500"
+  };
   
+  const colorClass = colorClasses[color] || "";
+
   return (
     <Card className="md:w-1/2 w-full">
       <CardHeader className="border-b border-gray-200 p-4">
-        <CardTitle className={`text-${colorClass} text-lg font-semibold font-poppins`}>
+        <CardTitle className={`${colorClass} text-lg font-semibold font-poppins`}>
           {title}
         </CardTitle>
       </CardHeader>

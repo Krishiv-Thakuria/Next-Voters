@@ -141,7 +141,7 @@ const Chat = () => {
           </div>
           
           <p className="text-xs text-slate-400 mt-2 text-center">
-            Press Enter to send. AI can only discuss policies.
+            AI can be incorrect. Double check with citations.
           </p>
         </div>
       </div>
