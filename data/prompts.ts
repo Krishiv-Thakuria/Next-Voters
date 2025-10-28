@@ -44,3 +44,5 @@ Follow the exact JSON-like format and response requirements above. Any deviation
 **FAILURE TO FOLLOW THESE RULES WILL RESULT IN AN INVALID RESPONSE**`;
 
 };
+
+// Added prompt reinforcement technique to ensure the model follows the rules
