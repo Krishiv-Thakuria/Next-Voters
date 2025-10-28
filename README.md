@@ -60,12 +60,10 @@ Next Vote is an innovative educational platform that LEVERAGES artificial intell
 - get all creditionals specified in .env.example file
 
 ### Get FREE OpenAI Key
-OpenAI itself does not offer a free tier for thier services, making it harder for developers to access the service, so we will use a reverse proxy which is an external API that offers the exact services as the OpenAI API. It is called **Pawan.krd** and you have to follow these exact steps to attain it:
+OpenAI itself does not offer a free tier for thier services, making it harder for developers to access the service, so we will use a reverse proxy which is an external API that offers the exact services as the OpenAI API. It is accessible through Github Models. Simply go to the following website and click on the correct AI model, https://github.com/marketplace?type=models. 
 
-- Go to https://pawan.krd/ and join the Discord server through invite link
-- Go to Bots channel within the server, and type in the command /key
-- You will now have a key which you will need to add to your .env file
-- Add the following environment variables to your .env file:
+
+It will have a green option for you to start using the model. In that, make a new personal access token which will serve as your OPENAI_API_KEY. 
 
 ```env
 OPENAI_API_BASE_URL="https://models.github.ai/inference"
@@ -112,9 +110,5 @@ QDRANT_API_KEY=
 ### How it works ⚙️
 
 We use a technology called RAG or Retrieval Augemented Generation. This means that we use an LLM model (in our case gpt-4o-mini) to generate responses to user queries. However, we increase the quality of these responses by feeding the LLM with extra context which comes through vector search. This extra context is documents that are most similar to the user query which are determined through their meaning, not the actual wording, leading to more accuracy in finding correct context. 
-
-## Video Guide 🎥
-
-ADD YOUTUBE LINKS
 
 # Happy hacking 👨🏽‍💻
