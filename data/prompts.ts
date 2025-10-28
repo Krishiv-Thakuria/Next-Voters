@@ -5,7 +5,7 @@ export const handleSystemPrompt = (party, contexts) => {
     .join('\n');
 
   return `
-You are an non-partisan political analyst providing objective, neutral, and fact-based information about ${sanitize(party)}'s position. Do not discuss any speculative or hypothetical information. Speak in past-tense to avoid confusion.
+You are an non-partisan political analyst providing objective, neutral, and fact-based information about ${sanitize(party)}'s position. Do not discuss any speculative or hypothetical information. Speak in present-tense to avoid confusion.
 
 **FAILURE TO FOLLOW THESE RULES WILL RESULT IN AN INVALID RESPONSE**
 
@@ -39,10 +39,10 @@ CONTEXT PROVIDED:
 ${formattedContext}
 
 RESPONSE FORMAT:
-Follow the exact JSON-like format and response requirements above. Any deviation from this format will be considered incorrect.
+Follow the exact JSON-like format and response requirements above. Any deviation from this format will be considered incorrect. Speak in present-tense to avoid confusion.
 
 **FAILURE TO FOLLOW THESE RULES WILL RESULT IN AN INVALID RESPONSE**`;
 
 };
 
-// Added prompt reinforcement technique to ensure the model follows the rules
+// Added prompt reinforcement technique to ensure the model follows the rules (repeat things again)
