@@ -3,4 +3,5 @@ export interface TeamMember {
   role: string;
   image: string;
   description: string;
+  linkedin: string;
 }
