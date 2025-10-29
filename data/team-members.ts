@@ -1,26 +1,39 @@
-export const teamMembers = [
+export interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+  description: string;
+}
+
+export const teamMembers: TeamMember[] = [
     {
       name: 'Krishiv Thakuria',
       role: 'CEO',
-      image: '/profile-pics/placeholder.png',
-      description: 'Krishiv Thakuria is the CEO of NextVoters. He is a tech visioanary leading the company with his innovative ideas and vision.'
+      image: '/profile-pics/krishiv-thakuria.png',
+      description: 'Led viral marketing with millions of views for an AI product, now working on AI tools for education + democracy.'
     },
     {
       name: 'Hemit Patel',
       role: 'CTO',
-      image: '/profile-pics/placeholder.png',
-      description: 'Hemit Patel is the CTO of NextVoters. He is a software engineer with a passion for building innovative and user-friendly applications.'
+      image: '/profile-pics/hemit-patel.png',
+      description: 'Building AI tools for education + democracy. Innovating the very design of democracy, one line of code at a time.'
     },
     {
-      name: 'Danielle Dees',
+      name: 'Danielle Dee',
       role: 'COO',
-      image: '/profile-pics/placeholder.png',
-      description: 'Danielle Dees is the COO of NextVoters. She is a tech leader with a passion for building innovative and user-friendly applications.'
+      image: '/profile-pics/danielle-dee.png',
+      description: "I am passionate about the intersection of STEM, business, and law to ensure groundbreaking ideas reach those who need them most."
     },
     {
-      name: 'Kofi',
+      name: 'Kofi Hair-Ralston',
       role: 'Advisor',
-      image: '/profile-pics/placeholder.png',
-      description: 'Kofi is the Advisor of NextVoters. He is a tech leader with a passion for building innovative and user-friendly applications.'
+      image: '/profile-pics/kofi-hair-ralston.png',
+      description: 'I am a tech leader with a passion for building innovative and user-friendly applications.'
+    },
+      {
+      name: 'Agenya Tharun',
+      role: 'Advisor',
+      image: '/profile-pics/agenya-tharun.png',
+      description: 'College freshman at Carnegie Mellon University. A leader experienced in AI startups and pure ML research.'
     }
   ];
