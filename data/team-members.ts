@@ -3,7 +3,7 @@ import { TeamMember } from "@/types/team";
 export const teamMembers: TeamMember[] = [
     {
       name: 'Krishiv Thakuria',
-      role: 'CEO',
+      role: 'CEO and President',
       image: '/profile-pics/krishiv-thakuria.png',
       description: 'Led viral marketing with millions of views for an AI product, now working on AI tools for education + democracy.',
       linkedin: 'https://www.linkedin.com/in/krishiv-thakuria/'
