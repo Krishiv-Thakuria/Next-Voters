@@ -66,9 +66,9 @@ export const POST = async (request: NextRequest) => {
 
     const responses = await Promise.all(responsePromises);
 
-    handleIncrementRequest();
-    handleIncrementResponse();
-    
+    await handleIncrementRequest();
+    await handleIncrementResponse();
+
     return NextResponse.json({
       responses: responses as AIAgentResponse[],
       countryCode: regionDetail.code
