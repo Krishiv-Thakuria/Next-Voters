@@ -7,6 +7,7 @@ import { Citation } from "@/types/citations";
 import { removeDuplicateCitations } from "@/lib/chat-platform/citations";
 import { AIAgentResponse } from "@/types/chat-platform/chat-platform";
 import returnErrorResponse from "@/lib/error";
+import { handleIncrementRequest, handleIncrementResponse } from "@/lib/analytics";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -65,6 +66,9 @@ export const POST = async (request: NextRequest) => {
 
     const responses = await Promise.all(responsePromises);
 
+    handleIncrementRequest();
+    handleIncrementResponse();
+    
     return NextResponse.json({
       responses: responses as AIAgentResponse[],
       countryCode: regionDetail.code
