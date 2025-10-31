@@ -3,6 +3,7 @@
 import React, { FC, useState } from "react";
 import headerItems from "@/data/header";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { Menu, X } from "lucide-react";
 
 const Header: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +19,7 @@ const Header: FC = () => {
           <span className="text-[18px] font-bold text-gray-900 font-poppins">
             NV
           </span>
-          <a
+          <a  
             href={"/fellowship"}
             className="bg-[#E12D39] text-[12px] text-white px-4 py-2 rounded font-medium font-poppins"
           >
@@ -30,30 +31,26 @@ const Header: FC = () => {
             aria-label={`${isOpen ? "Close" : "Open"} menu`}
             className="md:hidden"
           >
-            <svg
-              className="w-6 h-6 fill-current"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d={`${
-                  isOpen ? "M6 18L18 6M6 6l12 12" : "M3 6H21V8H3V6M3 12H21V14H3V12M3 18H21V20H3V18Z"
-                }`}
-              />
-            </svg>
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        <nav className={`md:flex ${isOpen ? "block" : "hidden"}`}>
-          {headerItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-md text-gray-900 px-4 py-2 rounded font-medium font-poppins block"
-            >
-              {item.name}
-            </a>
-          ))}
+        <nav
+          className={`md:flex ${isOpen ? "block" : "hidden"} bg-gray-50 w-screen text-sm font-medium font-poppins text-gray-900 px-4 py-2`}
+          style={{ backdropFilter: "blur(3px)" }}
+        >
+          <ul className="flex flex-col md:flex-row items-center gap-4">
+            {headerItems.map((item) => (
+              <li key={item.name}>
+                <a
+                  href={item.href}
+                  className="block p-2 rounded hover:bg-gray-100"
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
         </nav>
 
         <LogoutLink className="md:block hidden px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
