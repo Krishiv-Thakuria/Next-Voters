@@ -38,19 +38,23 @@ const Chat = () => {
       },
     ]);
     
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: message,
-        region: region,
-        collectionName: handleFindRegionDetails("collectionName", region),
-      })
-    })
+    const { mutateAsync } = useMutation({
+      mutationFn: (message: string) => fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: message,
+          region: region,
+          collectionName: handleFindRegionDetails("collectionName", region),
+        })
+      }),
+    });
 
+    const response = await mutateAsync(message)
     const data = await response.json();
+
     const parties = data.responses.map((response: AIAgentResponse) => ({
       partyName: response.partyName,
       partyStance: response.partyStance,  
@@ -68,17 +72,17 @@ const Chat = () => {
     messageLoading.current = false; 
     setMessage('');
     
-    return data.responses;
+    return data;
   }
 
-  const { mutate } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: requestChat,
   })
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      mutate(message);
+      mutateAsync(message);
     }
   };
 
@@ -128,7 +132,7 @@ const Chat = () => {
                 rows={1}
               />
               <Button
-                onClick={() => mutate(message)}
+                onClick={() => mutateAsync(message)}
                 disabled={!message.trim()}
                 size="sm"
                 className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
