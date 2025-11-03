@@ -28,18 +28,9 @@ const Chat = () => {
 
   const region = getPreference();
 
-  const requestChat = async (message: string) => {  
-    messageLoading.current = true;  
-    setChatHistory((prev) => [
-      ...prev, 
-      {
-          type: 'reg',
-          message
-      },
-    ]);
-    
-    const { mutateAsync } = useMutation({
-      mutationFn: (message: string) => fetch('/api/chat', {
+  const { mutateAsync: sendMessage } = useMutation({
+    mutationFn: async (message: string) => {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,49 +40,72 @@ const Chat = () => {
           region: region,
           collectionName: handleFindRegionDetails("collectionName", region),
         })
-      }),
-    });
-
-    const response = await mutateAsync(message)
-    const data = await response.json();
-
-    const parties = data.responses.map((response: AIAgentResponse) => ({
-      partyName: response.partyName,
-      partyStance: response.partyStance,  
-      supportingDetails: response.supportingDetails,
-      citations: response.citations
-    }));
-    
-    setChatHistory((prev) => [
-      ...prev, 
-      { 
-        type: 'agent', 
-        parties: parties
-      }
-    ]);
-    messageLoading.current = false; 
-    setMessage('');
-    
-    return data;
-  }
-
-  const { mutateAsync } = useMutation({
-    mutationFn: requestChat,
-  })
+      });
+      return response.json();
+    },
+    onMutate: (message) => {
+      // Optimistically update the UI
+      messageLoading.current = true;
+      setChatHistory(prev => [
+        ...prev,
+        {
+          type: 'reg' as const,
+          message
+        }
+      ]);
+    },
+    onSuccess: (data) => {
+      const parties = data.responses.map((response: AIAgentResponse) => ({
+        partyName: response.partyName,
+        partyStance: response.partyStance,
+        supportingDetails: response.supportingDetails,
+        citations: response.citations
+      }));
+      
+      setChatHistory(prev => [
+        ...prev,
+        {
+          type: 'agent' as const,
+          parties
+        }
+      ]);
+      setMessage('');
+    },
+    onSettled: () => {
+      messageLoading.current = false;
+    },
+    onError: (error) => {
+      console.error('Error sending message:', error);
+      setChatHistory(prev => [
+        ...prev,
+        {
+          type: 'agent' as const,
+          parties: [{
+            partyName: 'System',
+            partyStance: ['Error'],
+            supportingDetails: ['Failed to send message. Please try again.'],
+            citations: []
+          }]
+        }
+      ]);
+    }
+  });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      mutateAsync(message);
+      if (message.trim()) {
+        sendMessage(message);
+      }
     }
   };
 
   useEffect(() => {
     if (initialMessage && !hasAutoSent.current) {
       hasAutoSent.current = true;
-      requestChat(initialMessage); 
+      sendMessage(initialMessage);
     }
-  }, [initialMessage]);
+  }, [initialMessage, sendMessage]);
 
   return (
     <ClientMountWrapper className="h-screen bg-slate-50 flex flex-col">
@@ -132,7 +146,7 @@ const Chat = () => {
                 rows={1}
               />
               <Button
-                onClick={() => mutateAsync(message)}
+                onClick={() => message.trim() && sendMessage(message)}
                 disabled={!message.trim()}
                 size="sm"
                 className="absolute right-2 bottom-2 w-8 h-8 bg-red-500 hover:bg-red-600 disabled:bg-slate-300 disabled:opacity-50 text-white rounded-full flex items-center justify-center transition-all duration-200 border-0 p-0"
