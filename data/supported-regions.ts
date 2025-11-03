@@ -19,6 +19,18 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Republican Party"
     ],
     collectionName: "collection-us"
+  },
+
+  {
+    code: "US-CA",
+    name: "California",
+    type: "sub-region",
+    parentRegionCode: "US",
+    politicalParties: [
+      "Democratic Party",
+      "Republican Party"
+    ],
+    collectionName: "collection-us-ca"
   }
 ]
 
