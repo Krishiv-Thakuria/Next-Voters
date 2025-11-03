@@ -13,6 +13,13 @@ const PreferenceSelector = () => {
     setSelectedPreference(value);
   };
 
+  const regions = supportedRegions.filter(regions => regions.type != "sub-region");
+
+  const handleFindSubRegion = (regionCode: string) => {
+    return supportedRegions.filter(region => region.parentRegionCode === regionCode) || [];
+  };
+
+
   return (
     <div>
       <div className="flex space-x-2 mt-3">
@@ -24,7 +31,27 @@ const PreferenceSelector = () => {
             <SelectValue placeholder="Country" />
           </SelectTrigger>
           <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
-            {supportedRegions.map(region => (
+            {regions.map(region => (
+              <SelectItem 
+                key={region.code} 
+                value={region.name} 
+                className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+              >
+                {region.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select 
+          value={selectedPreference} 
+          onValueChange={handlePreferenceChange}
+        >
+          <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+            <SelectValue placeholder="State" />
+          </SelectTrigger>
+          <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
+            {handleFindSubRegion(selectedPreference)?.map(region => (
               <SelectItem 
                 key={region.code} 
                 value={region.name} 
