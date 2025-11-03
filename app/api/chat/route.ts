@@ -64,6 +64,7 @@ export const POST = async (request: NextRequest) => {
       };
     });
 
+    // Run parallel so that we can get all responses at the same time
     const responses = await Promise.all(responsePromises);
 
     await handleIncrementRequest();
