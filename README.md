@@ -36,7 +36,7 @@ Next Vote is an AI-powered educational platform designed to help young citizens 
 
 ### 🌍 **Multi-Jurisdictional Support**
 
-* Canadian federal and provincial politics
+* Canadian and US federal and provincial politics
 * US political analysis capabilities
 * Region-specific election information
 * Easily extendable to additional countries
