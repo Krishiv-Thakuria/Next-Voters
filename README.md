@@ -7,7 +7,7 @@
     src="https://img.shields.io/badge/🚀%20Live%20Demo-DailySAT-2F80ED?color=2F80ED&logoColor=white"/></a>
   <a href="LICENSE-CODE"><img alt="Code License"
     src="https://img.shields.io/badge/Code%20License-MIT%202.0-00BFFF?color=00BFFF"/></a>
-  <a href="https://web.goodnotes.com/s/F1IvZmoXF9UeAWsxmgriNK"><img alt="GoodNotes Resource"
+  <a href="https://web.goodnotes.com/s/F1IvZmoXF9UeAWsxmgriNK"><img alt="Political Concept Classifer Resource"
     src="https://img.shields.io/badge/📘%20Engineering%20Resource-GoodNotes-0A84FF?color=0A84FF"/></a>
   <br>
 </div>
