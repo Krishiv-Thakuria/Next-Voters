@@ -8,7 +8,8 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Liberal Party",
       "Conservative Party",
     ],
-    collectionName: "collection-ca"
+    collectionName: "collection-ca",
+    type: "country"
   },
 
   {
@@ -18,19 +19,20 @@ export const supportedRegionDetails: SupportedRegionDetails[] = [
       "Democratic Party",
       "Republican Party"
     ],
-    collectionName: "collection-us"
+    collectionName: "collection-us",
+    type: "country"
   },
 
   {
     code: "US-CA",
     name: "California",
-    type: "sub-region",
     parentRegionCode: "US",
     politicalParties: [
       "Democratic Party",
       "Republican Party"
     ],
-    collectionName: "collection-us-ca"
+    collectionName: "collection-us-ca",
+    type: "sub-region"
   }
 ]
 
