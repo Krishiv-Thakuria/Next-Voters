@@ -12,6 +12,15 @@ const PreferenceSelector = () => {
     setSelectedPreference(value);
   };
 
+  const countryRegions = supportedRegions.filter(region => region.type === 'country');
+  const subRegionRegions = supportedRegions.filter(region => region.type === 'sub-region');
+
+  const countryMap = new Map(countryRegions.map(region => [region.code, region.name]));
+  const subRegionMap = new Map(subRegionRegions.map(region => [region.code, region.name]));
+
+  const countryOptions = Array.from(countryMap.values());
+  const subRegionOptions = Array.from(subRegionMap.values());
+
   return (
     <div>
       <div className="flex space-x-2 mt-3">
@@ -23,13 +32,22 @@ const PreferenceSelector = () => {
             <SelectValue placeholder="Country" />
           </SelectTrigger>
           <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
-            {supportedRegions.map(region => (
+            {countryOptions.map(option => (
               <SelectItem 
-                key={region.code} 
-                value={region.name} 
+                key={option} 
+                value={option} 
                 className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
               >
-                {region.name}
+                {option}
+              </SelectItem>
+            ))}
+            {subRegionOptions.map(option => (
+              <SelectItem 
+                key={option} 
+                value={option} 
+                className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+              >
+                {option}
               </SelectItem>
             ))}
           </SelectContent>
