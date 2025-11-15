@@ -15,6 +15,12 @@ export interface UserAdminTable {
   email: string
   name: string
 }
+
+export interface UserAdminRequestTable {
+  email: string
+  name: string
+}
+
 export type ChatCount = Selectable<ChatCountTable>
 export type NewChatCount = Insertable<ChatCountTable>
 export type ChatCountUpdate = Updateable<ChatCountTable>
