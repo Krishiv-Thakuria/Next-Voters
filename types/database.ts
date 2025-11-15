@@ -2,7 +2,8 @@ import { Generated, Selectable, Insertable, Updateable } from 'kysely'
 
 export interface Database {
   chat_count: ChatCountTable,
-  admin_table: UserAdminTable
+  admin_table: UserAdminTable,
+  user_admin_request_table: UserAdminRequestTable
 }
 
 export interface ChatCountTable {
@@ -26,3 +27,5 @@ export type NewChatCount = Insertable<ChatCountTable>
 export type ChatCountUpdate = Updateable<ChatCountTable>
 
 export type UserAdmin = Selectable<UserAdminTable>
+
+export type NewUserAdmin = Insertable<UserAdminTable>

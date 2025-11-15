@@ -1,15 +1,29 @@
 "use server"
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
+import { db } from "@/lib/db"
 
 export default async function handleRequestAdmin() {
     const { getUser } = getKindeServerSession()
     const user = await getUser()
-    
-    if (!user) {
-        return "Error: User not authenticated"
-    }
+    const email = user.email;
+    const name = user.given_name;
 
-    console.log("User email:", user.email)
-    return "Admin request submitted"
+    const userExists = await db
+        .selectFrom("user_admin_request_table")
+        .select("email")
+        .where("email", "=", email)
+        .executeTakeFirst()
+
+    if (userExists) {
+        return "User already exists"
+    }
+    await db
+        .insertInto("user_admin_request_table")
+        .values({
+            email: email,
+            name: name
+        })
+        .execute()
+    return "User added successfully"
 }
