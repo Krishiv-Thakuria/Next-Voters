@@ -1,66 +1,64 @@
-<div align="center">
-  <img src="/public/logo/nextvoters.png" width="20%" alt="nextvoters" />
-</div>
-<hr>
-<div align="center" style="line-height: 1;">
-  <a href="https://nextvoters.com"><img alt="Demo"
-    src="https://img.shields.io/badge/🚀%20Live%20Demo-DailySAT-2F80ED?color=2F80ED&logoColor=white"/></a>
-  <a href="LICENSE-CODE"><img alt="Code License"
-    src="https://img.shields.io/badge/Code%20License-MIT%202.0-00BFFF?color=00BFFF"/></a>
-  <a href="https://web.goodnotes.com/s/F1IvZmoXF9UeAWsxmgriNK"><img alt="Political Concept Classifer Resource"
-    src="https://img.shields.io/badge/📘%20Engineering%20Resource-GoodNotes-0A84FF?color=0A84FF"/></a>
-  <br>
-</div>
+# Next Voters
 
-**Empowering the next generation of informed voters through AI-driven political education**
+![nextvoters logo](/public/logo/nextvoters.png)
 
-Next Vote is an AI-powered educational platform designed to help young citizens understand policy, legislation, and political platforms. In an era where 87% of people believe online disinformation has harmed politics, Next Vote provides a trusted, fact-based approach to civic education.
+---
+
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-DailySAT-2F80ED?color=2F80ED)](https://nextvoters.com)
+[![Code License](https://img.shields.io/badge/Code%20License-MIT%202.0-00BFFF?color=00BFFF)](LICENSE-CODE)
+[![Engineering Resource](https://img.shields.io/badge/📘%20Engineering%20Resource-GoodNotes-0A84FF?color=0A84FF)](https://web.goodnotes.com/s/F1IvZmoXF9UeAWsxmgriNK)
+
+---
+
+**Empowering the next generation of informed voters through AI-driven political education.**
+
+Next Vote helps young citizens understand policy, legislation, and political platforms. With online disinformation at an all-time high, Next Vote delivers trusted, fact-based civic education.
 
 ---
 
 ## ✨ Key Features
 
-### 🔍 **Intelligent Policy Analysis**
+### 🔍 Intelligent Policy Analysis
 
 * AI-driven analysis of official party platforms
-* Real-time processing of political documents using Cohere AI
-* Side-by-side comparison of party positions on key issues
-* Streaming responses for immediate insights
+* Real-time document processing using Cohere AI
+* Side-by-side comparisons of party positions
+* Streaming responses for instant insights
 
-### 📄 **Document Deep Dive**
+### 📄 Document Deep Dive
 
-* Interactive analysis of legislative documents and bills
-* Query specific provisions or implications
-* Navigate complex political documents with AI assistance
-* Citation-backed responses for verification
+* Interactive bill and legislation analysis
+* Ask questions about specific clauses
+* AI-guided navigation through complex documents
+* Citation-backed responses
 
-### 🌍 **Multi-Jurisdictional Support**
+### 🌍 Multi-Jurisdictional Support
 
-* Canadian and US federal and provincial politics
-* US political analysis capabilities
-* Region-specific election information
-* Easily extendable to additional countries
+* Canadian federal/provincial coverage
+* U.S. political analysis
+* Region-specific election info
+* Extendable to more countries
 
-### 🎓 **Educational Focus**
+### 🎓 Educational Focus
 
-* Tailored for students and young voters
-* Fellowship program with $10,000+ grants for civic engagement
-* Combat misinformation with factual, sourced information
-* Promote informed civic participation
+* Built for students and young voters
+* Fellowship program with $10,000+ civic engagement grants
+* Misinformation-resistant, factual outputs
+* Encourages informed civic participation
 
 ---
 
 ## 🛠 Technology Stack
 
-* **Framework**: [Next.js 14+](https://nextjs.org/)
-* **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs)
-* **LLM Model**: [gpt-4o-mini](https://docs.openai.com/)
-* **Embedding Model**: [text-embedding-3-small](https://docs.openai.com/)
-* **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-* **UI Components**: [Shadcn](https://www.shadcn.com/)
-* **Database**: [Neon with Vercel Storage](https://neon.tech/)
-* **Vector Search**: [Qdrant](https://qdrant.tech/)
-* **Deployment**: [Vercel](https://vercel.com/)
+* **Framework:** Next.js 14+
+* **AI SDK:** Vercel AI SDK
+* **LLM:** gpt-4o-mini
+* **Embeddings:** text-embedding-3-small
+* **Styling:** Tailwind CSS
+* **UI:** Shadcn
+* **Database:** Neon + Vercel Storage
+* **Vector Search:** Qdrant
+* **Deployment:** Vercel
 
 ---
 
@@ -69,26 +67,27 @@ Next Vote is an AI-powered educational platform designed to help young citizens 
 ### Prerequisites
 
 * Next.js 14+
-* pnpm: [Installation](https://pnpm.io/installation)
-* Environment variables as specified in `.env.example`
+* pnpm (`https://pnpm.io/installation`)
+* Configure `.env` with required variables
 
-### OpenAI Key Setup
+---
 
-Since OpenAI doesn’t offer a free tier, we use a reverse proxy API that mimics OpenAI endpoints:
+## 🔑 OpenAI Key Setup
+
+Since OpenAI does not offer a free tier, this project uses a reverse-proxy compatible with OpenAI’s format:
 
 ```env
 OPENAI_API_BASE_URL="https://models.github.ai/inference"
 OPENAI_API_KEY=
 ```
 
-Generate your personal access token from [GitHub Models Marketplace](https://github.com/marketplace?type=models).
+Generate your token from **GitHub Models Marketplace**.
 
 ---
 
-### Authentication with Kinde
+## 🔐 Authentication with Kinde
 
-* Create a Kinde account
-* Add environment variables for authentication:
+Add the following to `.env`:
 
 ```env
 KINDE_CLIENT_ID=
@@ -99,32 +98,53 @@ KINDE_POST_LOGOUT_REDIRECT_URL=
 KINDE_POST_LOGIN_REDIRECT_REDIRECT_URL=
 ```
 
-* Enable **role-based authentication** and create roles in the Kinde dashboard
-* Assign roles (like admin) to users through the Kinde dashboard
+Then:
+
+1. Enable role-based auth in Kinde
+2. Create roles in the dashboard
+3. Assign roles (like `admin`) to users
 
 ---
 
-### Database Setup
+## 🗄 Database Setup
 
-* Use Neon with Vercel Storage for PostgreSQL
-* Add `DATABASE_URL=` to `.env`
+Use **Neon** PostgreSQL:
 
----
-
-### Vector Search Setup
-
-* Use Qdrant for semantic document search
-* Add `QDRANT_URL=` and `QDRANT_API_KEY=` to `.env`
+```env
+DATABASE_URL=
+```
 
 ---
 
-### How It Works ⚙️
+## 🔎 Vector Search Setup
 
-Next Vote uses **Retrieval-Augmented Generation (RAG)**:
+Configure Qdrant:
 
-1. LLM generates responses to user queries
-2. Responses are enhanced with context from vector search
-3. Vector search retrieves the most semantically similar documents, improving accuracy
+```env
+QDRANT_URL=
+QDRANT_API_KEY=
+```
+
+---
+
+## ⚙️ How It Works (RAG Architecture)
+
+1. User asks a question
+2. LLM generates an initial reasoning request
+3. Qdrant retrieves relevant semantic chunks
+4. LLM produces a final, context-enhanced answer
+
+This boosts accuracy and prevents hallucinations.
+
+---
+
+## 🎥 Video Documentation
+
+### **How to Upload Documents (Beginner-Friendly Tutorial)**
+
+New to the platform? This video walks you through uploading documents step-by-step:
+
+👉 **[https://www.youtube.com/watch?v=9mDKAfSvE3U](https://www.youtube.com/watch?v=9mDKAfSvE3U)**
 
 ---
 
