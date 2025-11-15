@@ -1,4 +1,4 @@
-import { db } from "./analytics/database"
+import { db } from "./db"
 
 export const handleGetUser = async (email: string) => {
     const row = await db
