@@ -1,29 +1,19 @@
 "use client"
 
-import React from 'react'
+import handleRequestAdmin from '@/server-actions/request-admin'
 
-const page = () => {
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log('Submitting')
-  }
-
+export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <div className="bg-red-500 text-white p-6 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold mb-4">Request Admin Access</h1>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <button
-            type="submit"
-            className="bg-white text-red-500 px-4 py-2 rounded-md hover:bg-gray-100"
-          >
-            Request
-          </button>
-        </form>
+        <button
+          className="bg-white text-red-500 px-4 py-2 rounded-md hover:bg-gray-100"
+          onClick={async () => await handleRequestAdmin()}
+        >
+          <span className="font-poppins">Request</span>
+        </button>
       </div>
     </div>
   )
 }
-
-export default page
