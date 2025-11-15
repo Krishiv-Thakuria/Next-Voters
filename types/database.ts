@@ -3,7 +3,7 @@ import { Generated, Selectable, Insertable, Updateable } from 'kysely'
 export interface Database {
   chat_count: ChatCountTable,
   admin_table: UserAdminTable,
-  user_admin_request_table: UserAdminRequestTable
+  user_admin_request: UserAdminRequestTable
 }
 
 export interface ChatCountTable {

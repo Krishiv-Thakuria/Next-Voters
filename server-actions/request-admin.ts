@@ -10,7 +10,7 @@ export default async function handleRequestAdmin() {
     const name = user.given_name;
 
     const userExists = await db
-        .selectFrom("user_admin_request_table")
+        .selectFrom("user_admin_request")
         .select("email")
         .where("email", "=", email)
         .executeTakeFirst()
@@ -19,7 +19,7 @@ export default async function handleRequestAdmin() {
         return "User already exists"
     }
     await db
-        .insertInto("user_admin_request_table")
+        .insertInto("user_admin_request")
         .values({
             email: email,
             name: name
