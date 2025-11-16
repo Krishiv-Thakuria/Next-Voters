@@ -1,3 +1,3 @@
-export const protectedRegularRoutes = ["/", "/chat", "/docs", "/analytics"]
+export const protectedRegularRoutes = ["/", "/chat", "/docs"]
 
-export const protectedAdminRoutes = ["/embed-pdf"]
+export const protectedAdminRoutes = ["/embed-pdf", "/analytics"]
