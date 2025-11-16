@@ -12,9 +12,7 @@ const headerItems: HeaderItem[] = [{
 }, {
     name: "Docs",
     href: "/docs"
-}, {
-    name: "Analytics",
-    href: "/analytics"
-}]
+}
+]
 
 export default headerItems
