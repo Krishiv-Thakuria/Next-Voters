@@ -1,5 +1,3 @@
-# Next Voters
-
 ![nextvoters logo](/public/logo/nextvoters.png)
 
 ---
