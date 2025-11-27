@@ -14,7 +14,7 @@ interface RegionData {
 }
 
 
-const handleCreateRegion = async (data: RegionData) => {
+const handleCreateRegion = async (data: RegionData) => {    
     try {
         if (!data) {
             throw new Error("No data provided");
@@ -40,8 +40,16 @@ const handleCreateRegion = async (data: RegionData) => {
         const arrayEnd = fileContent.lastIndexOf("]");
         const arrayContent = fileContent.substring(arrayStart, arrayEnd + 1);
         
-        // Parse the existing regions
-        const existingRegions: RegionData[] = JSON.parse(arrayContent);
+        // Parse the existing regions.
+        // The file is a TypeScript file and may contain trailing commas which are invalid JSON,
+        // so sanitize the extracted array text before parsing.
+        const sanitizedArrayContent = arrayContent.replace(/,\s*(?=[\]}])/g, "");
+        let existingRegions: RegionData[];
+        try {
+            existingRegions = JSON.parse(sanitizedArrayContent);
+        } catch (err) {
+            throw new Error(`Failed to parse supported regions array: ${(err as Error).message}`);
+        }
 
         // Create new region object
         const newRegion: RegionData = {
