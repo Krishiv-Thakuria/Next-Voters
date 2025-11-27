@@ -40,6 +40,47 @@ const CreateRegion = () => {
     }));
   };
 
+  const [partyInput, setPartyInput] = useState("");
+
+  const appendParty = (raw: string) => {
+    const items = raw.split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+    if (items.length === 0) return;
+    setForm(prev => {
+      const existing = prev.politicalParties || [];
+      const toAdd = items.filter(i => !existing.includes(i));
+      return {
+        ...prev,
+        politicalParties: [...existing, ...toAdd],
+      };
+    });
+  };
+
+  const handlePartyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      if (partyInput.trim()) {
+        appendParty(partyInput.replace(/,$/, ""));
+        setPartyInput("");
+      }
+    }
+  };
+
+  const handlePartyBlur = () => {
+    if (partyInput.trim()) {
+      appendParty(partyInput);
+      setPartyInput("");
+    }
+  };
+
+  const handlePartyRemove = (party: string) => {
+    setForm(prev => ({
+      ...prev,
+      politicalParties: prev.politicalParties.filter(p => p !== party),
+    }));
+  }
+
   const mutation = useMutation({
     mutationFn: async () => {
       return await handleCreateRegion({
@@ -121,18 +162,27 @@ const CreateRegion = () => {
 
             <input
               name="politicalParties"
-              placeholder="Political Parties (comma-separated)"
+              placeholder="Political Parties (press Enter to add, comma to separate)"
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:outline-none"
-              value={form.politicalParties.join(", ")}
-              onChange={(e) => {
-                const parties = e.target.value.split(",").map(p => p.trim()).filter(p => p);
-                setForm((prev) => ({
-                  ...prev,
-                  politicalParties: parties,
-                }));
-              }}
-              required
+              value={partyInput}
+              onChange={(e) => setPartyInput(e.target.value)}
+              onKeyDown={handlePartyKeyDown}
+              onBlur={handlePartyBlur}
+              required={form.politicalParties.length === 0 && partyInput.trim() === ""}
             />
+            {form.politicalParties.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {form.politicalParties.map((p: string) => (
+                  <span 
+                    onClick={() => handlePartyRemove(p)} 
+                    key={p} 
+                    className="text-xs px-2 py-1 bg-slate-100 border border-slate-200 rounded-md cursor-pointer"
+                  >
+                    {p}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <Button
               type="submit"
