@@ -170,6 +170,7 @@ const CreateRegion = () => {
               onBlur={handlePartyBlur}
               required={form.politicalParties.length === 0 && partyInput.trim() === ""}
             />
+            
             {form.politicalParties.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {form.politicalParties.map((p: string) => (
