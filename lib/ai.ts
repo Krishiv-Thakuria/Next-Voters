@@ -49,7 +49,7 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
   }
 };
 
-const createCollection = async (collectionName: string) => {
+export const createCollection = async (collectionName: string) => {
   try {
     await client.createCollection(collectionName, {
       vectors: { 
