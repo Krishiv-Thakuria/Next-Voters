@@ -8,9 +8,9 @@ import { Citation } from '@/types/citations';
 import { indexedFields } from '@/data/indexed-fields';
 
 export const openai = createOpenAI({
-    baseURL: process.env.OPENAI_API_BASE_URL,
-    apiKey: process.env.OPENAI_API_KEY
-})
+  baseURL: process.env.OPENAI_API_BASE_URL || "https://api.openai.com/v1",
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
   try {
@@ -49,7 +49,7 @@ export const chunkDocument = async (pdfBuffer: ArrayBuffer) => {
   }
 };
 
-const createCollection = async (collectionName: string) => {
+export const createCollection = async (collectionName: string) => {
   try {
     await client.createCollection(collectionName, {
       vectors: { 

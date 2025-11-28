@@ -140,7 +140,7 @@ const Chat = () => {
               <textarea
                 className="w-full bg-slate-50 py-3 px-4 pr-14 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder-slate-500 text-slate-900 resize-none max-h-32"
                 value={message}
-                placeholder="Type your message..."
+                placeholder="Type an issue like economics or healthcare to understand different political perspectives..."
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyDown={handleKeyDown}
                 rows={1}
