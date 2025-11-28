@@ -15,6 +15,15 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (protectedRegularRoutes.includes(route)) {
+    // Check if Kinde environment variables are configured
+    const kindeSiteUrl = process.env.KINDE_SITE_URL;
+    const kindeIssuerUrl = process.env.KINDE_ISSUER_URL;
+    
+    // If Kinde is not configured, skip auth for development
+    if (!kindeSiteUrl || !kindeIssuerUrl) {
+      return NextResponse.next();
+    }
+    
     return withAuth(req);
   }
 
