@@ -71,6 +71,22 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Google for Nonprofits Support Section */}
+        <section className="py-16">
+          <div className="max-w-[1000px] mx-auto px-6 text-center">
+            <p className="text-sm text-gray-600 mb-1 font-poppins">
+              Proud to be supported by
+            </p>
+            <div className="flex justify-center">
+              <img
+                src="/google-for-nonprofits-logo.png"
+                alt="Google for Nonprofits"
+                className="h-48 object-contain"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* 87% Statistics Section */}
         <section className="py-24 bg-white -mt-4">
           <div className="max-w-[1200px] mx-auto px-4">

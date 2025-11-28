@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 import headerItems from "@/data/header";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import dynamic from "next/dynamic";
 import { Menu, X } from "lucide-react";
+
+// Dynamically import LogoutLink to handle missing Kinde config
+const LogoutLink = dynamic(
+  () => import("@kinde-oss/kinde-auth-nextjs/components")
+    .then((mod) => mod.LogoutLink)
+    .catch(() => {
+      // Return a no-op component if Kinde fails to load
+      return ({ children, className, ...props }: any) => null;
+    }),
+  { 
+    ssr: false,
+    loading: () => null
+  }
+);
 
 const MobileHeader: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
