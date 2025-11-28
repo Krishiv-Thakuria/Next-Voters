@@ -5,7 +5,7 @@ import { handleSubscribeEmail } from '@/server-actions/sub-to-email';
 
 const EmailServiceProduct = () => {
   const [email, setEmail] = useState('');
-  
+
   return (
     <div className="w-full bg-white">
         <div className="max-w-[680px] mx-auto px-6 pt-20 pb-16 text-center">
@@ -27,8 +27,12 @@ const EmailServiceProduct = () => {
           <button 
             className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium"
             onClick={async () => {
-              await handleSubscribeEmail(email);
-              setEmail('');
+              try {
+                await handleSubscribeEmail(email);
+                setEmail('');
+              } catch(error) {
+                alert((error as Error).message);
+              }
             }}
           >
             Subscribe
