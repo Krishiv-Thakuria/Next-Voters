@@ -18,6 +18,7 @@ const EmailServiceProduct = () => {
           </p>
           
           <input 
+            className="w-full max-w-sm mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-transparent text-gray-900 text-[14px] font-poppins"
             type="email"
             placeholder="Enter your email"
             value={email}
