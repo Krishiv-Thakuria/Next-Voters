@@ -14,7 +14,7 @@ const EmailServiceProduct = () => {
           </h1>
           
           <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
-            Changing the world comes from being informed.
+            Changing the world comes from being educated!
           </p>
           
           <input 
