@@ -12,6 +12,9 @@ const headerItems: HeaderItem[] = [{
 }, {
     name: "Docs",
     href: "/docs"
+}, {
+    name: "Email Subscribe (free)",
+    href: "/email"
 }
 ]
 
