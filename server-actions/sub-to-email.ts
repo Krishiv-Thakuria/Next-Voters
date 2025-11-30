@@ -16,6 +16,6 @@ export const handleSubscribeEmail = async (email: string) => {
             .values({ email })
             .execute()
     } else {
-        throw new Error("Email already subscribed")
+        return { error: "Email already subscribed" }
     }
 }

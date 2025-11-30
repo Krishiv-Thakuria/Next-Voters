@@ -28,11 +28,11 @@ const EmailServiceProduct = () => {
           <button 
             className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium"
             onClick={async () => {
-              try {
-                await handleSubscribeEmail(email);
-                setEmail('');
-              } catch(error) {
-                alert((error as Error).message);
+              const result = await handleSubscribeEmail(email);
+              if (result?.error) {
+                alert(result.error);
+              } else {
+                alert('Subscribed successfully!');
               }
             }}
           >
