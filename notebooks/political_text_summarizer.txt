@@ -41,3 +41,4 @@ Summarize the following legislation:
 * Creates a review board responsible for checking whether agencies meet the required cybersecurity standards.
 
 Ensure that your response is exactly like the ASSISTANT from the examples explored. ANYTHING THAT IS ADDED OR REMOVED WILL BE REJECTED. 
+Ensure that you use * for bullet points instead of - 
