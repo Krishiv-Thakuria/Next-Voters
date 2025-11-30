@@ -14,7 +14,7 @@ const EmailServiceProduct = () => {
           </h1>
           
           <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
-            Stay informed with weekly email updates on local legislation, tailored to your city. Become an informed citizen. Subscribe now <b>for free</b>!
+            Stay informed with weekly email updates on local legislation, tailored to your city. Become an <u>informed citizen</u>. Subscribe now <b>for free</b>!
           </p>
           
           <input 
