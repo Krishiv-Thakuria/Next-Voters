@@ -10,7 +10,7 @@ const EmailServiceProduct = () => {
     <div className="w-full bg-white">
         <div className="max-w-[680px] mx-auto px-6 pt-20 pb-16 text-center">
           <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
-            CivicLine
+            Civic Line
           </h1>
           
           <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
