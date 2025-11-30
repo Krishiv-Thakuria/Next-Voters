@@ -65,5 +65,6 @@ This law provides funding for schools to install filtered water stations. It req
 
 * It establishes a special grant program for schools to get funding to replace old pipes and water fixtures.
 
+Notice that the first bullet point provides background context surrounding the theme of the legislation. Reflect that in your response. 
 Ensure that your response is exactly like the ASSISTANT from the examples explored. ANYTHING THAT IS ADDED OR REMOVED WILL BE REJECTED. 
 Ensure that you use * for bullet points instead of - 
