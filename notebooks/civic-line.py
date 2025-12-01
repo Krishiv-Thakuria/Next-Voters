@@ -229,39 +229,43 @@ def render_bills(category_name):
 # -----------------------------
 # Build HTML Email
 # -----------------------------
-html = f"""
-<!DOCTYPE html>
-<html>
-<head>
-...
-</head>
-<body>
-    <div class="container">
-        <div class="content">
 
-            <div class="section">
-                <h2 class="section-title">Immigration</h2>
-                {render_bills('Immigration')}
+def returnHTML(email):
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    ...
+    </head>
+    <body>
+        <div class="container">
+            <div class="content">
+    
+                <div class="section">
+                    <h2 class="section-title">Immigration</h2>
+                    {render_bills('Immigration')}
+                </div>
+    
+                <div class="section">
+                    <h2 class="section-title">Civil Rights</h2>
+                    {render_bills('Civil')}
+                </div>
+    
+                <div class="section">
+                    <h2 class="section-title">Economy</h2>
+                    {render_bills('Economy')}
+                </div>
+    
             </div>
-
-            <div class="section">
-                <h2 class="section-title">Civil Rights</h2>
-                {render_bills('Civil')}
+            <div class="footer">
+                © Next Voters <a href="https://nextvoters.com/remove-recipient?email={email}">Unsubscribe</a>
             </div>
-
-            <div class="section">
-                <h2 class="section-title">Economy</h2>
-                {render_bills('Economy')}
-            </div>
-
         </div>
-        <div class="footer">
-            © Next Voters {}
-        </div>
-    </div>
-</body>
-</html>
-"""
+    </body>
+    </html>
+    """
+
+    return html
 
 # -----------------------------
 # Send Emails
@@ -277,7 +281,7 @@ for recipient_email in recipients:
         msg['From'] = SENDER_EMAIL
         msg['To'] = recipient_email
 
-        msg.attach(MIMEText(html, 'html'))
+        msg.attach(MIMEText(returnHTML(recipient_email), 'html'))
 
         print(f"Connecting to SMTP for {recipient_email}...")
         server = smtplib.SMTP('smtp.gmail.com', 587)
