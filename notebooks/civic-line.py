@@ -1,4 +1,3 @@
-# Script for Civic Line
 from dotenv import load_dotenv
 import os
 import requests
@@ -12,230 +11,227 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# -----------------------------
 # Load Environment Variables
-# -----------------------------
 load_dotenv()
 
-open_ai_key = os.getenv("OPENAI_KEY")
-gmail_email = os.getenv("APP_GMAIL_EMAIL")
-gmail_app_password = os.getenv("APP_GMAIL_PWD")
-postgres_connection_string = os.getenv("POSTGRES_CONNECTION_STRING")
+openAiKey = os.getenv("OPENAI_KEY")
+gmailEmail = os.getenv("APP_GMAIL_EMAIL")
+gmailAppPassword = os.getenv("APP_GMAIL_PWD")
+postgresConnectionString = os.getenv("POSTGRES_CONNECTION_STRING")
 
-# -----------------------------
 # Load Prompt Files
-# -----------------------------
 with open("political_text_classifier.txt", "r", encoding="utf-8") as file:
-    political_text_classifier = file.read()
+    politicalTextClassifier = file.read()
 
 with open("political_text_summarizer.txt", "r", encoding="utf-8") as file:
-    political_text_summarizer = file.read()
+    politicalTextSummarizer = file.read()
 
-# -----------------------------
 # OpenAI Client
-# -----------------------------
-client = OpenAI(api_key=open_ai_key)
+client = OpenAI(api_key=openAiKey)
 
-def classifyText(input_text):
+def classifyText(inputText):
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": political_text_classifier},
-            {"role": "user", "content": input_text}
+            {"role": "system", "content": politicalTextClassifier},
+            {"role": "user", "content": inputText}
         ]
     )
     return response.choices[0].message.content.strip().split()[0]
 
-def summarizeText(input_text):
+def summarizeText(inputText):
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": political_text_summarizer},
-            {"role": "user", "content": "Summarize the following legislation: " + input_text}
+            {"role": "system", "content": politicalTextSummarizer},
+            {"role": "user", "content": f"Summarize the following legislation: {inputText}"}
         ]
     )
     return response.choices[0].message.content.strip()
 
-# -----------------------------
 # Scrape NYC Council Calendar
-# -----------------------------
-request_url = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Week"
-web_html = requests.get(request_url).text
-soup = BeautifulSoup(web_html, "html.parser")
+requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Week"
+webHtml = requests.get(requestUrl).text
+soup = BeautifulSoup(webHtml, "html.parser")
 
 table = soup.find('table', id='ctl00_ContentPlaceHolder1_gridCalendar_ctl00')
-council_meetings = []
+councilMeetings = []
 
-for tr in table.find_all('tr')[1:]:
-    cells = tr.find_all('td')
-    if not cells or len(cells) < 7:
-        continue
+if table:
+    for tr in table.find_all('tr')[1:]:
+        cells = tr.find_all('td')
+        if len(cells) < 7:
+            continue
 
-    committee = cells[0].get_text(strip=True)
-    date = cells[1].get_text(strip=True)
-    meeting_time = cells[3].get_text(strip=True)
+        committee = cells[0].get_text(strip=True)
+        date = cells[1].get_text(strip=True)
+        meetingTime = cells[3].get_text(strip=True)
 
-    if meeting_time == "Deferred":
-        continue
+        if meetingTime == "Deferred":
+            continue
 
-    meeting_detail = cells[6].find('a')
-    if meeting_detail:
-        meeting_detail_aspx = meeting_detail['href']
-    else:
-        continue
+        meetingDetail = cells[6].find('a')
+        if not meetingDetail:
+            continue
 
-    if len(council_meetings) < 2:
-        council_meetings.append({
-            'Date': date,
-            'Committee': committee,
-            'Meeting Details': meeting_detail_aspx
-        })
-    else:
-        break
+        if len(councilMeetings) < 2:
+            councilMeetings.append({
+                'date': date,
+                'committee': committee,
+                'meetingDetails': meetingDetail['href']
+            })
+        else:
+            break
 
-# -----------------------------
 # Classification Categories
-# -----------------------------
 categories = {
     "Immigration": [],
     "Economy": [],
     "Civil": []
 }
 
-# -----------------------------
 # Pull Each Meeting's Legislation
-# -----------------------------
-for meeting in council_meetings:
-    meeting_details_url = f"https://legistar.council.nyc.gov/{meeting['Meeting Details']}"
-    meeting_details_html = requests.get(meeting_details_url).text
-    soup = BeautifulSoup(meeting_details_html, "html.parser")
+for meeting in councilMeetings:
+    meetingDetailsUrl = f"https://legistar.council.nyc.gov/{meeting['meetingDetails']}"
+    meetingDetailsHtml = requests.get(meetingDetailsUrl).text
+    soup = BeautifulSoup(meetingDetailsHtml, "html.parser")
 
     table = soup.find('table', id='ctl00_ContentPlaceHolder1_gridMain_ctl00')
     if not table:
         continue
 
-    legislation_file = []
+    legislationFiles = []
 
     for tr in table.find_all('tr')[1:]:
         cells = tr.find_all('td')
         if len(cells) < 7:
             continue
 
-        file_type = cells[6].get_text(strip=True)
-        if file_type != "Introduction":
+        fileType = cells[6].get_text(strip=True)
+        if fileType != "Introduction":
             continue
 
-        locator_link = cells[0].find('a')
-        if not locator_link:
+        locatorLink = cells[0].find('a')
+        if not locatorLink:
             continue
 
-        file_locator = locator_link['href']
-
-        if len(legislation_file) > 2:
+        if len(legislationFiles) >= 3:
             break
 
-        legislation_file.append(file_locator)
+        legislationFiles.append(locatorLink['href'])
 
     # Scrape each bill
-    for file_locator in legislation_file:
-        response = requests.get(f"https://legistar.council.nyc.gov/{file_locator}").text
-        soup = BeautifulSoup(response, "html.parser")
+    for fileLocator in legislationFiles:
+        try:
+            response = requests.get(f"https://legistar.council.nyc.gov/{fileLocator}").text
+            soup = BeautifulSoup(response, "html.parser")
 
-        attachments_span = soup.find('span', id="ctl00_ContentPlaceHolder1_lblAttachments2")
-        if not attachments_span:
+            attachmentsSpan = soup.find('span', id="ctl00_ContentPlaceHolder1_lblAttachments2")
+            if not attachmentsSpan:
+                continue
+
+            pdfLinks = attachmentsSpan.find_all('a')
+            if len(pdfLinks) < 3:
+                continue
+
+            legislationPdfLink = pdfLinks[2]['href']
+
+            # Metadata
+            fileNumber = soup.find('span', id="ctl00_ContentPlaceHolder1_lblFile2").get_text(strip=True)
+            status = soup.find('span', id="ctl00_ContentPlaceHolder1_lblStatus2").get_text(strip=True)
+            sponsorsSpan = soup.find('span', id="ctl00_ContentPlaceHolder1_lblSponsors2")
+            sponsors = sponsorsSpan.find_all("a") if sponsorsSpan else []
+            name = soup.find('span', id="ctl00_ContentPlaceHolder1_lblName2").get_text(strip=True)
+
+            # Get Bill Text
+            fetchedDocument = requests.get(f"https://legistar.council.nyc.gov/{legislationPdfLink}")
+            doc = Document(BytesIO(fetchedDocument.content))
+            legislationText = '\n'.join([para.text for para in doc.paragraphs])
+
+            category = classifyText(legislationText)
+            summarized = summarizeText(legislationText)
+
+            if category in categories:
+                categories[category].append({
+                    "name": name,
+                    "fileNumber": fileNumber,
+                    "summarized": summarized,
+                    "sponsors": sponsors
+                })
+        except Exception as e:
+            print(f"Error processing bill {fileLocator}: {e}")
             continue
 
-        pdf_links = attachments_span.find_all('a')
-        if len(pdf_links) < 3:
-            continue
-
-        legislation_pdf_link = pdf_links[2]['href']
-
-        # Metadata
-        file_number = soup.find('span', id="ctl00_ContentPlaceHolder1_lblFile2").get_text(strip=True)
-        status = soup.find('span', id="ctl00_ContentPlaceHolder1_lblStatus2").get_text(strip=True)
-        sponsors_span = soup.find('span', id="ctl00_ContentPlaceHolder1_lblSponsors2")
-        sponsors = sponsors_span.find_all("a") if sponsors_span else []
-        name = soup.find('span', id="ctl00_ContentPlaceHolder1_lblName2").get_text(strip=True)
-
-        # Get Bill Text
-        fetched_document = requests.get(f"https://legistar.council.nyc.gov/{legislation_pdf_link}")
-        doc = Document(BytesIO(fetched_document.content))
-        legislation_text = '\n'.join([para.text for para in doc.paragraphs])
-
-        category = classifyText(legislation_text)
-        summarized = summarizeText(legislation_text)
-
-        categories[category].append({
-            "Name": name,
-            "File Number": file_number,
-            "Summarized": summarized,
-            "Sponsors": sponsors
-        })
-
-# -----------------------------
 # Fetch Email Subscribers
-# -----------------------------
-connection = psycopg2.connect(postgres_connection_string)
+connection = psycopg2.connect(postgresConnectionString)
 df = pd.read_sql_query("SELECT email FROM email_subscriptions;", connection)
 recipients = df['email'].tolist()
 connection.close()
 
-print("Recipients loaded:", recipients)
+print(f"Recipients loaded: {len(recipients)}")
 
-# -----------------------------
 # HTML Rendering Utilities
-# -----------------------------
-def parse_summary_to_bullets(summary):
+def parseSummaryToBullets(summary):
     lines = [line.strip()[1:].strip() for line in summary.split('\n') if line.strip().startswith('*')]
     if not lines:
         return f'<p>{summary}</p>'
     bullets = ''.join([f'<li>{line}</li>' for line in lines])
     return f'<ul>{bullets}</ul>'
 
-def render_sponsors(sponsors):
+def renderSponsors(sponsors):
     if not sponsors:
         return "Unknown"
     return ', '.join([s.get_text(strip=True) for s in sponsors])
 
-def render_bills(category_name):
-    bills = categories.get(category_name, [])
+def renderBills(categoryName):
+    bills = categories.get(categoryName, [])
     if not bills:
         return '<p style="color: #737373; font-style: italic;">No legislation to report this week.</p>'
 
-    bills_html = ""
+    billsHtml = ""
     for bill in bills:
-        summary_html = parse_summary_to_bullets(bill['Summarized'])
+        summaryHtml = parseSummaryToBullets(bill['summarized'])
 
-        bills_html += f'''
+        billsHtml += f'''
             <div class="bill-item">
                 <div>
-                    <span class="bill-name">{bill['Name']}</span>
+                    <span class="bill-name">{bill['name']}</span>
                     <br><br>
-                    <span class="file-number">{bill['File Number']}</span>
+                    <span class="file-number">{bill['fileNumber']}</span>
                 </div>
 
                 <br>
-                <span class="sponsors-body">{render_sponsors(bill['Sponsors'])}</span>
+                <span class="sponsors-body">{renderSponsors(bill['sponsors'])}</span>
                 <br><br>
 
                 <div class="bill-summary">
-                    {summary_html}
+                    {summaryHtml}
                 </div>
             </div>
         '''
-    return bills_html
+    return billsHtml
 
-# -----------------------------
 # Build HTML Email
-# -----------------------------
-
-def returnHTML(email):
+def returnHtml(email):
     html = f"""
     <!DOCTYPE html>
     <html>
     <head>
-    ...
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }}
+            .container {{ max-width: 800px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; }}
+            .content {{ padding: 30px; }}
+            .section {{ margin-bottom: 30px; }}
+            .section-title {{ color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }}
+            .bill-item {{ background-color: #f9f9f9; padding: 15px; margin-bottom: 15px; border-radius: 5px; }}
+            .bill-name {{ font-weight: bold; color: #2c3e50; }}
+            .file-number {{ color: #7f8c8d; font-size: 0.9em; }}
+            .sponsors-body {{ color: #34495e; font-style: italic; }}
+            .bill-summary {{ color: #2c3e50; line-height: 1.6; }}
+            .footer {{ background-color: #34495e; color: #ffffff; padding: 15px; text-align: center; }}
+            .footer a {{ color: #3498db; text-decoration: none; }}
+        </style>
     </head>
     <body>
         <div class="container">
@@ -243,58 +239,54 @@ def returnHTML(email):
     
                 <div class="section">
                     <h2 class="section-title">Immigration</h2>
-                    {render_bills('Immigration')}
+                    {renderBills('Immigration')}
                 </div>
     
                 <div class="section">
                     <h2 class="section-title">Civil Rights</h2>
-                    {render_bills('Civil')}
+                    {renderBills('Civil')}
                 </div>
     
                 <div class="section">
                     <h2 class="section-title">Economy</h2>
-                    {render_bills('Economy')}
+                    {renderBills('Economy')}
                 </div>
     
             </div>
             <div class="footer">
-                © Next Voters <a href="https://nextvoters.com/remove-recipient?email={email}">Unsubscribe</a>
+                © Next Voters | <a href="https://nextvoters.com/remove-recipient?email={email}">Unsubscribe</a>
             </div>
         </div>
     </body>
     </html>
     """
-
     return html
 
-# -----------------------------
 # Send Emails
-# -----------------------------
-SENDER_EMAIL = gmail_email
-SENDER_PASSWORD = gmail_app_password
-SUBJECT = "Civic Line - New York City Update"
+senderEmail = gmailEmail
+senderPassword = gmailAppPassword
+subject = "Civic Line - New York City Update"
 
-for recipient_email in recipients:
+for recipientEmail in recipients:
     try:
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = SUBJECT
-        msg['From'] = SENDER_EMAIL
-        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        msg['From'] = senderEmail
+        msg['To'] = recipientEmail
 
-        msg.attach(MIMEText(returnHTML(recipient_email), 'html'))
+        msg.attach(MIMEText(returnHtml(recipientEmail), 'html'))
 
-        print(f"Connecting to SMTP for {recipient_email}...")
         server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.set_debuglevel(1)
         server.starttls()
-        server.login(SENDER_EMAIL, SENDER_PASSWORD)
+        server.login(senderEmail, senderPassword)
         server.send_message(msg)
-        print(f"✓ Sent to {recipient_email}")
+        print(f"✓ Sent to {recipientEmail}")
         server.quit()
 
     except smtplib.SMTPAuthenticationError:
-        print("Authentication failed. Make sure your Gmail App Password is valid.")
+        print("Authentication failed. Check your Gmail App Password.")
+        break
     except Exception as e:
-        print(f"Error sending to {recipient_email}: {e}")
+        print(f"Error sending to {recipientEmail}: {e}")
 
 print("All emails processed.")
