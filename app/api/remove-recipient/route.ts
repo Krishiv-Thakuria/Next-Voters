@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/db/kysely'
+import { db } from '@/lib/db'
 
 export async function POST(request: Request) {
   try {
