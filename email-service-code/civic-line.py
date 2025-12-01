@@ -19,6 +19,7 @@ openAiKey = os.getenv("OPENAI_KEY")
 gmailEmail = os.getenv("APP_GMAIL_EMAIL")
 gmailAppPassword = os.getenv("APP_GMAIL_PWD")
 postgresConnectionString = os.getenv("POSTGRES_CONNECTION_STRING")
+secretKey = os.getenv("JWT_SECRET_KEY")
 
 # Load Prompt Files
 with open("political_text_classifier.txt", "r", encoding="utf-8") as file:
@@ -171,6 +172,11 @@ connection.close()
 
 print(f"Recipients loaded: {len(recipients)}")
 
+def assignJwt(email):
+    payload = {"email": email}
+    token = jwt.encode(payload, secretKey, algorithm="HS256")
+    return token
+
 # HTML Rendering Utilities
 def parseSummaryToBullets(summary):
     lines = [line.strip()[1:].strip() for line in summary.split('\n') if line.strip().startswith('*')]
@@ -213,7 +219,7 @@ def renderBills(categoryName):
     return billsHtml
 
 # Build HTML Email
-def returnHtml(email):
+def returnHtml(jwtToken):
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -255,7 +261,7 @@ def returnHtml(email):
     
             </div>
             <div class="footer">
-                © Next Voters | <a href="https://nextvoters.com/remove-recipient?email={email}">Unsubscribe</a>
+                © Next Voters | <a href="https://nextvoters.com/remove-recipient?token={jwtToken}">Unsubscribe (only valid for 10mins)</a>
             </div>
         </div>
     </body>
@@ -270,12 +276,13 @@ subject = "Civic Line - New York City Update"
 
 for recipientEmail in recipients:
     try:
+        jwtToken = assignJwt(recipientEmail)
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
         msg['From'] = senderEmail
         msg['To'] = recipientEmail
 
-        msg.attach(MIMEText(returnHtml(recipientEmail), 'html'))
+        msg.attach(MIMEText(returnHtml(recipientEmail, jwtToken), 'html'))
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
