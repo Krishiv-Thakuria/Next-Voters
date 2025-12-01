@@ -256,7 +256,7 @@ html = f"""
 
         </div>
         <div class="footer">
-            © Next Voters
+            © Next Voters {}
         </div>
     </div>
 </body>
