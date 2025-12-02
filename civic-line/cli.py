@@ -1,16 +1,16 @@
 from dotenv import load_dotenv
+from os import getenv
 from web_scraper import scrapeCouncilMeetings, scrapeLegislation
 from email import sendEmails
-
-# -----------------------------------------------------------
-# Load Environment Variables
-# -----------------------------------------------------------
-load_dotenv()
 
 # -----------------------------------------------------------
 # MAIN EXECUTION
 # -----------------------------------------------------------
 if __name__ == "__main__":
+    print("Loading environmental variables...")
+    load_dotenv() 
+    
+    
     print("Scraping meetings...")
     meetings = scrapeCouncilMeetings()
 
