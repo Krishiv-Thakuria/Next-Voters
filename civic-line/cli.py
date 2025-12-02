@@ -9,7 +9,12 @@ from email import sendEmails
 if __name__ == "__main__":
     print("Loading environmental variables...")
     load_dotenv() 
-    
+
+    # Load all required env variables 
+
+    if False: 
+        print("All env variables are not loaded. Double check.") 
+        return
     
     print("Scraping meetings...")
     meetings = scrapeCouncilMeetings()
