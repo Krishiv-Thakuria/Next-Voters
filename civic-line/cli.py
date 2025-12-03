@@ -11,10 +11,14 @@ if __name__ == "__main__":
     load_dotenv() 
 
     # Load all required env variables 
+    open_ai_key = getenv("OPENAI_KEY")
+    gmail_email = getenv("APP_GMAIL_EMAIL")
+    gmail_app_password = getenv("APP_GMAIL_PWD")
+    postgres_connection_string = getenv("POSTGRES_CONNECTION_STRING")
 
-    if False: 
+    if not all([open_ai_key, gmail_email, gmail_app_password, postgres_connection_string]): 
         print("All env variables are not loaded. Double check.") 
-        return
+        exit(1)
     
     print("Scraping meetings...")
     meetings = scrapeCouncilMeetings()
