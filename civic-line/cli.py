@@ -6,6 +6,7 @@ from email import sendEmails
 # -----------------------------------------------------------
 # MAIN EXECUTION
 # -----------------------------------------------------------
+
 if __name__ == "__main__":
     print("Loading environmental variables...")
     load_dotenv() 
