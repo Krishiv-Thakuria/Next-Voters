@@ -18,6 +18,7 @@ export default async function handleRequestAdmin() {
     if (userExists) {
         return "User already exists"
     }
+    
     await db
         .insertInto("user_admin_request")
         .values({
