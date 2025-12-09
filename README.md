@@ -1,4 +1,6 @@
-![nextvoters logo](/public/logo/nextvoters.png)
+<div align="center">
+  <img src="/public/logo/nextvoters.png" alt="nextvoters logo" />
+</div>
 
 ---
 
