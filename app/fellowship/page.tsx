@@ -16,7 +16,7 @@ const FellowshipPage = () => {
           <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
             Changing the world starts with changing your community.
           </p>
-          
+                                                                                    
           <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium">
             Apply Now - It's Free
           </a>
