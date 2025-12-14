@@ -1,3 +1,14 @@
+tools:
+  - name: code_review
+    description: "Analyze code quality and suggest improvements"
+    input_schema:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "The code to review"
+      required: [code]
+
 prompts:
   code_review:
     description: "Asks the LLM to analyze code quality and suggest improvements."
