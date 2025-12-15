@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="civic_line_cli",
-    version="0.4",  
+    version="0.6",  
     packages=find_packages(),
     install_requires=[
         "openai",

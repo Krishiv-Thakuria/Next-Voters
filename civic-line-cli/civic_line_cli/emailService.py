@@ -2,7 +2,7 @@ import psycopg2
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from storedValues import get_secret
+from .storedValues import get_secret
 
 gmail_email = get_secret("gmail_email")
 gmail_app_password = get_secret("gmail_app_password")

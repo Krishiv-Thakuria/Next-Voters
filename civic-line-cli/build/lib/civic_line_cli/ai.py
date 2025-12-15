@@ -1,5 +1,5 @@
 from openai import OpenAI
-from storedValues import get_secret
+from .storedValues import get_secret
 
 # -----------------------------------------------------------
 # Initialize OpenAI client once at module level 

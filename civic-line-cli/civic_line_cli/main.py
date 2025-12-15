@@ -1,6 +1,6 @@
-from webScraper import scrapeCouncilMeetings, scrapeLegislation
-from emailService import sendEmails
-from storedValues import create_secrets
+from .webScraper import scrapeCouncilMeetings, scrapeLegislation
+from .emailService import sendEmails
+from.storedValues import create_secrets
 
 def cli():
     isUpdateNeeded = input("Do you need to update any secret values? (y/n): ").strip().lower() 

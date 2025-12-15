@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from io import BytesIO
 from docx import Document
-from ai import classifyText, summarizeText
+from .ai import classifyText, summarizeText
 
 def scrapeCouncilMeetings():
     requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Month"
