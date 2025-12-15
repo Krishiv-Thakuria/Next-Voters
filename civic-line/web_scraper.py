@@ -1,17 +1,12 @@
 # -----------------------------------------------------------
-# web_scraper.py — Contains ONLY scraping-related functions
+# web_scraper.py — Contains ONLY scraping-related functions (NYC legislation)
 # -----------------------------------------------------------
 
-from os import getenv
 import requests
 from bs4 import BeautifulSoup
 from io import BytesIO
 from docx import Document
-from openai import OpenAI
 from ai import classifyText, summarizeText
-
-open_ai_key = getenv("OPENAI_KEY")
-client = OpenAI(api_key=open_ai_key)
 
 def scrapeCouncilMeetings():
     requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Week"

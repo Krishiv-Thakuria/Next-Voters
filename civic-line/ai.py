@@ -1,6 +1,5 @@
 from openai import OpenAI
-from os import getenv
-
+from storedValues import get_secret
 # -----------------------------------------------------------
 # Initalize OpenAI client once at module level 
 #-----------------------------------------------------------
@@ -14,8 +13,8 @@ def loadPrompt(fileName):
 def initializeClient():
     global _client
     if _client is not None:
-        open_ai_key = getenv("OPENAI_KEY")
-        _client = OpenAI(api_key=open_ai_key)
+        api_key = get_secret("open_ai_key")
+        _client = OpenAI(api_key=api_key)
     return _client
     
 def classifyText(fullText):

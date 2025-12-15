@@ -1,13 +1,13 @@
 import psycopg2
-from os import getenv
 import psycopg2
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from storedValues import get_secret
 
-gmail_email = getenv("APP_GMAIL_EMAIL")
-gmail_app_password = getenv("APP_GMAIL_PWD")
-postgres_connection_string = getenv("POSTGRES_CONNECTION_STRING")
+gmail_email = get_secret("gmail_email")
+gmail_app_password = get_secret("gmail_app_password")
+postgres_connection_string = get_secret("postgres_connection_string")
 
 def buildEmailHtml(categories):
     html = """
