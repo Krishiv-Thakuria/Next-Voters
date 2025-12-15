@@ -1,6 +1,6 @@
 from webScraper import scrapeCouncilMeetings, scrapeLegislation
 from emailService import sendEmails
-from storedValues import create_secrets, get_secret
+from storedValues import create_secrets
 
 # -----------------------------------------------------------
 # LOAD SECRETS (IN-MEMORY ONLY)
