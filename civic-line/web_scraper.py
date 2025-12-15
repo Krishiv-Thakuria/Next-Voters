@@ -9,7 +9,7 @@ from docx import Document
 from ai import classifyText, summarizeText
 
 def scrapeCouncilMeetings():
-    requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Week"
+    requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Month"
     soup = BeautifulSoup(requests.get(requestUrl).text, "html.parser")
 
     table = soup.find('table', id='ctl00_ContentPlaceHolder1_gridCalendar_ctl00')
@@ -84,9 +84,12 @@ def scrapeLegislation(meetings):
                 # Attachments
                 attachments = soup.find('span', id="ctl00_ContentPlaceHolder1_lblAttachments2")
                 if not attachments:
+                    print(f"No attachments found for {fileLocator}")
                     continue
+                    
                 pdfLinks = attachments.find_all('a')
                 if len(pdfLinks) < 3:
+                    print(f"Not enough PDF links for {fileLocator}")
                     continue
 
                 # Download PDF
@@ -94,13 +97,21 @@ def scrapeLegislation(meetings):
                 pdfBytes = requests.get(f"https://legistar.council.nyc.gov/{pdfUrl}").content
                 doc = Document(BytesIO(pdfBytes))
                 fullText = "\n".join(p.text for p in doc.paragraphs)
+                
+                # Check if we actually got text
+                if not fullText.strip():
+                    print(f"Warning: No text extracted from {fileLocator}")
+                    continue
 
                 # Metadata
                 fileNumber = soup.find('span', id="ctl00_ContentPlaceHolder1_lblFile2").get_text(strip=True)
                 name = soup.find('span', id="ctl00_ContentPlaceHolder1_lblName2").get_text(strip=True)
+                
+                # FIX: Extract text from sponsor links instead of keeping BeautifulSoup objects
                 sponsorsSpan = soup.find('span', id="ctl00_ContentPlaceHolder1_lblSponsors2")
-                sponsors = sponsorsSpan.find_all('a') if sponsorsSpan else []
+                sponsors = [a.get_text(strip=True) for a in sponsorsSpan.find_all('a')] if sponsorsSpan else []
 
+                # Call AI functions
                 category = classifyText(fullText)
                 summary = summarizeText(fullText)
 
@@ -111,6 +122,7 @@ def scrapeLegislation(meetings):
                         "summarized": summary,
                         "sponsors": sponsors
                     })
+                    
             except Exception as e:
                 print(f"Error processing bill {fileLocator}: {e}")
 
