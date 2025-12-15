@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages 
 
 setup(
-    name="civic-line-cli",
-    version="0.1",  
+    name="civic_line_cli",
+    version="0.4",  
     packages=find_packages(),
     install_requires=[
         "openai",
@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "civicline = civic_line:cli"
+            "civicline = civic_line_cli:cli"
         ]
     }
 )
