@@ -23,7 +23,7 @@ def buildEmailHtml(categories):
             continue
         
         for bill in bills:
-            sponsors = ", ".join(bill["sponsors"])  # FIXED: Removed .get_text() since sponsors are already strings
+            sponsors = ", ".join(bill["sponsors"]) 
             html += f"""
             <div>
                 <h3>{bill["name"]} ({bill["fileNumber"]})</h3>
