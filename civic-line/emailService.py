@@ -44,7 +44,7 @@ def sendEmails(categories):
     conn = psycopg2.connect(postgres_connection_string)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT email FROM subscribers;")
+    cursor.execute("SELECT email FROM email_subscriptions;")
     subscribers = cursor.fetchall()
 
     html_body = buildEmailHtml(categories)
