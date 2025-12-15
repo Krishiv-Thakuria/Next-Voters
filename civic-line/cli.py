@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from os import getenv
 from web_scraper import scrapeCouncilMeetings, scrapeLegislation
-from email import sendEmails
+from emailService import sendEmails
 
 # -----------------------------------------------------------
 # MAIN EXECUTION

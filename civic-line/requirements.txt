@@ -1,0 +1,6 @@
+openai 
+psycopg2
+dotenv
+requests
+bs4
+python-docx
