@@ -1,5 +1,5 @@
 openai 
-psycopg2
+psycopg2-binary
 requests
 bs4
 python-docx
