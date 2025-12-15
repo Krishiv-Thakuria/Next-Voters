@@ -9,7 +9,7 @@ from docx import Document
 from ai import classifyText, summarizeText
 
 def scrapeCouncilMeetings():
-    requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Month"
+    requestUrl = "https://legistar.council.nyc.gov/Calendar.aspx?Mode=Last+Week"
     soup = BeautifulSoup(requests.get(requestUrl).text, "html.parser")
 
     table = soup.find('table', id='ctl00_ContentPlaceHolder1_gridCalendar_ctl00')
