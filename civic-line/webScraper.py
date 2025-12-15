@@ -49,38 +49,42 @@ def scrapeLegislation(meetings):
     classifyText and summarizeText come from your OpenAI helpers.
     """
     categories = {"Immigration": [], "Economy": [], "Civil": []}
-
+    processed_bills = set()  # Track bill IDs we've already processed
+    
     for meeting in meetings:
         detailsUrl = f"https://legistar.council.nyc.gov/{meeting['meetingDetails']}"
         soup = BeautifulSoup(requests.get(detailsUrl).text, "html.parser")
-
         table = soup.find('table', id='ctl00_ContentPlaceHolder1_gridMain_ctl00')
+        
         if not table:
             continue
-
+            
         legislationFiles = []
-
         for tr in table.find_all('tr')[1:]:
             cells = tr.find_all('td')
             if len(cells) < 7:
                 continue
-
             if cells[6].get_text(strip=True) != "Introduction":
                 continue
-
             locator = cells[0].find('a')
             if locator:
                 legislationFiles.append(locator['href'])
-
             if len(legislationFiles) >= 3:
                 break
-
+        
         # Scrape each bill PDF
         for fileLocator in legislationFiles:
             try:
                 billHtml = requests.get(f"https://legistar.council.nyc.gov/{fileLocator}").text
                 soup = BeautifulSoup(billHtml, "html.parser")
-
+                
+                # Metadata
+                fileNumber = soup.find('span', id="ctl00_ContentPlaceHolder1_lblFile2").get_text(strip=True)
+                
+                # Check if already processed
+                if fileNumber in processed_bills:
+                    continue
+                
                 # Attachments
                 attachments = soup.find('span', id="ctl00_ContentPlaceHolder1_lblAttachments2")
                 if not attachments:
@@ -91,7 +95,7 @@ def scrapeLegislation(meetings):
                 if len(pdfLinks) < 3:
                     print(f"Not enough PDF links for {fileLocator}")
                     continue
-
+                
                 # Download PDF
                 pdfUrl = pdfLinks[2]['href']
                 pdfBytes = requests.get(f"https://legistar.council.nyc.gov/{pdfUrl}").content
@@ -102,19 +106,17 @@ def scrapeLegislation(meetings):
                 if not fullText.strip():
                     print(f"Warning: No text extracted from {fileLocator}")
                     continue
-
-                # Metadata
-                fileNumber = soup.find('span', id="ctl00_ContentPlaceHolder1_lblFile2").get_text(strip=True)
+                
                 name = soup.find('span', id="ctl00_ContentPlaceHolder1_lblName2").get_text(strip=True)
                 
                 # FIX: Extract text from sponsor links instead of keeping BeautifulSoup objects
                 sponsorsSpan = soup.find('span', id="ctl00_ContentPlaceHolder1_lblSponsors2")
                 sponsors = [a.get_text(strip=True) for a in sponsorsSpan.find_all('a')] if sponsorsSpan else []
-
+                
                 # Call AI functions
                 category = classifyText(fullText)
                 summary = summarizeText(fullText)
-
+                
                 if category in categories:
                     categories[category].append({
                         "name": name,
@@ -123,7 +125,10 @@ def scrapeLegislation(meetings):
                         "sponsors": sponsors
                     })
                     
+                    # Mark as processed
+                    processed_bills.add(fileNumber)
+                    
             except Exception as e:
                 print(f"Error processing bill {fileLocator}: {e}")
-
+    
     return categories
