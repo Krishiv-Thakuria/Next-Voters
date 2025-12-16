@@ -23,6 +23,43 @@ jobs:
         python -m pip install --upgrade pip
         pip install build twine
     
+    - name: Increment version
+      run: |
+        cd civic-line-cli
+        python << 'EOF'
+        import re
+        
+        with open('setup.py', 'r') as f:
+            content = f.read()
+        
+        # Find version string (matches version="x.y" format)
+        match = re.search(r'version\s*=\s*["\'](\d+)\.(\d+)["\']', content)
+        if match:
+            major, minor = match.groups()
+            new_minor = int(minor) + 1
+            new_version = f"{major}.{new_minor}"
+            content = re.sub(
+                r'(version\s*=\s*["\'])(\d+\.\d+)(["\'])',
+                f'\\g<1>{new_version}\\g<3>',
+                content
+            )
+            with open('setup.py', 'w') as f:
+                f.write(content)
+            print(f"Version incremented to {new_version}")
+        else:
+            print("Version not found in setup.py")
+            exit(1)
+        EOF
+    
+    - name: Commit version bump
+      run: |
+        cd civic-line-cli
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add setup.py
+        git commit -m "Bump version [skip ci]" || echo "No changes to commit"
+        git push || echo "No changes to push"
+    
     - name: Build package
       run: |
         cd civic-line-cli
