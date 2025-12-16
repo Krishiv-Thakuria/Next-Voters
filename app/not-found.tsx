@@ -9,7 +9,7 @@ export default function NotFound() {
         <CardHeader>
           <CardTitle className="text-4xl">404</CardTitle>
           <CardDescription className="text-2xl font-semibold">
-            Page Not Found
+            Page not found
           </CardDescription>
         </CardHeader>
         <CardContent>
