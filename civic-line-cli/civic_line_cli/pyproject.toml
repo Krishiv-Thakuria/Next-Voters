@@ -1,0 +1,5 @@
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+civic_line_cli = ["prompts/*.txt"]

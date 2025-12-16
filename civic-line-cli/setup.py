@@ -5,13 +5,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="civic_line_cli",
-    version="0.8",  
+    version="1.4",  
     author="Hemit Vimal Patel",
     author_email="hemit@nextvoters.com",
     description="Dead simple email sending for developers",
     long_description=long_description,
     long_description_content_type="text/markdown",  # Important!
     packages=find_packages(),
+    package_data={
+        "civic_line_cli": ["prompts/*.txt"]
+    },
     install_requires=[
         "openai",
         "psycopg2-binary",
