@@ -19,7 +19,7 @@ def initializeClient():
 
 def classifyText(fullText):
     client = initializeClient()
-    political_text_classifier = loadPrompt("prompts/political_text_classifier.txt")
+    political_text_classifier = loadPrompt("./prompts/political_text_classifier.txt")
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -32,7 +32,7 @@ def classifyText(fullText):
 
 def summarizeText(fullText):
     client = initializeClient()
-    political_text_summarizer = loadPrompt("prompts/political_text_summarizer.txt")
+    political_text_summarizer = loadPrompt("./prompts/political_text_summarizer.txt")
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[

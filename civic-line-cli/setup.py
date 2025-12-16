@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="civic_line_cli",
-    version="0.8",  
+    version="0.9",  
     author="Hemit Vimal Patel",
     author_email="hemit@nextvoters.com",
     description="Dead simple email sending for developers",
