@@ -1,4 +1,5 @@
 from openai import OpenAI
+from pathlib import Path
 from .storedValues import get_secret
 
 # -----------------------------------------------------------
@@ -6,8 +7,12 @@ from .storedValues import get_secret
 # -----------------------------------------------------------
 _client = None
 
-def loadPrompt(fileName):
-    with open(fileName, "r", encoding="utf-8") as file:
+BASE_DIR = Path(__file__).parent
+PROMPTS_DIR = BASE_DIR / "prompts"
+
+def loadPrompt(fileName: str) -> str:
+    path = PROMPTS_DIR / fileName
+    with open(path, "r", encoding="utf-8") as file:
         return file.read()
 
 def initializeClient():
@@ -19,25 +24,41 @@ def initializeClient():
 
 def classifyText(fullText):
     client = initializeClient()
-    political_text_classifier = loadPrompt("./prompts/political_text_classifier.txt")
+    political_text_classifier = loadPrompt("political_text_classifier.txt")
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": f"Classify the legislation into: Immigration, Economy, or Civil. Return ONLY the category name: {fullText}"},
-            {"role": "user", "content": political_text_classifier}
+            {
+                "role": "system",
+                "content": "Classify the legislation into: Immigration, Economy, or Civil. Return ONLY the category name."
+            },
+            {
+                "role": "user",
+                "content": f"{political_text_classifier}\n\n{fullText}"
+            }
         ],
         max_tokens=5
     )
+
     return response.choices[0].message.content.strip()
 
 def summarizeText(fullText):
     client = initializeClient()
-    political_text_summarizer = loadPrompt("./prompts/political_text_summarizer.txt")
+    political_text_summarizer = loadPrompt("political_text_summarizer.txt")
+
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": f"Summarize this legislation in 2–3 sentences, neutrally, with no opinions: {fullText}"},
-            {"role": "user", "content": political_text_summarizer}
+            {
+                "role": "system",
+                "content": "Summarize this legislation in 2–3 sentences, neutrally, with no opinions."
+            },
+            {
+                "role": "user",
+                "content": f"{political_text_summarizer}\n\n{fullText}"
+            }
         ],
     )
-    return response.choices[0].message.content.strip() 
+
+    return response.choices[0].message.content.strip()
