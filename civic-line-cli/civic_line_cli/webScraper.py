@@ -1,7 +1,3 @@
-# -----------------------------------------------------------
-# web_scraper.py — Contains ONLY scraping-related functions (NYC legislation)
-# -----------------------------------------------------------
-
 import requests
 from bs4 import BeautifulSoup
 from io import BytesIO
@@ -45,11 +41,8 @@ def scrapeCouncilMeetings():
 
 
 def scrapeLegislation(meetings):
-    """
-    classifyText and summarizeText come from your OpenAI helpers.
-    """
     categories = {"Immigration": [], "Economy": [], "Civil": []}
-    processed_bills = set()  # Track bill IDs we've already processed
+    processed_bills = set() 
     
     for meeting in meetings:
         detailsUrl = f"https://legistar.council.nyc.gov/{meeting['meetingDetails']}"
@@ -109,11 +102,9 @@ def scrapeLegislation(meetings):
                 
                 name = soup.find('span', id="ctl00_ContentPlaceHolder1_lblName2").get_text(strip=True)
                 
-                # FIX: Extract text from sponsor links instead of keeping BeautifulSoup objects
                 sponsorsSpan = soup.find('span', id="ctl00_ContentPlaceHolder1_lblSponsors2")
                 sponsors = [a.get_text(strip=True) for a in sponsorsSpan.find_all('a')] if sponsorsSpan else []
                 
-                # Call AI functions
                 category = classifyText(fullText)
                 summary = summarizeText(fullText)
                 
@@ -125,7 +116,6 @@ def scrapeLegislation(meetings):
                         "sponsors": sponsors
                     })
                     
-                    # Mark as processed
                     processed_bills.add(fileNumber)
                     
             except Exception as e:
