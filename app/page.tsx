@@ -127,7 +127,7 @@ const Home = () => {
         </section>
 
         {/* Testimonial Section */}
-        <section className="py-24 bg-white">
+        <section className="bg-white">
           <div className="max-w-[1200px] mx-auto px-4">
             <div className="w-full h-px bg-gray-200 mb-16"></div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
