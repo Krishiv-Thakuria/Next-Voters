@@ -146,7 +146,7 @@ const Home = () => {
                   </div>
                   <div>
                     <p className="text-[15px] font-semibold text-gray-900 font-poppins">
-                      Morris Fiona
+                      Morris Fiorina
                     </p>
                     <p className="text-[14px] text-gray-600 font-poppins">
                       Professor, Stanford University
