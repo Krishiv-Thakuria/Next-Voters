@@ -126,6 +126,44 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Testimonial Section */}
+        <section className="py-24 bg-white">
+          <div className="max-w-[1000px] mx-auto px-6">
+            <div className="bg-white border border-gray-200 rounded-xl p-10 shadow-sm">
+              {/* Quote Icon */}
+              <div className="mb-6">
+                <svg 
+                  className="w-10 h-10 text-red-500 opacity-50" 
+                  fill="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+              </div>
+
+              {/* Testimonial Text */}
+              <blockquote className="text-[18px] text-gray-700 leading-relaxed mb-8 font-poppins">
+                I enjoyed my session with the Youth Civic Leaders fellows. They were knowledgeable, engaged and asked good questions. What I found very exciting was their geographic heterogeneity which brings a variety of different perspectives to their work.
+              </blockquote>
+
+              {/* Attribution */}
+              <div className="flex items-center">
+                <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-xl font-poppins mr-4">
+                  MF
+                </div>
+                <div>
+                  <p className="text-[16px] font-semibold text-gray-900 font-poppins">
+                    Morris Fiona
+                  </p>
+                  <p className="text-[14px] text-gray-600 font-poppins">
+                    Professor, Stanford University
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Fellowship Section */}
         <section className="py-24 bg-white">
           <div className="max-w-[1200px] mx-auto px-4 text-center">
