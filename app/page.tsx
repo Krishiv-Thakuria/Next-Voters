@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import PreferenceSelector from "@/components/preference-selector";
 import ClientMountWrapper from "@/components/client-mount-wrapper";
@@ -141,9 +142,13 @@ const Home = () => {
                   I enjoyed my session with the Youth Civic Leaders fellows. They were knowledgeable, engaged and asked good questions. What I found very exciting was their geographic heterogeneity which brings a variety of different perspectives to their work.
                 </blockquote>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-sm font-poppins mr-3">
-                    MF
-                  </div>
+                  <Image 
+                    className="w-12 h-12 bg-gradient-to-br from-red-500 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-sm font-poppins mr-3"
+                    src="/profile-pics/morris-fiorina.jpg"
+                    alt="Morris Fiorina"
+                    width={48}
+                    height={48}
+                  />
                   <div>
                     <p className="text-[15px] font-semibold text-gray-900 font-poppins">
                       Morris Fiorina
