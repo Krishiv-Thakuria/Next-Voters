@@ -143,7 +143,7 @@ const Home = () => {
                 </blockquote>
                 <div className="flex items-center">
                   <Image 
-                    className="w-12 h-12 bg-gradient-to-br from-red-500 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-sm font-poppins mr-3"
+                    className="w-12 h-12 bg-gradient-to-br from-red-500 to-blue-700 rounded-full flex items-center justify-center text-white font-bold text-sm font-poppins mr-3 object-cover"
                     src="/profile-pics/morris-fiorina.png"
                     alt="Morris Fiorina"
                     width={48}
