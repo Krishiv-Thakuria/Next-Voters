@@ -38,3 +38,8 @@ yarn-error.log*
 next-env.d.ts
 
 .conda
+__pycache__/
+secrets.json
+dist
+civic_line_cli.egg-info
+build

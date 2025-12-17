@@ -1,4 +1,6 @@
-![nextvoters logo](/public/logo/nextvoters.png)
+<div align="center">
+  <img src="/public/logo/nextvoters.png" alt="nextvoters logo" />
+</div>
 
 ---
 
@@ -46,6 +48,42 @@ Next Vote helps young citizens understand policy, legislation, and political pla
 
 ---
 
+## 📧 Automated Civic Email Alerts (Civic Line)
+
+Next Voters integrates **Civic Line**, an automated email sender service that keeps users informed about new legislation, council activity, and policy updates — without any manual setup.
+
+### How it works
+
+* Powered by the **`civic-line-cli`** PyPI package
+* Runs automatically on a schedule (or on-demand)
+* Scrapes legislative and council data
+* Generates AI summaries
+* Sends formatted email updates to subscribers
+
+All of this is handled by a single command:
+
+```bash
+civicline
+```
+
+The CLI handles:
+
+* Data ingestion and scraping
+* AI-powered summarization
+* Email composition
+* Secure email delivery
+
+No configuration or scripting required beyond environment variables.
+
+### Why this matters
+
+* Keeps voters informed **passively**
+* Reduces information overload
+* Bridges the gap between legislation and public understanding
+* Ideal for students, families, and local communities
+
+---
+
 ## 🛠 Technology Stack
 
 * **Framework:** Next.js 14+
@@ -56,6 +94,7 @@ Next Vote helps young citizens understand policy, legislation, and political pla
 * **UI:** Shadcn
 * **Database:** Neon + Vercel Storage
 * **Vector Search:** Qdrant
+* **Email Automation:** civic-line-cli (PyPI)
 * **Deployment:** Vercel
 
 ---
