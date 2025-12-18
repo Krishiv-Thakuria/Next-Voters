@@ -84,14 +84,14 @@ const Home = () => {
                 alt="Google for Nonprofits"
                 width={192}
                 height={192}
-                className="h-48 object-contain"
+                className="object-contain"
               />
               <Image
                 src="/lookup-live-logo.png"
                 alt="Lookup Live"
-                width={96}
-                height={96}
-                className="h-32 object-contain"
+                width={150}
+                height={150}
+                className="object-contain"
               />
             </div>
           </div>
