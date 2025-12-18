@@ -79,15 +79,19 @@ const Home = () => {
               Proud to be supported by
             </p>
             <div className="flex justify-center space-x-5 items-center mt-4">
-              <img
+              <Image
                 src="/google-for-nonprofits-logo.png"
                 alt="Google for Nonprofits"
+                width={192}
+                height={192}
                 className="h-48 object-contain"
               />
-              <img
+              <Image
                 src="/lookup-live-logo.png"
                 alt="Lookup Live"
-                className="h-48 object-contain"
+                width={96}
+                height={96}
+                className="h-24 object-contain"
               />
             </div>
           </div>
