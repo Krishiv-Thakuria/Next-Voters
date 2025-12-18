@@ -78,7 +78,7 @@ const Home = () => {
             <p className="text-sm text-gray-600 mb-1 font-poppins">
               Proud to be supported by
             </p>
-            <div className="flex justify-center">
+            <div className="flex justify-center space-x-5 items-center mt-4">
               <img
                 src="/google-for-nonprofits-logo.png"
                 alt="Google for Nonprofits"
