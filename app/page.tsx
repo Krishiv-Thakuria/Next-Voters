@@ -72,7 +72,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Google for Nonprofits Support Section */}
         <section className="py-16">
           <div className="max-w-[1000px] mx-auto px-6 text-center">
             <p className="text-sm text-gray-600 mb-1 font-poppins">
