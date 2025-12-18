@@ -81,15 +81,15 @@ const Home = () => {
               <Image
                 src="/google-for-nonprofits-logo.png"
                 alt="Google for Nonprofits"
-                width={192}
-                height={192}
+                width={250}
+                height={250}
                 className="object-contain"
               />
               <Image
                 src="/lookup-live-logo.png"
                 alt="Lookup Live"
-                width={150}
-                height={150}
+                width={200}
+                height={200}
                 className="object-contain"
               />
             </div>
