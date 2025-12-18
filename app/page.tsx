@@ -88,8 +88,8 @@ const Home = () => {
               <Image
                 src="/lookup-live-logo.png"
                 alt="Lookup Live"
-                width={200}
-                height={200}
+                width={300}
+                height={300}
                 className="object-contain"
               />
             </div>
