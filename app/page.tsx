@@ -24,53 +24,6 @@ const Home = () => {
   return (
     <ClientMountWrapper className="min-h-screen bg-white">
       <div className="w-full">
-        {/* Navigation Header */}
-        <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-          <div className="max-w-[1200px] mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-blue-700 rounded"></div>
-                <span className="text-xl font-bold text-gray-900 font-poppins">Next Voters</span>
-              </div>
-              
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-8">
-                <a href="#about" className="text-sm text-gray-700 hover:text-gray-900 font-poppins">About</a>
-                <a href="#problem" className="text-sm text-gray-700 hover:text-gray-900 font-poppins">The Problem</a>
-                <a href="#fellowship" className="text-sm text-gray-700 hover:text-gray-900 font-poppins">Fellowship</a>
-                <a href="#contact" className="text-sm text-gray-700 hover:text-gray-900 font-poppins">Contact</a>
-                <a 
-                  href="/chat" 
-                  className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors font-poppins font-medium"
-                >
-                  Get Started
-                </a>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <button 
-                className="md:hidden text-gray-700"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-              <div className="md:hidden pt-4 pb-2 space-y-2">
-                <a href="#about" className="block py-2 text-sm text-gray-700 font-poppins">About</a>
-                <a href="#problem" className="block py-2 text-sm text-gray-700 font-poppins">The Problem</a>
-                <a href="#fellowship" className="block py-2 text-sm text-gray-700 font-poppins">Fellowship</a>
-                <a href="#contact" className="block py-2 text-sm text-gray-700 font-poppins">Contact</a>
-                <a href="/chat" className="block py-2 text-sm text-red-500 font-poppins font-medium">Get Started</a>
-              </div>
-            )}
-          </div>
-        </nav>
-
         {/* Hero Section */}
         <section id="about" className="relative pt-16 pb-8">
           <div className="relative max-w-[1000px] mx-auto px-6 text-center">
