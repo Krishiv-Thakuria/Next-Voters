@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import PreferenceSelector from "@/components/preference-selector";
 import ClientMountWrapper from "@/components/client-mount-wrapper";
 
@@ -16,7 +16,7 @@ const Home = () => {
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       handleRedirectToChat();
     }
   };
@@ -96,7 +96,7 @@ const Home = () => {
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
                   onClick={handleRedirectToChat}
                   aria-label="Submit question"
                 >
@@ -155,7 +155,6 @@ const Home = () => {
         <section id="problem" className="py-24 bg-white">
           <div className="max-w-[1200px] mx-auto px-6">
             <div className="w-full h-px bg-gray-200 mb-16"></div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               <div>
                 <div className="text-[120px] font-bold text-gray-900 leading-none mb-6 font-poppins">
@@ -166,7 +165,6 @@ const Home = () => {
                   <span className="text-gray-500">(according to a survey by the United Nations)</span>
                 </p>
               </div>
-
               <div className="pt-8">
                 <h2 className="text-[24px] font-semibold text-gray-900 mb-6 leading-tight font-poppins">
                   Political misinformation is distracting Gen Z from voting on facts
@@ -184,7 +182,6 @@ const Home = () => {
                 </div>
               </div>
             </div>
-
             <div className="w-full h-px bg-gray-200 mt-16"></div>
           </div>
         </section>
@@ -237,21 +234,16 @@ const Home = () => {
         <section className="bg-white py-16">
           <div className="max-w-[1200px] mx-auto px-6">
             <div className="w-full h-px bg-gray-200 mb-16"></div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               <div>
-                <div className="text-[72px] font-bold text-gray-900 font-poppins">
+                <div className="text-[72px] font-bold text-gray-900 leading-none mb-6 font-poppins">
                   Testimonial
                 </div>
               </div>
-
               <div className="pt-8">
                 <blockquote className="text-[15px] text-gray-700 leading-relaxed mb-6 font-poppins">
-                  I enjoyed my session with the Youth Civic Leaders fellows. They were knowledgeable,
-                  engaged, and asked good questions. Their geographic diversity brought valuable
-                  perspectives to the discussion.
+                  I enjoyed my session with the Youth Civic Leaders fellows. They were knowledgeable, engaged and asked good questions. What I found very exciting was their geographic heterogeneity which brings a variety of different perspectives to their work.
                 </blockquote>
-
                 <div className="flex items-center">
                   <Image 
                     className="w-12 h-12 rounded-full object-cover mr-3"
@@ -267,7 +259,6 @@ const Home = () => {
                 </div>
               </div>
             </div>
-
             <div className="w-full h-px bg-gray-200 mt-16"></div>
           </div>
         </section>
@@ -389,13 +380,14 @@ const Home = () => {
             </div>
             <div className="pt-8 border-t border-gray-200 text-center">
               <p className="text-sm text-gray-600 font-poppins">
-                © 2024 Next Voters. A registered 501(c)(3) nonprofit organization.
+                © 2025 Next Voters. A registered 501(c)(3) nonprofit organization.
               </p>
             </div>
-          </footer>
-        </div>
-      </ClientMountWrapper>
-    );
-  }
+          </div>
+        </footer>
+      </div>
+    </ClientMountWrapper>
+  );
+}
 
 export default Home;
