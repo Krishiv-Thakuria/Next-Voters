@@ -1,6 +1,6 @@
-from .webScraper import scrapeCouncilMeetings, scrapeLegislation
-from .emailService import sendEmails
-from .storedValues import create_secrets
+from .helper.webScraper import scrapeCouncilMeetings, scrapeLegislation
+from .helper.emailService import sendEmails
+from .helper.storedValues import create_secrets
 import time 
 
 def cli():
