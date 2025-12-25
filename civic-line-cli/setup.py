@@ -10,7 +10,7 @@ setup(
     author_email="hemit@nextvoters.com",
     description="Dead simple email sending for developers",
     long_description=long_description,
-    long_description_content_type="text/markdown",  # Important!
+    long_description_content_type="text/markdown",  
     packages=find_packages(),
     package_data={
         "civic_line_cli": ["helper/prompts/*.txt"]
