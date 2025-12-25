@@ -3,7 +3,8 @@
 # Global variables used throughout the application. 
 meetings = []
 bills = []
-resultsHTML = []
+meetingDetailsHTML = []
+legislationDetailsHTML = []
 fileLocaters = []
 categories = {
     "Immigration": [],

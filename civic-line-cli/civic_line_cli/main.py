@@ -1,7 +1,7 @@
-from .helper.scraper import scrapeCouncilMeetings, scrapeLegislations
+from .helper.scraper import scrapeCouncilMeetings, scrapeMeetingDetails, scrapeLegislationDetail
 from .helper.emailService import sendEmails
 from .helper.storedValues import create_secrets
-from .helper.asyncioManager import fetchCouncilMeetings, fetchLegislation, processBillsWithAI
+from .helper.asyncioManager import fetchCouncilMeetings, fetchMeetingDetails, fetchLegislationDetails, processBillsWithAI
 import time 
 import asyncio
 
@@ -24,14 +24,20 @@ async def cli():
     print("Scraping meetings...")
     scrapeCouncilMeetings(meetingHTML)
     
-    print("Fetching legislation...")
-    await fetchLegislation()
+    print("Fetching meeting details (legislation list)...")
+    await fetchMeetingDetails()
     
-    print("Scraping legislation...")
-    scrapeLegislations()
+    print("Scraping meeting details (legislation list)...")
+    scrapeMeetingDetails()
+
+    print("Fetching legislation details...")
+    await fetchLegislationDetails()
+
+    print("Scraping legislation details...")
+    scrapeLegislationDetail()
     
     print("Processing bills with AI...")
-    await processBillsWithAI()  # Missing await!
+    await processBillsWithAI() 
     
     print("Sending emails...")
     sendEmails()

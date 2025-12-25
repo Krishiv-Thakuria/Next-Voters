@@ -47,7 +47,7 @@ def sendEmails():
     
     for (email,) in subscribers:
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = "NYC Legislation Update"
+        msg["Subject"] = "TESTING"
         msg["From"] = gmail_email
         msg["To"] = email
         msg.attach(MIMEText(html_body, "html"))

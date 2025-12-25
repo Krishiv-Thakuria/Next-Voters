@@ -1,6 +1,6 @@
 import asyncio
 from aiohttp import ClientSession
-from ..globalStates import meetings, resultsHTML, bills, categories
+from ..globalStates import meetings, meetingDetailsHTML, legislationDetailsHTML, bills, categories, fileLocaters
 from .ai import runAIOnBill
 
 
@@ -11,29 +11,40 @@ async def fetchCouncilMeetings():
     return html
 
 
-def getLegislationWebRequestTasks(session):
+def getMeetingDetailsTasks(session):
     tasks = []
     for meeting in meetings:
-        # ssl=False goes INSIDE session.get(), not after append()
         tasks.append(session.get(f"https://legistar.council.nyc.gov/{meeting['meetingDetails']}", ssl=False))
     return tasks
 
+def getLegislationDetailsTask(session):
+    tasks = []
+    for fileLocator in fileLocaters:
+        tasks.append(session.get(f"https://legistar.council.nyc.gov/{fileLocator}", ssl=False))
+    return tasks
 
 def getAITasks():
     tasks = []
     for bill in bills:
-        tasks.append(runAIOnBill(bill["fullText"]))
+        tasks.append(runAIOnBill(bill))
     return tasks
 
 
-async def fetchLegislation(): 
+async def fetchMeetingDetails(): 
     async with ClientSession() as session:
-        tasks = getLegislationWebRequestTasks(session)
+        tasks = getMeetingDetailsTasks(session)
         responses = await asyncio.gather(*tasks)
         for response in responses:
             html = await response.text()
-            resultsHTML.append(html)
+            meetingDetailsHTML.append(html)
 
+async def fetchLegislationDetails():
+    async with ClientSession() as session:
+        tasks = getLegislationDetailsTask(session)
+        responses = await asyncio.gather(*tasks)
+        for response in responses:
+            html = await response.text()
+            legislationDetailsHTML.append(html)
 
 async def processBillsWithAI():
     tasks = getAITasks()
@@ -51,3 +62,5 @@ async def processBillsWithAI():
             categories[category].append(billData)
         else:
             print("Unknown category:", category)
+
+    
