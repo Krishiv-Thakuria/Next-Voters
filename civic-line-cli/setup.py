@@ -24,7 +24,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "civicline = civic_line_cli:cli"
+            "civicline = civic_line_cli.main:main"
         ]
     }
 )

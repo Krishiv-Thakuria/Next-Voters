@@ -1,10 +1,11 @@
+import time 
+import asyncio
+
 from .helper.scraper import scrapeCouncilMeetings, scrapeMeetingDetails, scrapeLegislationDetail
 from .helper.emailService import sendEmails
 from .helper.storedValues import create_secrets
 from .helper.webRequester import fetchCouncilMeetings, fetchMeetingDetails, fetchLegislationDetails
 from .helper.aiProcessor import processBillsWithAI
-import time 
-import asyncio
 
 async def cli():
     isUpdateNeeded = input("Do you need to update any secret values? (y/n): ").strip().lower() 
@@ -45,6 +46,5 @@ async def cli():
     elapsed_time = time.time() - start_time
     print(f"Total time: {elapsed_time:.2f} seconds")
 
-
-if __name__ == "__main__":
-    asyncio.run(cli())  
+def main():
+    asyncio.run(cli())
