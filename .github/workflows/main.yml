@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - civic-line-cli/**
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
