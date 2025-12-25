@@ -6,7 +6,6 @@ from .helper.aiProcessor import processBillsWithAI
 import time 
 import asyncio
 
-
 async def cli():
     isUpdateNeeded = input("Do you need to update any secret values? (y/n): ").strip().lower() 
     
