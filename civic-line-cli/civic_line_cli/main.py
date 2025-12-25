@@ -1,7 +1,8 @@
 from .helper.scraper import scrapeCouncilMeetings, scrapeMeetingDetails, scrapeLegislationDetail
 from .helper.emailService import sendEmails
 from .helper.storedValues import create_secrets
-from .helper.asyncioManager import fetchCouncilMeetings, fetchMeetingDetails, fetchLegislationDetails, processBillsWithAI
+from .helper.webRequester import fetchCouncilMeetings, fetchMeetingDetails, fetchLegislationDetails
+from .helper.aiProcessor import processBillsWithAI
 import time 
 import asyncio
 

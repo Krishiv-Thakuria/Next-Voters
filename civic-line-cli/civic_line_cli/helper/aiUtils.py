@@ -1,6 +1,7 @@
 from openai import AsyncOpenAI
 from pathlib import Path
 from .storedValues import get_secret
+from .tasksManager import getAITasks
 
 # Intialize OpenAI at module level for reuse
 _client = None
@@ -73,3 +74,4 @@ async def runAIOnBill(bill):
     summary = await summarizeText(fullText)
 
     return category, name, fileNumber, summary, sponsors
+
