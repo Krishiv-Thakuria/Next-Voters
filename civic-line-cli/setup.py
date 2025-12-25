@@ -13,7 +13,7 @@ setup(
     long_description_content_type="text/markdown",  # Important!
     packages=find_packages(),
     package_data={
-        "civic_line_cli": ["prompts/*.txt"]
+        "civic_line_cli": ["helper/prompts/*.txt"]
     },
     install_requires=[
         "openai",
