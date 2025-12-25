@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Civic Line CLI Logo" width="200"/>
   <h1>Civic Line CLI</h1>
   <p><strong>Dead simple bulk email sending for civic engagement and voter outreach.</strong></p>
 </div>
