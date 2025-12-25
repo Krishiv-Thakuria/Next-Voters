@@ -1,7 +1,6 @@
 from openai import AsyncOpenAI
 from pathlib import Path
 from .storedValues import get_secret
-from .tasksManager import getAITasks
 
 # Intialize OpenAI at module level for reuse
 _client = None
