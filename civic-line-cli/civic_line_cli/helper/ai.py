@@ -1,32 +1,33 @@
-from openai import OpenAI
+from openai import AsyncOpenAI
 from pathlib import Path
 from .storedValues import get_secret
 
-# -----------------------------------------------------------
-# Initialize OpenAI client once at module level 
-# -----------------------------------------------------------
+# Intialize OpenAI at module level for reuse
 _client = None
 
 BASE_DIR = Path(__file__).parent
 PROMPTS_DIR = BASE_DIR / "prompts"
+
 
 def loadPrompt(fileName: str) -> str:
     path = PROMPTS_DIR / fileName
     with open(path, "r", encoding="utf-8") as file:
         return file.read()
 
+
 def initializeClient():
     global _client
     if _client is None:  
         api_key = get_secret("open_ai_key")
-        _client = OpenAI(api_key=api_key)
+        _client = AsyncOpenAI(api_key=api_key)
     return _client
 
-def classifyText(fullText):
+
+async def classifyText(fullText):
     client = initializeClient()
     political_text_classifier = loadPrompt("political_text_classifier.txt")
-
-    response = client.chat.completions.create(
+    
+    response = await client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {
@@ -40,14 +41,14 @@ def classifyText(fullText):
         ],
         max_tokens=5
     )
-
     return response.choices[0].message.content.strip()
 
-def summarizeText(fullText):
+
+async def summarizeText(fullText):
     client = initializeClient()
     political_text_summarizer = loadPrompt("political_text_summarizer.txt")
-
-    response = client.chat.completions.create(
+    
+    response = await client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {
@@ -60,5 +61,15 @@ def summarizeText(fullText):
             }
         ],
     )
-
     return response.choices[0].message.content.strip()
+
+async def runAIOnBill(bill):
+    name = bill["name"]
+    fileNumber = bill["fileNumber"]
+    fullText = bill["fullText"]
+    sponsors = bill["sponsors"]
+
+    category = await classifyText(fullText)
+    summary = await summarizeText(fullText)
+
+    return category, name, fileNumber, summary, sponsors

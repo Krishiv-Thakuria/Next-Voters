@@ -3,6 +3,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from .storedValues import get_secret
+from ..globalStates import categories
 
 gmail_email = get_secret("gmail_email")
 gmail_app_password = get_secret("gmail_app_password")
@@ -36,10 +37,7 @@ def buildEmailHtml(categories):
     html += "</body></html>"
     return html
 
-# -----------------------------------------------------------
-# Send Email Function
-# -----------------------------------------------------------
-def sendEmails(categories):
+def sendEmails():
     conn = psycopg2.connect(postgres_connection_string)
     cursor = conn.cursor()
     cursor.execute("SELECT email FROM email_subscriptions;")
@@ -49,7 +47,7 @@ def sendEmails(categories):
     
     for (email,) in subscribers:
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = "Weekly NYC Legislation Update"
+        msg["Subject"] = "NYC Legislation Update"
         msg["From"] = gmail_email
         msg["To"] = email
         msg.attach(MIMEText(html_body, "html"))
