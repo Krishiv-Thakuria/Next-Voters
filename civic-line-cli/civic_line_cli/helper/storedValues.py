@@ -2,11 +2,8 @@ import json
 from getpass import getpass
 from pathlib import Path
 
-SECRETS_FILE = Path("secrets.json")  # You can change the path as needed
+SECRETS_FILE = Path("secrets.json") 
 
-# -----------------------------------------------------------
-# Ensure the secrets file exists with all keys (empty values)
-# -----------------------------------------------------------
 default_secrets = {
     "open_ai_key": "",
     "gmail_email": "",
@@ -19,9 +16,6 @@ if not SECRETS_FILE.exists():
         json.dump(default_secrets, f, indent=4)
     print(f"{SECRETS_FILE} did not exist. Created file with empty values.")
 
-# -----------------------------------------------------------
-# Functions
-# -----------------------------------------------------------
 def prompt_value(name: str) -> str:
     """Prompt the user for a value, input hidden for security."""
     prompt = f"Enter {name}: "

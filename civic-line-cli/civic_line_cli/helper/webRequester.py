@@ -1,5 +1,5 @@
 from aiohttp import ClientSession 
-from .tasksManager import getMeetingDetailsTasks, getLegislationDetailsTask, getAITasks
+from .tasksManager import getMeetingDetailsTasks, getLegislationDetailsTask
 from ..globalStates import meetingDetailsHTML, legislationDetailsHTML
 import asyncio 
 
