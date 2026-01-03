@@ -44,6 +44,7 @@ async def classifyText(fullText):
     return response.choices[0].message.content.strip()
 
 
+
 async def summarizeText(fullText):
     client = initializeClient()
     political_text_summarizer = loadPrompt("political_text_summarizer.txt")

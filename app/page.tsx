@@ -104,41 +104,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* 87% Statistics Section */}
-        <section id="problem" className="py-24 bg-white">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="w-full h-px bg-gray-200 mb-16"></div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              <div>
-                <div className="text-[120px] font-bold text-gray-900 leading-none mb-6 font-poppins">
-                  87%
-                </div>
-                <p className="text-[15px] text-gray-700 leading-relaxed font-poppins">
-                  of people believe online disinformation has harmed their country's politics{" "}
-                  <span className="text-gray-500">(according to a survey by the United Nations)</span>
-                </p>
-              </div>
-              <div className="pt-8">
-                <h2 className="text-[24px] font-semibold text-gray-900 mb-6 leading-tight font-poppins">
-                  Political misinformation is distracting Gen Z from voting on facts
-                </h2>
-                <p className="text-[15px] text-gray-700 leading-relaxed mb-4 font-poppins">
-                  TikTok, Instagram, and other social platforms have become Gen Z's chief civic classroom, but that's where misinformation thrives. Young voters spend nearly three hours daily scrolling past election-related content—much of it unverified and influenced content—propagated by engagement algorithms. Despite being digital natives, Gen Z encounters a barrage of conflicting sources that deters them from seeking quality information. The gap between confidence and skill is widening dangerously.
-                </p>
-                <div className="mt-6">
-                  <a 
-                    href="/chat" 
-                    className="inline-block px-6 py-3 bg-red-500 text-white text-[15px] rounded-lg hover:bg-red-600 transition-colors font-poppins font-medium"
-                  >
-                    Get Fact-Based Answers
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="w-full h-px bg-gray-200 mt-16"></div>
-          </div>
-        </section>
-
         {/* What We Do Section */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-[1200px] mx-auto px-6">
