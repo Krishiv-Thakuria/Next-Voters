@@ -257,52 +257,6 @@ const Home = () => {
             </div>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="bg-white border-t border-gray-200 py-12">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-blue-700 rounded"></div>
-                  <span className="text-lg font-bold text-gray-900 font-poppins">Next Voters</span>
-                </div>
-                <p className="text-sm text-gray-600 font-poppins">
-                  Empowering young voters with fact-based policy information.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3 font-poppins">Platform</h3>
-                <ul className="space-y-2">
-                  <li><a href="/chat" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Ask Questions</a></li>
-                  <li><a href="#about" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">About Us</a></li>
-                  <li><a href="#problem" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">The Problem</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3 font-poppins">Fellowship</h3>
-                <ul className="space-y-2">
-                  <li><a href="/fellowship" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Apply</a></li>
-                  <li><a href="/fellowship" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Program Details</a></li>
-                  <li><a href="/fellowship" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Past Fellows</a></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3 font-poppins">Legal</h3>
-                <ul className="space-y-2">
-                  <li><a href="/privacy" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Privacy Policy</a></li>
-                  <li><a href="/terms" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Terms of Service</a></li>
-                  <li><a href="#contact" className="text-sm text-gray-600 hover:text-gray-900 font-poppins">Contact</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className="pt-8 border-t border-gray-200 text-center">
-              <p className="text-sm text-gray-600 font-poppins">
-                © 2025 Next Voters. A registered 501(c)(3) nonprofit organization.
-              </p>
-            </div>
-          </div>
-        </footer>
       </div>
     </ClientMountWrapper>
   );
