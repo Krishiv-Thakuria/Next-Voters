@@ -261,7 +261,7 @@ const Home = () => {
         {/* Footer */}
         <footer className="pt-8 border-t border-gray-200 text-center">
             <p className="text-sm text-gray-600 font-poppins">
-                © 2025 Next Voters. A registered 501(c)(3) nonprofit organization.
+                © {new Date().getFullYear();} Next Voters. A registered 501(c)(3) nonprofit organization.
             </p>
           </div>
         </footer>
