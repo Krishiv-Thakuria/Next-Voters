@@ -260,12 +260,12 @@ const Home = () => {
 
         {/* Footer */}
         <footer className="pt-8 border-t border-gray-200 text-center">
+          <div className="px-6 py-4">
             <p className="text-sm text-gray-600 font-poppins">
-                © {new Date().getFullYear();} Next Voters. A registered 501(c)(3) nonprofit organization.
+              © {new Date().getFullYear()} Next Voters. A registered 501(c)(3) nonprofit organization.
             </p>
           </div>
         </footer>
-      </div>
     </ClientMountWrapper>
   );
 }
