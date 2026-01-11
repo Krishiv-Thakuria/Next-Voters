@@ -9,21 +9,12 @@ const EmailServiceProduct = () => {
   return (
     <div className="w-full bg-white">
         <div className="max-w-[680px] mx-auto px-6 pt-20 pb-16 text-center">
-<<<<<<< HEAD
           <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-plus-jakarta-sans leading-tight">
             Become informed.
           </h1>
           
           <p className="text-[16px] text-gray-600 mb-10 font-plus-jakarta-sans leading-relaxed">
             Changing the world comes from being educated!
-=======
-          <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
-            Civic Line
-          </h1>
-          
-          <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
-            Stay informed with weekly email updates on local legislation, tailored to your city. Become an <u>informed citizen</u>. Subscribe now <b>for free</b>!
->>>>>>> 1e4be6d865e0a25b84981b01f8eeab33b2c76590
           </p>
           
           <input 
