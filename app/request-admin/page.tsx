@@ -11,7 +11,7 @@ export default function Page() {
           className="bg-white text-red-500 px-4 py-2 rounded-md hover:bg-gray-100"
           onClick={async () => await handleRequestAdmin()}
         >
-          <span className="font-poppins">Request</span>
+          <span className="font-plus-jakarta-sans">Request</span>
         </button>
       </div>
     </div>

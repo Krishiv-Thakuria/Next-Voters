@@ -7,6 +7,7 @@ import { getPreference, setPreference } from '@/lib/preferences';
 
 const PreferenceSelector = () => {
   const [selectedPreference, setSelectedPreference] = useState(getPreference());
+  
   const handlePreferenceChange = (value) => {
     setPreference(value);
     setSelectedPreference(value);
@@ -28,7 +29,7 @@ const PreferenceSelector = () => {
           value={selectedPreference || ""} 
           onValueChange={handlePreferenceChange}
         >
-          <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+          <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-plus-jakarta-sans">
             <SelectValue placeholder="Country" />
           </SelectTrigger>
           <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
@@ -36,7 +37,7 @@ const PreferenceSelector = () => {
               <SelectItem 
                 key={option} 
                 value={option} 
-                className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                className="hover:bg-gray-100 focus:bg-gray-100 font-plus-jakarta-sans"
               >
                 {option}
               </SelectItem>
@@ -45,7 +46,7 @@ const PreferenceSelector = () => {
               <SelectItem 
                 key={option} 
                 value={option} 
-                className="hover:bg-gray-100 focus:bg-gray-100 font-poppins"
+                className="hover:bg-gray-100 focus:bg-gray-100 font-plus-jakarta-sans"
               >
                 {option}
               </SelectItem>

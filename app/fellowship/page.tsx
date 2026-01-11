@@ -9,15 +9,15 @@ const FellowshipPage = () => {
       <main className="w-full">
         {/* Hero Section */}
         <div className="max-w-[680px] mx-auto px-6 pt-20 pb-16 text-center">
-          <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-poppins leading-tight">
+          <h1 className="text-[48px] font-bold text-gray-900 mb-6 font-plus-jakarta-sans leading-tight">
             Become a civic changemaker
           </h1>
           
-          <p className="text-[16px] text-gray-600 mb-10 font-poppins leading-relaxed">
+          <p className="text-[16px] text-gray-600 mb-10 font-plus-jakarta-sans leading-relaxed">
             Changing the world starts with changing your community.
           </p>
           
-          <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium">
+          <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-plus-jakarta-sans font-medium">
             Apply Now - It's Free
           </a>
         </div>
@@ -27,7 +27,7 @@ const FellowshipPage = () => {
           <hr className="border-gray-200 my-16" />
         </div>
         <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
-          <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-poppins">
+          <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-plus-jakarta-sans">
             Featured Speakers & Mentors
           </h2>
 
@@ -40,10 +40,10 @@ const FellowshipPage = () => {
                   alt="Professor Morris P. Fiorina"
                   className="w-28 h-28 rounded-full object-cover mb-4 border border-gray-300"
                 />
-                <h3 className="text-[18px] font-semibold text-gray-900 font-poppins">Professor Morris P. Fiorina</h3>
-                <p className="text-[13px] text-gray-600 font-poppins mb-4">Professor of Political Science, Stanford University</p>
+                <h3 className="text-[18px] font-semibold text-gray-900 font-plus-jakarta-sans">Professor Morris P. Fiorina</h3>
+                <p className="text-[13px] text-gray-600 font-plus-jakarta-sans mb-4">Professor of Political Science, Stanford University</p>
               </div>
-              <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
+              <p className="text-[14px] text-gray-700 leading-relaxed font-plus-jakarta-sans">
                 Morris P. Fiorina is a leading American political scientist at Stanford University and the Hoover Institution, renowned for his research on representation, public opinion, and the myth of a deeply polarized electorate.
               </p>
               <div className="mt-4 flex items-center justify-center">
@@ -63,10 +63,10 @@ const FellowshipPage = () => {
                   alt="Professor Diana C. Mutz"
                   className="w-28 h-28 rounded-full object-cover mb-4 border border-gray-300"
                 />
-                <h3 className="text-[18px] font-semibold text-gray-900 font-poppins">Professor Diana C. Mutz</h3>
-                <p className="text-[13px] text-gray-600 font-poppins mb-4">Professor of Political Science & Communication, University of Pennsylvania</p>
+                <h3 className="text-[18px] font-semibold text-gray-900 font-plus-jakarta-sans">Professor Diana C. Mutz</h3>
+                <p className="text-[13px] text-gray-600 font-plus-jakarta-sans mb-4">Professor of Political Science & Communication, University of Pennsylvania</p>
               </div>
-              <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
+              <p className="text-[14px] text-gray-700 leading-relaxed font-plus-jakarta-sans">
                 Diana C. Mutz is a prominent scholar of political psychology and public opinion at the University of Pennsylvania, widely recognized for her work on cross-cutting political exposure and the dynamics of democratic discourse.
               </p>
               <div className="mt-4 flex items-center justify-center">
@@ -79,7 +79,7 @@ const FellowshipPage = () => {
             </div>
           </div>
 
-          <p className="text-[12px] text-gray-500 font-poppins mt-6">
+          <p className="text-[12px] text-gray-500 font-plus-jakarta-sans mt-6">
             More speakers will be revealed soon — stay tuned!
           </p>
         </div>
@@ -92,11 +92,11 @@ const FellowshipPage = () => {
         {/* $10,000+ Section */}
         <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
           <div className="max-w-lg mx-auto bg-white border border-gray-300 rounded-xl p-12 shadow-sm">
-            <p className="text-[16px] text-gray-900 mb-6 font-poppins">
+            <p className="text-[16px] text-gray-900 mb-6 font-plus-jakarta-sans">
               Get access to a pool of
             </p>
             <div 
-              className="text-[64px] font-bold mb-6 leading-none font-poppins"
+              className="text-[64px] font-bold mb-6 leading-none font-plus-jakarta-sans"
               style={{ 
                 background: 'linear-gradient(135deg, #B91C1C 0%, #1E40AF 100%)',
                 WebkitBackgroundClip: 'text',
@@ -106,7 +106,7 @@ const FellowshipPage = () => {
             >
               $10,000+
             </div>
-            <p className="text-[16px] text-gray-900 leading-relaxed font-poppins">
+            <p className="text-[16px] text-gray-900 leading-relaxed font-plus-jakarta-sans">
               in no-strings-attached, impact-based grants for top-performing fellows
             </p>
           </div>
@@ -114,7 +114,7 @@ const FellowshipPage = () => {
 
         {/* Fellows Lead Real Change Section */}
         <div className="max-w-[680px] mx-auto px-6 text-center mb-20">
-          <h2 className="text-[32px] font-semibold text-gray-900 mb-12 font-poppins">
+          <h2 className="text-[32px] font-semibold text-gray-900 mb-12 font-plus-jakarta-sans">
             Fellows lead <em>real</em> change
           </h2>
           
@@ -122,20 +122,20 @@ const FellowshipPage = () => {
           <div className="space-y-8">
             {/* Card 1 */}
             <div className="bg-white border border-gray-300 rounded-xl p-8 shadow-sm">
-              <h3 className="text-[20px] font-semibold text-gray-900 mb-4 font-poppins">
+              <h3 className="text-[20px] font-semibold text-gray-900 mb-4 font-plus-jakarta-sans">
                 Create viral content that impacts millions
               </h3>
-              <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
+              <p className="text-[14px] text-gray-700 leading-relaxed font-plus-jakarta-sans">
               Fellows will be directly trained by a viral marketing expert with millions of views on TikTok pages, empowering millions of voters by raising awareness on accessible tools provided by Next Voters.
               </p>
             </div>
 
             {/* Card 2 */}
             <div className="bg-white border border-gray-300 rounded-xl p-8 shadow-sm">
-              <h3 className="text-[20px] font-semibold text-gray-900 mb-4 font-poppins">
+              <h3 className="text-[20px] font-semibold text-gray-900 mb-4 font-plus-jakarta-sans">
                 Lead real change in your community
               </h3>
-              <p className="text-[14px] text-gray-700 leading-relaxed font-poppins">
+              <p className="text-[14px] text-gray-700 leading-relaxed font-plus-jakarta-sans">
               Fellows will empower young voters in their local community of choice (school, district, etc) by integrating Next Voters technology.
               </p>
             </div>
@@ -146,11 +146,11 @@ const FellowshipPage = () => {
 
         {/* Final CTA Section */}
         <div className="max-w-[680px] mx-auto px-6 text-center pb-20">
-          <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-poppins">
+          <h2 className="text-[32px] font-semibold text-gray-900 mb-6 font-plus-jakarta-sans">
             Let's strengthen democracy, together
           </h2>
           
-          <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium">
+          <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-plus-jakarta-sans font-medium">
             Apply Now - It's Free
           </a>
         </div>

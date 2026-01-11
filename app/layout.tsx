@@ -1,7 +1,14 @@
 import { type Metadata } from 'next'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Root from '@/components/common/root'
 import { AuthProvider } from '@/wrappers/AuthProvider'
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Next-Voters',
@@ -15,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <AuthProvider>
-    <html lang="en">
+    <html lang="en" className={plusJakartaSans.variable}>
       <body className={`antialiased`}>
         <Root>{children}</Root>
       </body>

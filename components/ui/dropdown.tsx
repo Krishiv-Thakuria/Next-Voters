@@ -13,7 +13,7 @@ const Dropdown = ({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="appearance-none bg-transparent pr-0 text-[16px] text-gray-800 font-poppins focus:outline-none"
+      className="appearance-none bg-transparent pr-0 text-[16px] text-gray-800 font-plus-jakarta-sans focus:outline-none"
     >
       <option value="">{label}</option>
       {options.map((opt) => (

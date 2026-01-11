@@ -157,7 +157,7 @@ export default function ChatMainPage() {
   };
 
   return (
-    <div className="h-screen bg-white text-gray-900 flex flex-col font-poppins">
+    <div className="h-screen bg-white text-gray-900 flex flex-col font-plus-jakarta-sans">
       {/* Header */}
       <header className="bg-white p-4 sticky top-0 z-20 border-b border-gray-200">
         <div className="container mx-auto flex flex-col items-center max-w-5xl">
@@ -174,7 +174,7 @@ export default function ChatMainPage() {
             {/* Current User Question */}
             <div className="flex justify-end w-full">
               <div className="bg-blue-500 text-white p-4 rounded-lg max-w-xs sm:max-w-sm md:max-w-md shadow-sm">
-                <p className="whitespace-pre-line font-poppins">{currentQuestion}</p>
+                <p className="whitespace-pre-line font-plus-jakarta-sans">{currentQuestion}</p>
               </div>
             </div>
 
@@ -183,10 +183,10 @@ export default function ChatMainPage() {
               {/* Perspective 1 Column */}
               <Card className="bg-white border border-gray-200 rounded-lg shadow-sm">
                 <CardHeader className="border-b border-gray-200 p-4">
-                  <CardTitle className={`text-${perspectives.perspective1.color}-600 text-lg font-semibold font-poppins`}>{perspectives.perspective1.name}</CardTitle>
+                  <CardTitle className={`text-${perspectives.perspective1.color}-600 text-lg font-semibold font-plus-jakarta-sans`}>{perspectives.perspective1.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
-                  <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins">
+                  <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-plus-jakarta-sans">
                     <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                       {mockResponses[currentQuestion][currentCountry].democratic}
                     </ReactMarkdown>
@@ -197,10 +197,10 @@ export default function ChatMainPage() {
               {/* Perspective 2 Column */}
               <Card className="bg-white border border-gray-200 rounded-lg shadow-sm">
                 <CardHeader className="border-b border-gray-200 p-4">
-                  <CardTitle className={`text-${perspectives.perspective2.color}-600 text-lg font-semibold font-poppins`}>{perspectives.perspective2.name}</CardTitle>
+                  <CardTitle className={`text-${perspectives.perspective2.color}-600 text-lg font-semibold font-plus-jakarta-sans`}>{perspectives.perspective2.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
-                  <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-poppins">
+                  <div className="text-sm text-gray-900 whitespace-pre-line min-h-[100px] font-plus-jakarta-sans">
                     <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
                       {mockResponses[currentQuestion][currentCountry].republican}
                     </ReactMarkdown>
@@ -263,17 +263,17 @@ export default function ChatMainPage() {
           <Input
             value={inputQuestion}
             placeholder="Type your question here... (e.g., What are the candidate's views on healthcare?)"
-            className="flex-grow bg-transparent border-none text-gray-900 placeholder-gray-500 focus:ring-0 focus:outline-none shadow-none font-poppins"
+            className="flex-grow bg-transparent border-none text-gray-900 placeholder-gray-500 focus:ring-0 focus:outline-none shadow-none font-plus-jakarta-sans"
           />
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Select value="USA">
-                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                <SelectTrigger className="w-auto md:w-[150px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-plus-jakarta-sans">
                   <SelectValue placeholder="Country" />
                 </SelectTrigger>
                 <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
                   {Object.keys(countryData).map((c) => (
-                    <SelectItem key={c} value={c} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">
+                    <SelectItem key={c} value={c} className="hover:bg-gray-100 focus:bg-gray-100 font-plus-jakarta-sans">
                       {c}
                     </SelectItem>
                   ))}
@@ -281,23 +281,23 @@ export default function ChatMainPage() {
               </Select>
 
               <Select value="California">
-                <SelectTrigger className="w-full md:w-[180px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                <SelectTrigger className="w-full md:w-[180px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-plus-jakarta-sans">
                   <SelectValue placeholder="Select Region/State" />
                 </SelectTrigger>
                 <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
                   {countryData.USA.map((r) => (
-                    <SelectItem key={r} value={r} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">{r}</SelectItem>
+                    <SelectItem key={r} value={r} className="hover:bg-gray-100 focus:bg-gray-100 font-plus-jakarta-sans">{r}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
               <Select value="Presidential Election 2024">
-                <SelectTrigger className="w-full md:w-[180px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-poppins">
+                <SelectTrigger className="w-full md:w-[180px] bg-white border border-gray-300 text-gray-900 text-xs md:text-sm p-2 h-9 md:h-10 font-plus-jakarta-sans">
                   <SelectValue placeholder="Select Election" />
                 </SelectTrigger>
                 <SelectContent className="bg-white text-gray-900 border border-gray-300 z-[50]">
                   {electionOptions.USA.map((election) => (
-                    <SelectItem key={election} value={election} className="hover:bg-gray-100 focus:bg-gray-100 font-poppins">{election}</SelectItem>
+                    <SelectItem key={election} value={election} className="hover:bg-gray-100 focus:bg-gray-100 font-plus-jakarta-sans">{election}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
