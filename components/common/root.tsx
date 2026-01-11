@@ -26,8 +26,8 @@ const Root: FC<RootProps> = ({ children }) => {
     return (
         <QueryClientProvider client={queryClient}>
           <div className="min-h-screen flex flex-col">
-            <Header />
             <main className="flex-1">
+              <Header />
               {children}
             </main>
           </div>

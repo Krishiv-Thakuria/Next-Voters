@@ -16,8 +16,13 @@ const FellowshipPage = () => {
           <p className="text-[16px] text-gray-600 mb-10 font-plus-jakarta-sans leading-relaxed">
             Changing the world starts with changing your community.
           </p>
+<<<<<<< HEAD
           
           <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-plus-jakarta-sans font-medium">
+=======
+                                                                                    
+          <a href="https://tally.so/r/mD8ooX" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 text-[14px] text-gray-900 border border-gray-900 rounded-lg hover:bg-gray-50 transition-colors font-poppins font-medium">
+>>>>>>> 1e4be6d865e0a25b84981b01f8eeab33b2c76590
             Apply Now - It's Free
           </a>
         </div>

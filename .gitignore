@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+.venv
 /node_modules
 /.pnp
 .pnp.js
@@ -37,3 +38,8 @@ yarn-error.log*
 next-env.d.ts
 
 .conda
+__pycache__/
+secrets.json
+dist
+civic_line_cli.egg-info
+build
