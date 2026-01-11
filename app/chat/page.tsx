@@ -41,7 +41,108 @@ const Chat = () => {
           collectionName: handleFindRegionDetails("collectionName", region),
         })
       });
-      return response.json();
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      // Create agent message entry for streaming updates
+      let agentMessageIndex: number | null = null;
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        
+        // Keep the last incomplete line in the buffer
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const jsonStr = line.slice(6);
+              if (!jsonStr.trim()) continue;
+              
+              const data = JSON.parse(jsonStr);
+
+              if (data.type === 'party' && data.data) {
+                const partyData: AIAgentResponse = {
+                  partyName: data.data.partyName,
+                  partyStance: data.data.partyStance,
+                  supportingDetails: data.data.supportingDetails,
+                  citations: data.data.citations
+                };
+
+                // Update chat history with new party response
+                setChatHistory(prev => {
+                  const newHistory = [...prev];
+                  
+                  // Find or create the agent message
+                  if (agentMessageIndex === null) {
+                    // Find the last agent message (should be the one we just created in onMutate)
+                    const lastIndex = newHistory.length - 1;
+                    if (lastIndex >= 0 && newHistory[lastIndex]?.type === 'agent') {
+                      agentMessageIndex = lastIndex;
+                    } else {
+                      // Create new agent message
+                      newHistory.push({
+                        type: 'agent' as const,
+                        parties: []
+                      });
+                      agentMessageIndex = newHistory.length - 1;
+                    }
+                  }
+
+                  const agentMessage = newHistory[agentMessageIndex];
+                  if (agentMessage?.type === 'agent') {
+                    // Check if party already exists
+                    const existingIndex = agentMessage.parties.findIndex(
+                      p => p.partyName === partyData.partyName
+                    );
+
+                    if (existingIndex >= 0) {
+                      // Update existing party
+                      newHistory[agentMessageIndex] = {
+                        type: 'agent' as const,
+                        parties: agentMessage.parties.map((p, idx) =>
+                          idx === existingIndex ? partyData : p
+                        )
+                      };
+                    } else {
+                      // Add new party
+                      newHistory[agentMessageIndex] = {
+                        type: 'agent' as const,
+                        parties: [...agentMessage.parties, partyData]
+                      };
+                    }
+                  }
+
+                  return newHistory;
+                });
+              } else if (data.type === 'done') {
+                // Stream completed
+                return { done: true };
+              } else if (data.type === 'error') {
+                throw new Error(data.message || 'Unknown error occurred');
+              }
+            } catch (e) {
+              console.error('Error parsing SSE message:', e, 'Line:', line);
+            }
+          }
+        }
+      }
+
+      return { done: true };
     },
     onMutate: (message) => {
       // Optimistically update the UI
@@ -51,24 +152,14 @@ const Chat = () => {
         {
           type: 'reg' as const,
           message
+        },
+        {
+          type: 'agent' as const,
+          parties: []
         }
       ]);
     },
-    onSuccess: (data) => {
-      const parties = data.responses.map((response: AIAgentResponse) => ({
-        partyName: response.partyName,
-        partyStance: response.partyStance,
-        supportingDetails: response.supportingDetails,
-        citations: response.citations
-      }));
-      
-      setChatHistory(prev => [
-        ...prev,
-        {
-          type: 'agent' as const,
-          parties
-        }
-      ]);
+    onSuccess: () => {
       setMessage('');
     },
     onSettled: () => {
@@ -76,9 +167,15 @@ const Chat = () => {
     },
     onError: (error) => {
       console.error('Error sending message:', error);
-      setChatHistory(prev => [
-        ...prev,
-        {
+      setChatHistory(prev => {
+        const newHistory = [...prev];
+        // Remove empty agent message if it exists
+        const lastMessage = newHistory[newHistory.length - 1];
+        if (lastMessage?.type === 'agent' && lastMessage.parties.length === 0) {
+          newHistory.pop();
+        }
+        // Add error message
+        newHistory.push({
           type: 'agent' as const,
           parties: [{
             partyName: 'System',
@@ -86,8 +183,9 @@ const Chat = () => {
             supportingDetails: ['Failed to send message. Please try again.'],
             citations: []
           }]
-        }
-      ]);
+        });
+        return newHistory;
+      });
     }
   });
 

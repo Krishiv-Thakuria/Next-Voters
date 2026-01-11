@@ -1,6 +1,6 @@
 import { searchEmbeddings } from "@/lib/ai";
 import { generateResponseForParty } from "@/lib/chat-platform/chat-response"
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { supportedRegionDetails } from "@/data/supported-regions";
 import { SupportedRegions } from "@/types/supported-regions";
 import { Citation } from "@/types/citations";
@@ -29,50 +29,93 @@ export const POST = async (request: NextRequest) => {
       throw new Error("Region not found in supported regions");
     }
 
-    const responsePromises = regionDetail.politicalParties.map(async (partyName) => {
-      const contexts: string[] = [];
-      const citations: Citation[] = [];
+    // Create a readable stream for Server-Sent Events
+    const stream = new ReadableStream({
+      async start(controller) {
+        const encoder = new TextEncoder();
+        
+        const sendChunk = (data: any) => {
+          const chunk = `data: ${JSON.stringify(data)}\n\n`;
+          controller.enqueue(encoder.encode(chunk));
+        };
 
-      const embeddings = await searchEmbeddings(
-        prompt,
-        regionDetail.collectionName,
-        region,
-        partyName
-      );
+        try {
+          // Process each party response as they complete
+          const responsePromises = regionDetail.politicalParties.map(async (partyName) => {
+            try {
+              const contexts: string[] = [];
+              const citations: Citation[] = [];
 
-      if (!embeddings || !embeddings.points) {
-        throw new Error("Embeddings data is missing or malformed");
-      }
+              const embeddings = await searchEmbeddings(
+                prompt,
+                regionDetail.collectionName,
+                region,
+                partyName
+              );
 
-      embeddings.points.forEach(point => {
-        contexts.push(point.payload.text as string);
-        citations.push(point.payload.citation as Citation);
-      });
+              if (!embeddings || !embeddings.points) {
+                throw new Error("Embeddings data is missing or malformed");
+              }
 
-      const response = await generateResponseForParty(
-        prompt,
-        regionDetail.name as SupportedRegions,
-        partyName,
-        contexts,
-      );
+              embeddings.points.forEach(point => {
+                contexts.push(point.payload.text as string);
+                citations.push(point.payload.citation as Citation);
+              });
 
-      return {
-        partyName,
-        partyStance: response.partyStance,
-        supportingDetails: response.supportingDetails,
-        citations: removeDuplicateCitations(citations)  
-      };
+              const response = await generateResponseForParty(
+                prompt,
+                regionDetail.name as SupportedRegions,
+                partyName,
+                contexts,
+              );
+
+              const partyResponse: AIAgentResponse = {
+                partyName,
+                partyStance: response.partyStance,
+                supportingDetails: response.supportingDetails,
+                citations: removeDuplicateCitations(citations)  
+              };
+
+              // Send party response as it completes
+              sendChunk({ type: 'party', data: partyResponse });
+              
+              return partyResponse;
+            } catch (error) {
+              console.error(`Error processing party ${partyName}:`, error);
+              sendChunk({ 
+                type: 'error', 
+                partyName,
+                message: error instanceof Error ? error.message : 'Unknown error'
+              });
+              return null;
+            }
+          });
+
+          // Wait for all responses to complete
+          await Promise.all(responsePromises);
+
+          await handleIncrementRequest();
+          await handleIncrementResponse();
+
+          // Send completion signal
+          sendChunk({ type: 'done' });
+          controller.close();
+        } catch (error) {
+          sendChunk({ 
+            type: 'error', 
+            message: error instanceof Error ? error.message : 'Unknown error'
+          });
+          controller.close();
+        }
+      },
     });
 
-    // Run parallel so that we can get all responses at the same time
-    const responses = await Promise.all(responsePromises);
-
-    await handleIncrementRequest();
-    await handleIncrementResponse();
-
-    return NextResponse.json({
-      responses: responses as AIAgentResponse[],
-      countryCode: regionDetail.code
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache, no-transform',
+        'Connection': 'keep-alive',
+      },
     });
   } catch (error) {
     return returnErrorResponse(error);
